@@ -5,15 +5,7 @@ import org.apache.commons.lang3.time.FastDateParser;
 
 import java.text.ParseException;
 import java.text.ParsePosition;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.OffsetTime;
-import java.time.Year;
-import java.time.YearMonth;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -64,13 +56,17 @@ public class DateParser {
             result = calendar;
         } else if (Date.class.equals(type)) {
             result = calendar.getTime();
-        }
-        if (Long.class.equals(type)) {
+        } else if (Long.class.equals(type)) {
             result = calendar.getTime().getTime();
         } else if (Instant.class.equals(type)) {
             result = calendar.toInstant();
         } else if (TimeZone.class.equals(type)) {
             result = calendar.getTimeZone();
+        } else if (ZoneOffset.class.equals(type)) {
+            result = calendar.getTimeZone()
+                    .toZoneId()
+                    .getRules()
+                    .getOffset(Instant.now());
         } else if (LocalDate.class.equals(type)) {
             result = LocalDate.of(
                     calendar.get(Calendar.YEAR),
@@ -121,6 +117,19 @@ public class DateParser {
                             .toZoneId()
                             .getRules()
                             .getOffset(Instant.now())
+            );
+        } else if (DayOfWeek.class.equals(type)) {
+            result = DayOfWeek.of(
+                    calendar.get(Calendar.DAY_OF_WEEK)
+            );
+        } else if (MonthDay.class.equals(type)) {
+            result = MonthDay.of(
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+            );
+        } else if (Month.class.equals(type)) {
+            result = Month.of(
+                    calendar.get(Calendar.MONTH)
             );
         } else if (Year.class.equals(type)) {
             result = Year.of(
