@@ -3,7 +3,6 @@ package com.joutvhu.date.parser;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.time.FastDateParser;
 
-import java.text.ParseException;
 import java.text.ParsePosition;
 import java.time.*;
 import java.util.Calendar;
@@ -13,7 +12,7 @@ import java.util.TimeZone;
 
 @UtilityClass
 public class DateParser {
-    private class ApacheDateParser extends FastDateParser {
+    private static class ApacheDateParser extends FastDateParser {
         public ApacheDateParser(String pattern, TimeZone timeZone, Locale locale) {
             this(pattern, timeZone, locale, null);
         }
@@ -23,7 +22,7 @@ public class DateParser {
         }
     }
 
-    public <T> T parse(Class<T> type, String value, String... patterns) throws ParseException {
+    public <T> T parse(Class<T> type, String value, String... patterns) {
         if (type == null)
             throw new IllegalArgumentException("Date Type must not be null");
         if (value == null || patterns == null)
@@ -46,7 +45,7 @@ public class DateParser {
             pos.setIndex(0);
         }
 
-        throw new ParseException("Unable to parse the date: " + value, -1);
+        throw new ParseException("Unable to parse the date: " + value, patterns);
     }
 
     private <T> T parse(Class<T> type, Calendar calendar) {
