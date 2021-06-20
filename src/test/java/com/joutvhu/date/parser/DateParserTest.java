@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -49,6 +52,19 @@ public class DateParserTest {
         Date result = DateParser.parse(Date.class,"2021/06/27 21:52:25.408", "yyyy/MM/dd HH:mm:ss.SSS");
         Assertions.assertNotNull(result);
         Assertions.assertEquals("2021-06-27 21:52:25.408", format(result, "yyyy-MM-dd HH:mm:ss.SSS"));
+    }
+
+    @Test
+    public void testParse_Calendar0() {
+        Calendar result = DateParser.parse(Calendar.class,"2021/06/27 21:52:25.408", "yyyy/MM/dd HH:mm:ss.SSS");
+        Assertions.assertNotNull(result);
+    }
+
+    @Test
+    public void testParse_LocalDateTime0() {
+        LocalDateTime result = DateParser.parse(LocalDateTime.class,"2021/06/27 21:52:25.408", "yyyy/MM/dd HH:mm:ss.SSS");
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals("2021-05-27T21:52:25.408", result.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
     }
 
     private String format(Date date, String format) {
