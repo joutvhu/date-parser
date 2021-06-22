@@ -1,5 +1,6 @@
 package com.joutvhu.date.parser;
 
+import com.joutvhu.date.parser.exception.ParseException;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.time.FastDateParser;
 
