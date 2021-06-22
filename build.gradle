@@ -138,17 +138,21 @@ publishing {
             } else {
                 url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
             }
-            credentials {
-                username = project.ossrhUsername
-                password = project.ossrhPassword
+            if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
+                credentials {
+                    username = project.ossrhUsername
+                    password = project.ossrhPassword
+                }
             }
         }
         maven {
             name = 'github'
             url = 'https://maven.pkg.github.com/joutvhu/date-parser'
-            credentials {
-                username = project.githubUsername
-                password = project.githubPassword
+            if (project.hasProperty('githubUsername') && project.hasProperty('githubPassword')) {
+                credentials {
+                    username = project.githubUsername
+                    password = project.githubPassword
+                }
             }
         }
     }

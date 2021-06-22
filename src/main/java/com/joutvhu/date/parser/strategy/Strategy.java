@@ -1,5 +1,8 @@
 package com.joutvhu.date.parser.strategy;
 
+import com.joutvhu.date.parser.DateStorage;
+import com.joutvhu.date.parser.StringSource;
+
 public abstract class Strategy {
     private boolean end;
     protected String pattern;
@@ -29,4 +32,6 @@ public abstract class Strategy {
             return false;
         }
     }
+
+    public abstract void parse(DateStorage dateStorage, StringSource source, NextStrategy chain);
 }

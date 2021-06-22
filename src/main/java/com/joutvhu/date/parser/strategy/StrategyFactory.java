@@ -42,7 +42,7 @@ public class StrategyFactory {
             case 'Z':
                 return new ZoneStrategy(c);
             default:
-                return new CopyQuotedStrategy(c);
+                return new QuotedStrategy(c);
         }
     }
 }

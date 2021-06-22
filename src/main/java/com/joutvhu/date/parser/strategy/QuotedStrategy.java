@@ -1,10 +1,13 @@
 package com.joutvhu.date.parser.strategy;
 
-public class CopyQuotedStrategy extends Strategy {
+import com.joutvhu.date.parser.DateStorage;
+import com.joutvhu.date.parser.StringSource;
+
+public class QuotedStrategy extends Strategy {
     private boolean quoted;
     private Boolean end;
 
-    public CopyQuotedStrategy(char c) {
+    public QuotedStrategy(char c) {
         super(c);
         this.end = false;
         this.quoted = c == '\'';
@@ -36,5 +39,9 @@ public class CopyQuotedStrategy extends Strategy {
             }
         } else
             return false;
+    }
+
+    @Override
+    public void parse(DateStorage dateStorage, StringSource source, NextStrategy chain) {
     }
 }
