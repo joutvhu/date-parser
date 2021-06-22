@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser;
 
-import com.joutvhu.date.parser.strategy.QuotedStrategy;
+import com.joutvhu.date.parser.strategy.QuoteStrategy;
 import com.joutvhu.date.parser.strategy.Strategy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,6 +16,6 @@ public class DatePatternSplitterTest {
                 .getStrategyChain();
         Assertions.assertNotNull(result);
         Assertions.assertEquals(13, result.size());
-        Assertions.assertTrue(result.get(5) instanceof QuotedStrategy);
+        Assertions.assertTrue(result.get(5) instanceof QuoteStrategy);
     }
 }

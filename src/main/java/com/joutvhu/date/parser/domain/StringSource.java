@@ -4,53 +4,44 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.text.ParsePosition;
+import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
 @Setter
-public class StringSource {
+public class StringSource extends ParsePosition {
     private int length;
     private String source;
-    private ParsePosition position;
     private Integer backupPosition;
 
     public StringSource(String source) {
-        this(source, new ParsePosition(0));
+        this(source, 0);
     }
 
-    public StringSource(String source, ParsePosition position) {
+    public StringSource(String source, int position) {
+        super(position);
         if (source == null)
             throw new IllegalArgumentException("String of date must not be null.");
 
         this.source = source;
-        if (position == null)
-            this.position = new ParsePosition(0);
-        else
-            this.position = position;
         this.length = source.length();
     }
 
     public StringSource next() {
-        int index = this.position.getIndex() + 1;
+        int index = this.getIndex() + 1;
         if (index < this.length) {
-            this.position.setIndex(index);
+            this.setIndex(index);
             return this;
         } else
             return null;
     }
 
-    public StringSource backup() {
-        this.backupPosition = this.position.getIndex();
-        return this;
-    }
-
-    public StringSource restore() {
-        this.position.setIndex(this.backupPosition);
-        this.backupPosition = null;
-        return this;
+    public PositionBackup backup() {
+        return new PositionBackup(this);
     }
 
     public Character character() {
-        int index = this.position.getIndex();
+        int index = this.getIndex();
         if (index < this.length)
             return this.source.charAt(index);
         else
@@ -58,13 +49,56 @@ public class StringSource {
     }
 
     public String get(int length) {
-        int index = this.position.getIndex();
+        int index = this.getIndex();
         if (index + length < this.length) {
-            this.position.setIndex(index + length);
+            this.setIndex(index + length);
             return this.source.substring(index, index + length);
         } else {
-            this.position.setIndex(this.length);
+            this.setIndex(this.length);
             return this.source.substring(index);
+        }
+    }
+
+    public Iterator<String> get(int from, int to) {
+        final AtomicReference<String> value = new AtomicReference<>();
+        final AtomicReference<Integer> length = new AtomicReference<>();
+        int index = this.getIndex();
+
+        return new Iterator<String>() {
+            @Override
+            public boolean hasNext() {
+                Integer i = length.get();
+                return i == null || (i < to && (index + i) < StringSource.this.length);
+            }
+
+            @Override
+            public String next() {
+                Integer i = length.get();
+                if (length.get() == null) {
+                    length.set(from);
+                    value.set(StringSource.this.get(from));
+                } else {
+                    i++;
+                    StringSource.this.setIndex(index + i);
+                    value.set(value.get() + StringSource.this.source.charAt(index + i));
+                }
+                return value.get();
+            }
+        };
+    }
+
+    public class PositionBackup {
+        private int backup;
+        private StringSource position;
+
+        public PositionBackup(StringSource position) {
+            this.position = position;
+            this.backup = position.getIndex();
+        }
+
+        public StringSource restore() {
+            this.position.setIndex(this.backup);
+            return position;
         }
     }
 }

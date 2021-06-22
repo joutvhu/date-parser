@@ -2,12 +2,13 @@ package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
+import com.joutvhu.date.parser.exception.MismatchException;
 
-public class QuotedStrategy extends Strategy {
+public class QuoteStrategy extends Strategy {
     private boolean quoted;
     private Boolean end;
 
-    public QuotedStrategy(char c) {
+    public QuoteStrategy(char c) {
         super(c);
         this.end = false;
         this.quoted = c == '\'';
@@ -43,13 +44,17 @@ public class QuotedStrategy extends Strategy {
 
     @Override
     public void parse(DateStorage storage, StringSource source, NextStrategy chain) {
-        String value = source
-                .backup()
-                .get(this.pattern.length());
+        StringSource.PositionBackup backup = source.backup();
+        String value = source.get(this.pattern.length());
         if (pattern.equals(value))
             this.nextStrategy(chain);
         else {
-            // throw
+            backup.restore();
+            throw new MismatchException(
+                    "The quote \"" + value + "\" not match with \"" + this.pattern + "\".",
+                    source.getIndex(),
+                    this.pattern
+            );
         }
     }
 }

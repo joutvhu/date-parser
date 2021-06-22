@@ -46,7 +46,7 @@ public class StrategyFactory {
             case 'Z':
                 return new ZoneStrategy(c);
             default:
-                return new QuotedStrategy(c);
+                return new QuoteStrategy(c);
         }
     }
 }
