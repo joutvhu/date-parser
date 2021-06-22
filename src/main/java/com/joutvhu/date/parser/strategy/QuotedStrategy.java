@@ -43,5 +43,13 @@ public class QuotedStrategy extends Strategy {
 
     @Override
     public void parse(DateStorage storage, StringSource source, NextStrategy chain) {
+        String value = source
+                .backup()
+                .get(this.pattern.length());
+        if (pattern.equals(value))
+            this.nextStrategy(chain);
+        else {
+            // throw
+        }
     }
 }

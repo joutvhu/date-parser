@@ -9,14 +9,14 @@ import java.util.TimeZone;
 @Getter
 @Setter
 public class DateStorage {
-    private int year;
-    private int month;
-    private int day;
+    private Integer year;
+    private Integer month;
+    private Integer day;
 
-    private int hour;
-    private int minute;
-    private int second;
-    private int nano;
+    private Integer hour;
+    private Integer minute;
+    private Integer second;
+    private Integer nano;
 
     private Locale locale;
     private TimeZone zone;

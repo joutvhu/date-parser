@@ -15,6 +15,6 @@ public class MinuteStrategy extends Strategy {
 
     @Override
     public void parse(DateStorage storage, StringSource source, NextStrategy chain) {
-
+        this.nextStrategy(chain);
     }
 }

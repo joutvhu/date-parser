@@ -34,4 +34,9 @@ public abstract class Strategy {
     }
 
     public abstract void parse(DateStorage storage, StringSource source, NextStrategy chain);
+
+    protected void nextStrategy(NextStrategy chain) {
+        if (chain != null)
+            chain.next();
+    }
 }

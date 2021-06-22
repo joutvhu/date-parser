@@ -15,8 +15,11 @@ public class YearStrategy extends Strategy {
 
     @Override
     public void parse(DateStorage storage, StringSource source, NextStrategy chain) {
-        if (this.pattern.length() == 2) {
+        int len = this.pattern.length();
+        if (len == 4) {
+
         } else {
         }
+        this.nextStrategy(chain);
     }
 }

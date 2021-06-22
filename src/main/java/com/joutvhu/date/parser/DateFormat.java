@@ -12,6 +12,7 @@ public class DateFormat {
     private Locale locale;
     private TimeZone zone;
     private List<Strategy> strategies;
+    private int endIndex;
 
     public DateFormat(String pattern) {
         this(pattern, Locale.getDefault(), TimeZone.getDefault());
@@ -24,13 +25,13 @@ public class DateFormat {
         this.locale = locale;
         this.zone = zone;
         this.strategies = new DatePatternSplitter(pattern).getStrategyChain();
+        this.endIndex = this.strategies.size() - 1;
     }
 
     private void parse(DateStorage storage, StringSource source, int index) {
-        int endIndex = this.strategies.size() - 1;
-        if (index < endIndex)
+        if (index < this.endIndex)
             this.strategies.get(index).parse(storage, source, () -> this.parse(storage, source, index + 1));
-        else if (index == endIndex)
+        else if (index == this.endIndex)
             this.strategies.get(index).parse(storage, source, null);
     }
 

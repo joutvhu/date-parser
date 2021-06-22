@@ -9,6 +9,8 @@ public class StrategyFactory {
             case 'a':
             case 'A':
                 return new AmPmStrategy(c);
+            case 'C':
+                return new CenturyStrategy(c);
             case 'd':
             case 'D':
                 return new DayStrategy(c);
@@ -17,6 +19,8 @@ public class StrategyFactory {
                 return new WeekdayStrategy(c);
             case 'F':
                 return new WeekdayInMonthStrategy(c);
+            case 'G':
+                return new EraStrategy(c);
             case 'h':
             case 'H':
             case 'k':
