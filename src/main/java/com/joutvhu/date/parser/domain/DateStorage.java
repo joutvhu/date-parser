@@ -1,4 +1,4 @@
-package com.joutvhu.date.parser;
+package com.joutvhu.date.parser.domain;
 
 import lombok.Getter;
 import lombok.Setter;

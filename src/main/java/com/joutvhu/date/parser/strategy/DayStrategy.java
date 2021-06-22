@@ -1,7 +1,7 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.DateStorage;
-import com.joutvhu.date.parser.StringSource;
+import com.joutvhu.date.parser.domain.DateStorage;
+import com.joutvhu.date.parser.domain.StringSource;
 
 public class DayStrategy extends Strategy {
     private boolean dayInYear;
@@ -17,7 +17,7 @@ public class DayStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateStorage dateStorage, StringSource source, NextStrategy chain) {
+    public void parse(DateStorage storage, StringSource source, NextStrategy chain) {
 
     }
 }
