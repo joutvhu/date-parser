@@ -2,6 +2,7 @@ package com.joutvhu.date.parser;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
+import com.joutvhu.date.parser.exception.MismatchException;
 import com.joutvhu.date.parser.strategy.NextStrategy;
 import com.joutvhu.date.parser.strategy.Strategy;
 import com.joutvhu.date.parser.support.DatePatternSplitter;
@@ -31,7 +32,7 @@ public class DateFormat {
     }
 
     private void parse(DateStorage storage, StringSource source, int index) {
-        if (index < this.endIndex)
+        if (index < this.endIndex) {
             this.strategies.get(index).parse(storage, source, new NextStrategy() {
                 @Override
                 public Strategy get() {
@@ -43,8 +44,20 @@ public class DateFormat {
                     DateFormat.this.parse(storage, source, index + 1);
                 }
             });
-        else if (index == this.endIndex)
-            this.strategies.get(index).parse(storage, source, null);
+        } else if (index == this.endIndex) {
+            this.strategies.get(index).parse(storage, source, new NextStrategy() {
+                @Override
+                public Strategy get() {
+                    return null;
+                }
+
+                @Override
+                public void next() {
+                    if (source.getIndex() < source.getLength())
+                        throw new MismatchException("Does not finish at the end of string.", source.getIndex(), null);
+                }
+            });
+        }
     }
 
     public DateStorage parse(String value) {

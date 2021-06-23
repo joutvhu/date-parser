@@ -44,7 +44,7 @@ public class MonthStrategy extends Strategy {
         AtomicBoolean first = new AtomicBoolean(true);
         int len = this.ordinal ? this.pattern.length() + 1 : this.pattern.length();
         StringSource.PositionBackup backup = source.backup();
-        Iterator<String> iterator = source.iterator(len, 2);
+        Iterator<String> iterator = source.iterator(len, this.ordinal ? 4 : 2);
 
         while (iterator.hasNext()) {
             String value = iterator.next();

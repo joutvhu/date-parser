@@ -5,12 +5,11 @@ import lombok.Setter;
 
 import java.text.ParsePosition;
 import java.util.Iterator;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.NoSuchElementException;
 
 @Getter
 @Setter
 public class StringSource extends ParsePosition {
-    private int length;
     private String source;
     private Integer backupPosition;
 
@@ -24,12 +23,15 @@ public class StringSource extends ParsePosition {
             throw new IllegalArgumentException("String of date must not be null.");
 
         this.source = source;
-        this.length = source.length();
+    }
+
+    public int getLength() {
+        return source.length();
     }
 
     public StringSource next() {
         int index = this.getIndex() + 1;
-        if (index < this.length) {
+        if (index < source.length()) {
             this.setIndex(index);
             return this;
         } else
@@ -42,7 +44,7 @@ public class StringSource extends ParsePosition {
 
     public Character character() {
         int index = this.getIndex();
-        if (index < this.length)
+        if (index < source.length())
             return this.source.charAt(index);
         else
             return null;
@@ -50,39 +52,56 @@ public class StringSource extends ParsePosition {
 
     public String get(int length) {
         int index = this.getIndex();
-        if (index + length < this.length) {
+        if (index + length < source.length()) {
             this.setIndex(index + length);
             return this.source.substring(index, index + length);
         } else {
-            this.setIndex(this.length);
+            this.setIndex(source.length());
             return this.source.substring(index);
         }
     }
 
     public Iterator<String> iterator(int from, int to) {
-        final int currentIndex = this.getIndex();
-        final AtomicReference<String> value = new AtomicReference<>();
-        final AtomicReference<Integer> relativeIndex = new AtomicReference<>();
-
         return new Iterator<String>() {
+            private final StringSource source = StringSource.this;
+            private final int currentIndex = StringSource.this.getIndex();
+
+            private String value;
+            private Integer relativeIndex;
+
             @Override
             public boolean hasNext() {
-                Integer i = relativeIndex.get();
-                return i == null || (i < to && (currentIndex + i) < StringSource.this.length);
+                if (relativeIndex == null)
+                    return currentIndex < source.getLength();
+                else
+                    return relativeIndex < to && currentIndex + relativeIndex < source.getLength();
             }
 
             @Override
             public String next() {
-                Integer i = relativeIndex.get();
-                if (relativeIndex.get() == null) {
-                    relativeIndex.set(from);
-                    value.set(StringSource.this.get(from));
+                if (relativeIndex == null) {
+                    if (currentIndex >= source.getLength())
+                        throw new NoSuchElementException();
+                    else if (currentIndex + from <= source.getLength()) {
+                        relativeIndex = from;
+                        int end = currentIndex + relativeIndex;
+                        source.setIndex(end);
+                        value = source.getSource().substring(currentIndex, end);
+                    } else {
+                        relativeIndex = source.getLength() - currentIndex;
+                        source.setIndex(source.getLength());
+                        value = source.getSource().substring(currentIndex, source.getLength());
+                    }
                 } else {
-                    i++;
-                    StringSource.this.setIndex(currentIndex + i);
-                    value.set(value.get() + StringSource.this.source.charAt(currentIndex + i));
+                    if (relativeIndex < to && currentIndex + relativeIndex < source.getLength()) {
+                        relativeIndex++;
+                        int last = currentIndex + relativeIndex;
+                        source.setIndex(last);
+                        value += source.getSource().charAt(last - 1);
+                    } else
+                        throw new NoSuchElementException();
                 }
-                return value.get();
+                return value;
             }
         };
     }

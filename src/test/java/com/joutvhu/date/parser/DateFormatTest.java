@@ -9,7 +9,7 @@ import org.junit.jupiter.api.TestInstance;
 public class DateFormatTest {
     @Test
     public void parse_Case0() {
-        DateStorage storage = new DateFormat("yyyy/MM").parse("2021/11");
+        DateStorage storage = new DateFormat("yyyyMd").parse("20211123");
         Assertions.assertNotNull(storage);
     }
 }
