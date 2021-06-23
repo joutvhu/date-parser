@@ -87,6 +87,7 @@ public class StringSource extends ParsePosition {
         };
     }
 
+    @Getter
     public class PositionBackup {
         private final int backup;
         private final StringSource position;

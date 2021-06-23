@@ -1,4 +1,4 @@
-package com.joutvhu.date.parser;
+package com.joutvhu.date.parser.support;
 
 import com.joutvhu.date.parser.strategy.QuoteStrategy;
 import com.joutvhu.date.parser.strategy.Strategy;

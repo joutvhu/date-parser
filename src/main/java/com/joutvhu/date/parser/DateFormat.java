@@ -2,7 +2,9 @@ package com.joutvhu.date.parser;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
+import com.joutvhu.date.parser.strategy.NextStrategy;
 import com.joutvhu.date.parser.strategy.Strategy;
+import com.joutvhu.date.parser.support.DatePatternSplitter;
 
 import java.util.List;
 import java.util.Locale;
@@ -30,7 +32,17 @@ public class DateFormat {
 
     private void parse(DateStorage storage, StringSource source, int index) {
         if (index < this.endIndex)
-            this.strategies.get(index).parse(storage, source, () -> this.parse(storage, source, index + 1));
+            this.strategies.get(index).parse(storage, source, new NextStrategy() {
+                @Override
+                public Strategy get() {
+                    return DateFormat.this.strategies.get(index + 1);
+                }
+
+                @Override
+                public void next() {
+                    DateFormat.this.parse(storage, source, index + 1);
+                }
+            });
         else if (index == this.endIndex)
             this.strategies.get(index).parse(storage, source, null);
     }

@@ -1,4 +1,4 @@
-package com.joutvhu.date.parser;
+package com.joutvhu.date.parser.support;
 
 import com.joutvhu.date.parser.strategy.Strategy;
 import com.joutvhu.date.parser.strategy.StrategyFactory;
@@ -35,6 +35,7 @@ public class DatePatternSplitter {
                 Strategy result = this.strategy;
                 this.strategy = StrategyFactory.getStrategy(c);
                 this.position++;
+                result.afterPatternSet();
                 return result;
             }
         }
@@ -42,6 +43,7 @@ public class DatePatternSplitter {
         if (this.strategy != null) {
             Strategy result = this.strategy;
             this.strategy = null;
+            result.afterPatternSet();
             return result;
         } else {
             return null;

@@ -1,6 +1,7 @@
 package com.joutvhu.date.parser.strategy;
 
-@FunctionalInterface
 public interface NextStrategy {
+    Strategy get();
+
     void next();
 }

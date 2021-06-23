@@ -6,8 +6,11 @@ import com.joutvhu.date.parser.exception.MismatchException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class YearStrategy extends Strategy {
+    int length;
+
     public YearStrategy(char c) {
         super(c);
     }
@@ -18,18 +21,20 @@ public class YearStrategy extends Strategy {
     }
 
     @Override
+    public void afterPatternSet() {
+        this.length = this.pattern.length();
+    }
+
+    @Override
     public void parse(DateStorage storage, StringSource source, NextStrategy chain) {
-        boolean first = true;
-        int currentIndex = source.getIndex();
+        AtomicBoolean first = new AtomicBoolean(true);
         StringSource.PositionBackup backup = source.backup();
-        Iterator<String> iterator = source.iterator(this.pattern.length(), 4);
+        Iterator<String> iterator = source.iterator(this.length, 4);
 
         while (iterator.hasNext()) {
             String value = iterator.next();
-            if ((first && CommonUtil.isNumber(value)) ||
-                (!first && CommonUtil.isNumber(value.charAt(value.length() - 1)))) {
+            if (CommonUtil.isNumber(first, value)) {
                 try {
-                    first = false;
                     this.nextStrategy(chain);
                     storage.setYear(Integer.parseInt(value));
                     return;
@@ -41,7 +46,7 @@ public class YearStrategy extends Strategy {
                 }
             } else {
                 backup.restore();
-                throw new MismatchException("The string \"" + value + "\" is not a year.", currentIndex, this.pattern);
+                throw new MismatchException("The \"" + value + "\" is not a year.", backup.getBackup(), this.pattern);
             }
         }
     }

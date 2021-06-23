@@ -12,6 +12,10 @@ public abstract class Strategy {
         this.pattern = String.valueOf(c);
     }
 
+    public void afterPatternSet() {
+        // Do nothing
+    }
+
     public abstract boolean add(char c);
 
     protected boolean add(boolean condition, char c) {
