@@ -59,28 +59,28 @@ public class StringSource extends ParsePosition {
         }
     }
 
-    public Iterator<String> get(int from, int to) {
+    public Iterator<String> iterator(int from, int to) {
+        final int currentIndex = this.getIndex();
         final AtomicReference<String> value = new AtomicReference<>();
-        final AtomicReference<Integer> length = new AtomicReference<>();
-        int index = this.getIndex();
+        final AtomicReference<Integer> relativeIndex = new AtomicReference<>();
 
         return new Iterator<String>() {
             @Override
             public boolean hasNext() {
-                Integer i = length.get();
-                return i == null || (i < to && (index + i) < StringSource.this.length);
+                Integer i = relativeIndex.get();
+                return i == null || (i < to && (currentIndex + i) < StringSource.this.length);
             }
 
             @Override
             public String next() {
-                Integer i = length.get();
-                if (length.get() == null) {
-                    length.set(from);
+                Integer i = relativeIndex.get();
+                if (relativeIndex.get() == null) {
+                    relativeIndex.set(from);
                     value.set(StringSource.this.get(from));
                 } else {
                     i++;
-                    StringSource.this.setIndex(index + i);
-                    value.set(value.get() + StringSource.this.source.charAt(index + i));
+                    StringSource.this.setIndex(currentIndex + i);
+                    value.set(value.get() + StringSource.this.source.charAt(currentIndex + i));
                 }
                 return value.get();
             }
@@ -88,8 +88,8 @@ public class StringSource extends ParsePosition {
     }
 
     public class PositionBackup {
-        private int backup;
-        private StringSource position;
+        private final int backup;
+        private final StringSource position;
 
         public PositionBackup(StringSource position) {
             this.position = position;
