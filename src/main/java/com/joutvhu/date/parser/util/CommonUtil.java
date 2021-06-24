@@ -48,7 +48,7 @@ public class CommonUtil {
         return str.concat(repeat(padChar, pads));
     }
 
-    public static String rightPad(final String str, final int size, String padStr) {
+    public String rightPad(final String str, final int size, String padStr) {
         if (str == null)
             return null;
         if (padStr == null || padStr.length() == 0)
@@ -75,7 +75,7 @@ public class CommonUtil {
         }
     }
 
-    public static String repeat(final char ch, final int repeat) {
+    public String repeat(final char ch, final int repeat) {
         if (repeat <= 0)
             return "";
         final char[] buf = new char[repeat];
