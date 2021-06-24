@@ -30,9 +30,9 @@ public class StringSource extends ParsePosition {
     }
 
     public StringSource next() {
-        int index = this.getIndex() + 1;
+        int index = this.getIndex();
         if (index < source.length()) {
-            this.setIndex(index);
+            this.setIndex(index + 1);
             return this;
         } else
             return null;
