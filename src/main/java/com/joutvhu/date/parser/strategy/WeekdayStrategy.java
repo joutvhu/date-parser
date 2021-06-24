@@ -39,10 +39,8 @@ public class WeekdayStrategy extends Strategy {
                 chain,
                 backup,
                 source.get(this.pattern.length()),
-                this.pattern.length() > 1
-        )) {
+                this.pattern.length() > 1))
             this.tryParse(storage, chain, backup, source.get(1), true);
-        }
     }
 
     private boolean tryParse(

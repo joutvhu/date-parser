@@ -25,13 +25,13 @@ public class DayStrategy extends Strategy {
     }
 
     @Override
-    public void afterPatternSet() {
-        this.ordinal = this.pattern.endsWith("o");
+    public boolean add(char c) {
+        return add(c == this.pattern.charAt(0), c, c == 'o');
     }
 
     @Override
-    public boolean add(char c) {
-        return add(c == this.pattern.charAt(0), c, c == 'o');
+    public void afterPatternSet() {
+        this.ordinal = this.pattern.endsWith("o");
     }
 
     @Override
