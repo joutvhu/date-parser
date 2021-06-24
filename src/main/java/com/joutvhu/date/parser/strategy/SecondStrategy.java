@@ -27,18 +27,18 @@ public class SecondStrategy extends Strategy {
             if (CommonUtil.isNumber(value)) {
                 try {
                     this.nextStrategy(chain);
+
+                    int second = Integer.parseInt(value);
+                    if (second < 0 || second > 59)
+                        throw new MismatchException("The \"" + value + "\" is not a second.", backup.getBackup(), this.pattern);
+                    storage.setSecond(second);
+                    return;
                 } catch (MismatchException e) {
                     if (!iterator.hasNext()) {
                         backup.restore();
                         throw e;
                     }
                 }
-
-                int second = Integer.parseInt(value);
-                if (second < 0 || second > 59)
-                    throw new MismatchException("The \"" + value + "\" is not a second.", backup.getBackup(), this.pattern);
-                storage.setSecond(second);
-                return;
             } else {
                 backup.restore();
                 throw new MismatchException("The \"" + value + "\" is not a second.", backup.getBackup(), this.pattern);

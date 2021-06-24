@@ -63,18 +63,18 @@ public class MonthStrategy extends Strategy {
             if (CommonUtil.isNumber(first, value)) {
                 try {
                     this.nextStrategy(chain);
+
+                    int month = Integer.parseInt(value);
+                    if (month < 1 || month > 12)
+                        throw new MismatchException("The \"" + month + "\" is not a month.", backup.getBackup(), this.pattern);
+                    storage.setMonth(month);
+                    return;
                 } catch (MismatchException e) {
                     if (iterator.hasNext())
                         continue;
                     backup.restore();
                     throw e;
                 }
-
-                int month = Integer.parseInt(value);
-                if (month < 1 || month > 12)
-                    throw new MismatchException("The \"" + month + "\" is not a month.", backup.getBackup(), this.pattern);
-                storage.setMonth(month);
-                return;
             } else {
                 backup.restore();
                 throw new MismatchException("The \"" + value + "\" is not a month.", backup.getBackup(), this.pattern);

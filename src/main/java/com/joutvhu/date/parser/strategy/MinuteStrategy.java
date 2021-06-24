@@ -27,18 +27,18 @@ public class MinuteStrategy extends Strategy {
             if (CommonUtil.isNumber(value)) {
                 try {
                     this.nextStrategy(chain);
+
+                    int minute = Integer.parseInt(value);
+                    if (minute < 0 || minute > 59)
+                        throw new MismatchException("The \"" + value + "\" is not a minute.", backup.getBackup(), this.pattern);
+                    storage.setMinute(minute);
+                    return;
                 } catch (MismatchException e) {
                     if (!iterator.hasNext()) {
                         backup.restore();
                         throw e;
                     }
                 }
-
-                int minute = Integer.parseInt(value);
-                if (minute < 0 || minute > 59)
-                    throw new MismatchException("The \"" + value + "\" is not a minute.", backup.getBackup(), this.pattern);
-                storage.setMinute(minute);
-                return;
             } else {
                 backup.restore();
                 throw new MismatchException("The \"" + value + "\" is not a minute.", backup.getBackup(), this.pattern);

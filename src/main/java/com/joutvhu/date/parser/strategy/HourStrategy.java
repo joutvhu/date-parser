@@ -32,28 +32,28 @@ public class HourStrategy extends Strategy {
             if (CommonUtil.isNumber(value)) {
                 try {
                     this.nextStrategy(chain);
+
+                    int hour = Integer.parseInt(value);
+                    if (hour24) {
+                        if (!startFrom0 && hour == 24)
+                            hour = 0;
+                        if (hour < 0 || hour > 23)
+                            throw new MismatchException("The \"" + value + "\" is not a hour.", backup.getBackup(), this.pattern);
+                        storage.setHour(hour);
+                    } else {
+                        if (!startFrom0 && hour == 12)
+                            hour = 0;
+                        if (hour < 0 || hour > 11)
+                            throw new MismatchException("The \"" + value + "\" is not a hour.", backup.getBackup(), this.pattern);
+                        // TODO save hour 12
+                    }
+                    return;
                 } catch (MismatchException e) {
                     if (!iterator.hasNext()) {
                         backup.restore();
                         throw e;
                     }
                 }
-
-                int hour = Integer.parseInt(value);
-                if (hour24) {
-                    if (!startFrom0 && hour == 24)
-                        hour = 0;
-                    if (hour < 0 || hour > 23)
-                        throw new MismatchException("The \"" + value + "\" is not a hour.", backup.getBackup(), this.pattern);
-                    storage.setHour(hour);
-                } else {
-                    if (!startFrom0 && hour == 12)
-                        hour = 0;
-                    if (hour < 0 || hour > 11)
-                        throw new MismatchException("The \"" + value + "\" is not a hour.", backup.getBackup(), this.pattern);
-                    // TODO save hour 12
-                }
-                return;
             } else {
                 backup.restore();
                 throw new MismatchException("The \"" + value + "\" is not a hour.", backup.getBackup(), this.pattern);
