@@ -43,9 +43,14 @@ public class HourStrategy extends Strategy {
                     } else {
                         if (!startFrom0 && hour == 12)
                             hour = 0;
-                        if (hour < 0 || hour > 11)
+                        String am_pm = storage.get(AmPmStrategy.AM_PM);
+                        if (hour < 12 && AmPmStrategy.PM.equals(am_pm))
+                            hour += 12;
+                        if (hour < 0 || hour > 24 || AmPmStrategy.AM.equals(am_pm) && hour > 11)
                             throw new MismatchException("The \"" + value + "\" is not a hour.", backup.getBackup(), this.pattern);
-                        // TODO save hour 12
+                        if (!startFrom0 && hour == 24)
+                            hour = 0;
+                        storage.setHour(hour);
                     }
                     return;
                 } catch (MismatchException e) {
