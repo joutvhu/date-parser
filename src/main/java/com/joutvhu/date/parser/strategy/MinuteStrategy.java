@@ -26,11 +26,11 @@ public class MinuteStrategy extends Strategy {
             String value = iterator.next();
             if (CommonUtil.isNumber(value)) {
                 try {
-                    this.nextStrategy(chain);
-
                     int minute = Integer.parseInt(value);
                     if (minute < 0 || minute > 59)
                         throw new MismatchException("The \"" + value + "\" is not a minute.", backup.getBackup(), this.pattern);
+
+                    this.nextStrategy(chain);
                     storage.setMinute(minute);
                     return;
                 } catch (MismatchException e) {

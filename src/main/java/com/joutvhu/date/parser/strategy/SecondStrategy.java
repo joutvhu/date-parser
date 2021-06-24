@@ -26,11 +26,11 @@ public class SecondStrategy extends Strategy {
             String value = iterator.next();
             if (CommonUtil.isNumber(value)) {
                 try {
-                    this.nextStrategy(chain);
-
                     int second = Integer.parseInt(value);
                     if (second < 0 || second > 59)
                         throw new MismatchException("The \"" + value + "\" is not a second.", backup.getBackup(), this.pattern);
+
+                    this.nextStrategy(chain);
                     storage.setSecond(second);
                     return;
                 } catch (MismatchException e) {
