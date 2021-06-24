@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class YearStrategy extends Strategy {
-    int length;
+    private int length;
 
     public YearStrategy(char c) {
         super(c);

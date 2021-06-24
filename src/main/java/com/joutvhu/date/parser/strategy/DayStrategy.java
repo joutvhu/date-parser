@@ -62,7 +62,7 @@ public class DayStrategy extends Strategy {
                 }
 
                 if (this.dayInYear) {
-                    // TODO: save day in year
+                    // TODO save day in year
                 } else {
                     int day = Integer.parseInt(value);
                     if (day == 0 || day > 31)
