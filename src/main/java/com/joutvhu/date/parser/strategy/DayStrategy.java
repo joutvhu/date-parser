@@ -4,11 +4,18 @@ import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchException;
 import com.joutvhu.date.parser.util.CommonUtil;
+import javafx.util.Pair;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DayStrategy extends Strategy {
+    private static final List<Integer> END_DAY_OF_MONTHS = Arrays.asList(0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365);
+    private static final List<Integer> CONFLICT_DAYS = Arrays.asList(60, 91, 121, 152, 182, 213, 244, 274, 305, 335);
+
     private boolean dayInYear;
     private boolean ordinal;
 
@@ -55,10 +62,20 @@ public class DayStrategy extends Strategy {
                 try {
                     this.nextStrategy(chain);
 
+                    int day = Integer.parseInt(value);
                     if (this.dayInYear) {
-                        // TODO save day in year
+                        if (day == 0 || day > 366)
+                            throw new MismatchException("The \"" + day + "\" is not a day of year.", backup.getBackup(), this.pattern);
+                        List<Pair<Integer, Integer>> days = getMonthAndDay(day);
+                        if (days.isEmpty())
+                            throw new MismatchException("The \"" + day + "\" is not a day of year.", backup.getBackup(), this.pattern);
+                        else if (days.size() == 1) {
+                            storage.setMonth(days.get(0).getKey());
+                            storage.setDay(days.get(0).getValue());
+                        } else {
+                            // TODO select a day
+                        }
                     } else {
-                        int day = Integer.parseInt(value);
                         if (day == 0 || day > 31)
                             throw new MismatchException("The \"" + day + "\" is not a day.", backup.getBackup(), this.pattern);
                         storage.setDay(Integer.parseInt(value));
@@ -75,5 +92,32 @@ public class DayStrategy extends Strategy {
                 throw new MismatchException("The \"" + value + "\" is not a day.", backup.getBackup(), this.pattern);
             }
         }
+    }
+
+    public List<Pair<Integer, Integer>> getMonthAndDay(int dayOfYear) {
+        if (dayOfYear == 366)
+            return Collections.singletonList(new Pair<>(12, 31));
+        else if (dayOfYear < 60)
+            return Collections.singletonList(new Pair<>(
+                    dayOfYear > 31 ? 2 : 1,
+                    dayOfYear > 31 ? dayOfYear - 31 : dayOfYear
+            ));
+        else {
+            for (int i = 2, len = END_DAY_OF_MONTHS.size(); i < len; i++) {
+                if (END_DAY_OF_MONTHS.get(i) + 1 == dayOfYear) {
+                    return Arrays.asList(
+                            new Pair<>(i, dayOfYear - END_DAY_OF_MONTHS.get(i - 1) - 1),
+                            new Pair<>(i + 1, 1)
+                    );
+                }
+                if (END_DAY_OF_MONTHS.get(i - 1) < dayOfYear && dayOfYear <= END_DAY_OF_MONTHS.get(i)) {
+                    return Arrays.asList(
+                            new Pair<>(i, dayOfYear - END_DAY_OF_MONTHS.get(i - 1) - 1),
+                            new Pair<>(i, dayOfYear - END_DAY_OF_MONTHS.get(i - 1))
+                    );
+                }
+            }
+        }
+        return Collections.emptyList();
     }
 }
