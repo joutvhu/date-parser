@@ -54,17 +54,20 @@ public class DayStrategy extends Strategy {
             if (CommonUtil.isNumber(first, value)) {
                 try {
                     this.nextStrategy(chain);
-                    if (this.dayInYear) {
-                        // TODO: save day in year
-                    } else {
-                        storage.setDay(Integer.parseInt(value));
-                    }
-                    return;
                 } catch (MismatchException e) {
-                    if (!iterator.hasNext()) {
-                        backup.restore();
-                        throw e;
-                    }
+                    if (iterator.hasNext())
+                        continue;
+                    backup.restore();
+                    throw e;
+                }
+
+                if (this.dayInYear) {
+                    // TODO: save day in year
+                } else {
+                    int day = Integer.parseInt(value);
+                    if (day == 0 || day > 31)
+                        throw new MismatchException("The \"" + day + "\" is not a day.", backup.getBackup(), this.pattern);
+                    storage.setDay(Integer.parseInt(value));
                 }
             } else {
                 backup.restore();
