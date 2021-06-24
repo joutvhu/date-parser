@@ -2,6 +2,11 @@ package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
+import com.joutvhu.date.parser.exception.MismatchException;
+import com.joutvhu.date.parser.util.ZoneUtil;
+
+import java.util.Iterator;
+import java.util.TimeZone;
 
 public class ZoneStrategy extends Strategy {
     public ZoneStrategy(char c) {
@@ -15,6 +20,26 @@ public class ZoneStrategy extends Strategy {
 
     @Override
     public void parse(DateStorage storage, StringSource source, NextStrategy chain) {
-        this.nextStrategy(chain);
+        StringSource.PositionBackup backup = source.backup();
+        Iterator<String> iterator = source.iterator(this.pattern.length());
+
+        while (iterator.hasNext()) {
+            String value = iterator.next();
+            TimeZone timeZone = ZoneUtil.getTimeZone(value);
+            if (timeZone != null) {
+                try {
+                    this.nextStrategy(chain);
+                    storage.setZone(timeZone);
+                } catch (MismatchException e) {
+                    if (!iterator.hasNext()) {
+                        backup.restore();
+                        throw e;
+                    }
+                }
+            }
+        }
+
+        backup.restore();
+        throw new MismatchException("The time zone is invalid.", backup.getBackup(), this.pattern);
     }
 }

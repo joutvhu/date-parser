@@ -153,15 +153,16 @@ public class ZoneUtil {
         ZoneId zone = zoneIdByName(zoneId);
         if (zone != null)
             return zone;
-
-        try {
+        else
             return ZoneId.of(zoneId);
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     public TimeZone getTimeZone(String zone) {
-        return TimeZone.getTimeZone(zoneIdOf(zone));
+        try {
+            ZoneId zoneId = zoneIdOf(zone);
+            return zoneId != null ? TimeZone.getTimeZone(zoneId) : null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

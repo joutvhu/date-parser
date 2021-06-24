@@ -61,6 +61,10 @@ public class StringSource extends ParsePosition {
         }
     }
 
+    public Iterator<String> iterator(int from) {
+        return iterator(from, this.getLength() - this.getIndex());
+    }
+
     public Iterator<String> iterator(int from, int to) {
         return new Iterator<String>() {
             private final StringSource source = StringSource.this;
