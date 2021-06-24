@@ -14,7 +14,7 @@ public class QuarterStrategy extends Strategy {
 
     @Override
     public boolean add(char c) {
-        return add(false, c, c == 'o');
+        return add(c == this.pattern.charAt(0), c, c == 'o');
     }
 
     @Override
