@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateStorage;
+import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 
@@ -22,21 +22,21 @@ public class AmPmStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateStorage storage, StringSource source, NextStrategy chain) {
+    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
         StringSource.PositionBackup backup = source.backup();
         String value = source.get(2);
 
         try {
             if ("am".equalsIgnoreCase(value)) {
                 this.nextStrategy(chain);
-                storage.put(AM_PM, AM);
+                builder.put(AM_PM, AM);
                 return;
             } else if ("pm".equalsIgnoreCase(value)) {
                 this.nextStrategy(chain);
-                Integer hour = storage.getHour();
+                Integer hour = builder.getHour();
                 if (hour != null && hour < 12)
-                    storage.setHour(hour + 12);
-                storage.put(AM_PM, PM);
+                    builder.setHour(hour + 12);
+                builder.put(AM_PM, PM);
                 return;
             }
         } catch (Exception e) {

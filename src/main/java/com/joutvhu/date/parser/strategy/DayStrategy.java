@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateStorage;
+import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
@@ -37,7 +37,7 @@ public class DayStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateStorage storage, StringSource source, NextStrategy chain) {
+    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
         AtomicBoolean first = new AtomicBoolean(true);
         int len = this.ordinal ? this.pattern.length() + 1 : this.pattern.length();
         StringSource.PositionBackup backup = source.backup();
@@ -72,15 +72,15 @@ public class DayStrategy extends Strategy {
                         if (days.isEmpty())
                             throw new MismatchPatternException("The \"" + day + "\" is not a day of year.", backup.getBackup(), this.pattern);
                         else if (days.size() == 1) {
-                            storage.setMonth(days.get(0).getKey());
-                            storage.setDay(days.get(0).getValue());
+                            builder.setMonth(days.get(0).getKey());
+                            builder.setDay(days.get(0).getValue());
                         } else {
-                            storage.put(DAYS, days);
+                            builder.put(DAYS, days);
                         }
                     } else {
                         if (day == 0 || day > 31)
                             throw new MismatchPatternException("The \"" + day + "\" is not a day.", backup.getBackup(), this.pattern);
-                        storage.setDay(Integer.parseInt(value));
+                        builder.setDay(Integer.parseInt(value));
                     }
                     return;
                 } catch (Exception e) {

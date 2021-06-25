@@ -10,7 +10,7 @@ import java.util.TimeZone;
 
 @Getter
 @Setter
-public class DateStorage {
+public class DateBuilder {
     private Integer year;
     private Integer month;
     private Integer day;
@@ -25,7 +25,7 @@ public class DateStorage {
 
     private Map<String, Object> extension;
 
-    public DateStorage(Locale locale, TimeZone zone) {
+    public DateBuilder(Locale locale, TimeZone zone) {
         this.locale = locale;
         this.zone = zone;
         this.extension = new HashMap<>();

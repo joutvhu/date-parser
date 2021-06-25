@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.support;
 
-import com.joutvhu.date.parser.domain.DateStorage;
+import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.strategy.NextStrategy;
@@ -30,9 +30,9 @@ public class DateFormat {
         this.endIndex = this.strategies.size() - 1;
     }
 
-    private void parse(DateStorage storage, StringSource source, int index) {
+    private void parse(DateBuilder builder, StringSource source, int index) {
         if (index < this.endIndex) {
-            this.strategies.get(index).parse(storage, source, new NextStrategy() {
+            this.strategies.get(index).parse(builder, source, new NextStrategy() {
                 @Override
                 public Strategy get() {
                     return DateFormat.this.strategies.get(index + 1);
@@ -40,11 +40,11 @@ public class DateFormat {
 
                 @Override
                 public void next() {
-                    DateFormat.this.parse(storage, source, index + 1);
+                    DateFormat.this.parse(builder, source, index + 1);
                 }
             });
         } else if (index == this.endIndex) {
-            this.strategies.get(index).parse(storage, source, new NextStrategy() {
+            this.strategies.get(index).parse(builder, source, new NextStrategy() {
                 @Override
                 public Strategy get() {
                     return null;
@@ -59,10 +59,10 @@ public class DateFormat {
         }
     }
 
-    public DateStorage parse(String value) {
-        DateStorage storage = new DateStorage(this.locale, this.zone);
+    public DateBuilder parse(String value) {
+        DateBuilder builder = new DateBuilder(this.locale, this.zone);
         StringSource source = new StringSource(value);
-        this.parse(storage, source, 0);
-        return storage;
+        this.parse(builder, source, 0);
+        return builder;
     }
 }

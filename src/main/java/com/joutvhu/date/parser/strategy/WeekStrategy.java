@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateStorage;
+import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
@@ -27,20 +27,20 @@ public class WeekStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateStorage storage, StringSource source, NextStrategy chain) {
+    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
         StringSource.PositionBackup backup = source.backup();
 
         if (!this.tryParse(
-                storage,
+                builder,
                 chain,
                 backup,
                 source.get(this.ordinal ? this.pattern.length() + 1 : this.pattern.length()),
                 this.pattern.length() > (this.ordinal ? 2 : 1)))
-            this.tryParse(storage, chain, backup, source.get(this.ordinal ? 3 : 1), true);
+            this.tryParse(builder, chain, backup, source.get(this.ordinal ? 3 : 1), true);
     }
 
     private boolean tryParse(
-            DateStorage storage,
+            DateBuilder builder,
             NextStrategy chain,
             StringSource.PositionBackup backup,
             String value,
@@ -68,7 +68,7 @@ public class WeekStrategy extends Strategy {
                 }
 
                 this.nextStrategy(chain);
-                storage.put(WEEK, week);
+                builder.put(WEEK, week);
                 return true;
             } catch (Exception e) {
                 backup.restore();

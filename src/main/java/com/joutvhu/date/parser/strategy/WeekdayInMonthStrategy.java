@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateStorage;
+import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 
@@ -17,7 +17,7 @@ public class WeekdayInMonthStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateStorage storage, StringSource source, NextStrategy chain) {
+    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
         StringSource.PositionBackup backup = source.backup();
         Character value = source.character();
 
@@ -26,7 +26,7 @@ public class WeekdayInMonthStrategy extends Strategy {
             try {
                 this.nextStrategy(chain);
                 int weekdayInMonth = value - '0';
-                storage.put(WEEKDAY_IN_MONTH, weekdayInMonth);
+                builder.put(WEEKDAY_IN_MONTH, weekdayInMonth);
             } catch (Exception e) {
                 backup.restore();
                 throw e;

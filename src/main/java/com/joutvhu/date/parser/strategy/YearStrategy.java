@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateStorage;
+import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
@@ -26,7 +26,7 @@ public class YearStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateStorage storage, StringSource source, NextStrategy chain) {
+    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
         AtomicBoolean first = new AtomicBoolean(true);
         StringSource.PositionBackup backup = source.backup();
         Iterator<String> iterator = source.iterator(this.length, 4);
@@ -36,7 +36,7 @@ public class YearStrategy extends Strategy {
             if (CommonUtil.isNumber(first, value)) {
                 try {
                     this.nextStrategy(chain);
-                    storage.setYear(Integer.parseInt(value));
+                    builder.setYear(Integer.parseInt(value));
                     return;
                 } catch (Exception e) {
                     if (!iterator.hasNext()) {
