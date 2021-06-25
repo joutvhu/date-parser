@@ -18,7 +18,7 @@ public class DayStrategy extends Strategy {
     private static final List<Integer> END_DAY_OF_MONTHS = Arrays.asList(0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365);
     private static final List<Integer> CONFLICT_DAYS = Arrays.asList(60, 91, 121, 152, 182, 213, 244, 274, 305, 335);
 
-    private boolean dayInYear;
+    private final boolean dayInYear;
     private boolean ordinal;
 
     public DayStrategy(char c) {

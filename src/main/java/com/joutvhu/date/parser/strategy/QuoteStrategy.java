@@ -5,7 +5,7 @@ import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchException;
 
 public class QuoteStrategy extends Strategy {
-    private boolean quoted;
+    private final boolean quoted;
     private Boolean end;
 
     public QuoteStrategy(char c) {

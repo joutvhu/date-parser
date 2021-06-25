@@ -8,8 +8,8 @@ import com.joutvhu.date.parser.util.CommonUtil;
 import java.util.Iterator;
 
 public class HourStrategy extends Strategy {
-    private boolean hour24;
-    private boolean startFrom0;
+    private final boolean hour24;
+    private final boolean startFrom0;
 
     public HourStrategy(char c) {
         super(c);

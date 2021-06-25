@@ -8,7 +8,7 @@ import com.joutvhu.date.parser.util.CommonUtil;
 public class WeekStrategy extends Strategy {
     public static final String WEEK = "week";
 
-    private boolean weekInYear;
+    private final boolean weekInYear;
     private boolean ordinal;
 
     public WeekStrategy(char c) {

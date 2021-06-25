@@ -30,6 +30,7 @@ public class MillisecondStrategy extends Strategy {
                 this.nextStrategy(chain);
                 int nano = Integer.parseInt(CommonUtil.rightPad(value, 9, '0'));
                 storage.setNano(nano);
+                return;
             } else {
                 backup.restore();
                 throw new MismatchException("The \"" + value + "\" is not a millisecond.", backup.getBackup(), this.pattern);

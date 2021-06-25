@@ -30,6 +30,7 @@ public class ZoneStrategy extends Strategy {
                 try {
                     this.nextStrategy(chain);
                     storage.setZone(timeZone);
+                    return;
                 } catch (MismatchException e) {
                     if (!iterator.hasNext()) {
                         backup.restore();

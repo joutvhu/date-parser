@@ -9,7 +9,7 @@ public class AmPmStrategy extends Strategy {
     public static final String PM = "pm";
     public static final String AM_PM = "am/pm";
 
-    private boolean upperCase;
+    private final boolean upperCase;
 
     public AmPmStrategy(char c) {
         super(c);

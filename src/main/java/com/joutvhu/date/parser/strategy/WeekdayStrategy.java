@@ -14,7 +14,7 @@ public class WeekdayStrategy extends Strategy {
     private static final List<String> SHORT_WEEKDAYS = Arrays.asList("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun");
     private static final List<String> LONG_WEEKDAYS = Arrays.asList("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
 
-    private boolean text;
+    private final boolean text;
 
     public WeekdayStrategy(char c) {
         super(c);
