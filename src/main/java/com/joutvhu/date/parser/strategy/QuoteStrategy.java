@@ -2,7 +2,7 @@ package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
-import com.joutvhu.date.parser.exception.MismatchException;
+import com.joutvhu.date.parser.exception.MismatchPatternException;
 
 public class QuoteStrategy extends Strategy {
     private final boolean quoted;
@@ -46,11 +46,16 @@ public class QuoteStrategy extends Strategy {
     public void parse(DateStorage storage, StringSource source, NextStrategy chain) {
         StringSource.PositionBackup backup = source.backup();
         String value = source.get(this.pattern.length());
-        if (pattern.equals(value))
-            this.nextStrategy(chain);
-        else {
+        if (pattern.equals(value)) {
+            try {
+                this.nextStrategy(chain);
+            } catch (Exception e) {
+                backup.restore();
+                throw e;
+            }
+        } else {
             backup.restore();
-            throw new MismatchException(
+            throw new MismatchPatternException(
                     "The quote \"" + value + "\" not match with \"" + this.pattern + "\".",
                     source.getIndex(),
                     this.pattern

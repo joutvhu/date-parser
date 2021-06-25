@@ -2,7 +2,7 @@ package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
-import com.joutvhu.date.parser.exception.MismatchException;
+import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 public class WeekStrategy extends Strategy {
@@ -52,7 +52,7 @@ public class WeekStrategy extends Strategy {
             else {
                 backup.restore();
                 if (throwable)
-                    throw new MismatchException("The \"" + value + "\" of week must be end with an ordinal.", backup.getBackup(), this.pattern);
+                    throw new MismatchPatternException("The \"" + value + "\" of week must be end with an ordinal.", backup.getBackup(), this.pattern);
             }
         }
 
@@ -61,16 +61,16 @@ public class WeekStrategy extends Strategy {
                 int week = Integer.parseInt(value);
                 if (weekInYear) {
                     if (week < 1 || week > 53)
-                        throw new MismatchException("The \"" + week + "\" is not a week of year.", backup.getBackup(), this.pattern);
+                        throw new MismatchPatternException("The \"" + week + "\" is not a week of year.", backup.getBackup(), this.pattern);
                 } else {
                     if (week < 1 || week > 6)
-                        throw new MismatchException("The \"" + week + "\" is not a week of month.", backup.getBackup(), this.pattern);
+                        throw new MismatchPatternException("The \"" + week + "\" is not a week of month.", backup.getBackup(), this.pattern);
                 }
 
                 this.nextStrategy(chain);
                 storage.put(WEEK, week);
                 return true;
-            } catch (MismatchException e) {
+            } catch (Exception e) {
                 backup.restore();
                 if (throwable)
                     throw e;
@@ -78,7 +78,7 @@ public class WeekStrategy extends Strategy {
         } else {
             backup.restore();
             if (throwable)
-                throw new MismatchException("The \"" + value + "\" is not a week.", backup.getBackup(), this.pattern);
+                throw new MismatchPatternException("The \"" + value + "\" is not a week.", backup.getBackup(), this.pattern);
         }
         return false;
     }

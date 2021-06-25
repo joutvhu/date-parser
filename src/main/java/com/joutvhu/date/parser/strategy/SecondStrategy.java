@@ -2,7 +2,7 @@ package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
-import com.joutvhu.date.parser.exception.MismatchException;
+import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.util.Iterator;
@@ -28,12 +28,12 @@ public class SecondStrategy extends Strategy {
                 try {
                     int second = Integer.parseInt(value);
                     if (second < 0 || second > 59)
-                        throw new MismatchException("The \"" + value + "\" is not a second.", backup.getBackup(), this.pattern);
+                        throw new MismatchPatternException("The \"" + value + "\" is not a second.", backup.getBackup(), this.pattern);
 
                     this.nextStrategy(chain);
                     storage.setSecond(second);
                     return;
-                } catch (MismatchException e) {
+                } catch (Exception e) {
                     if (!iterator.hasNext()) {
                         backup.restore();
                         throw e;
@@ -41,7 +41,7 @@ public class SecondStrategy extends Strategy {
                 }
             } else {
                 backup.restore();
-                throw new MismatchException("The \"" + value + "\" is not a second.", backup.getBackup(), this.pattern);
+                throw new MismatchPatternException("The \"" + value + "\" is not a second.", backup.getBackup(), this.pattern);
             }
         }
     }

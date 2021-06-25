@@ -2,7 +2,7 @@ package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
-import com.joutvhu.date.parser.exception.MismatchException;
+import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 import javafx.util.Pair;
 
@@ -52,7 +52,7 @@ public class DayStrategy extends Strategy {
                 else {
                     if (!iterator.hasNext()) {
                         backup.restore();
-                        throw new MismatchException(
+                        throw new MismatchPatternException(
                                 "The \"" + value + "\" of day must be end with an ordinal.",
                                 backup.getBackup(),
                                 this.pattern);
@@ -67,10 +67,10 @@ public class DayStrategy extends Strategy {
                     int day = Integer.parseInt(value);
                     if (this.dayInYear) {
                         if (day == 0 || day > 366)
-                            throw new MismatchException("The \"" + day + "\" is not a day of year.", backup.getBackup(), this.pattern);
+                            throw new MismatchPatternException("The \"" + day + "\" is not a day of year.", backup.getBackup(), this.pattern);
                         List<Pair<Integer, Integer>> days = getMonthAndDay(day);
                         if (days.isEmpty())
-                            throw new MismatchException("The \"" + day + "\" is not a day of year.", backup.getBackup(), this.pattern);
+                            throw new MismatchPatternException("The \"" + day + "\" is not a day of year.", backup.getBackup(), this.pattern);
                         else if (days.size() == 1) {
                             storage.setMonth(days.get(0).getKey());
                             storage.setDay(days.get(0).getValue());
@@ -79,11 +79,11 @@ public class DayStrategy extends Strategy {
                         }
                     } else {
                         if (day == 0 || day > 31)
-                            throw new MismatchException("The \"" + day + "\" is not a day.", backup.getBackup(), this.pattern);
+                            throw new MismatchPatternException("The \"" + day + "\" is not a day.", backup.getBackup(), this.pattern);
                         storage.setDay(Integer.parseInt(value));
                     }
                     return;
-                } catch (MismatchException e) {
+                } catch (Exception e) {
                     if (iterator.hasNext())
                         continue;
                     backup.restore();
@@ -91,7 +91,7 @@ public class DayStrategy extends Strategy {
                 }
             } else {
                 backup.restore();
-                throw new MismatchException("The \"" + value + "\" is not a day.", backup.getBackup(), this.pattern);
+                throw new MismatchPatternException("The \"" + value + "\" is not a day.", backup.getBackup(), this.pattern);
             }
         }
     }

@@ -2,7 +2,7 @@ package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
-import com.joutvhu.date.parser.exception.MismatchException;
+import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.util.Arrays;
@@ -56,12 +56,12 @@ public class WeekdayStrategy extends Strategy {
             try {
                 int weekday = Integer.parseInt(value);
                 if (weekday < 1 || weekday > 6)
-                    throw new MismatchException("The \"" + weekday + "\" is not a day of week.", backup.getBackup(), this.pattern);
+                    throw new MismatchPatternException("The \"" + weekday + "\" is not a day of week.", backup.getBackup(), this.pattern);
 
                 this.nextStrategy(chain);
                 storage.put(WEEKDAY, weekday);
                 return true;
-            } catch (MismatchException e) {
+            } catch (Exception e) {
                 backup.restore();
                 if (throwable)
                     throw e;
@@ -69,7 +69,7 @@ public class WeekdayStrategy extends Strategy {
         } else {
             backup.restore();
             if (throwable)
-                throw new MismatchException("The \"" + value + "\" is not a day of week.", backup.getBackup(), this.pattern);
+                throw new MismatchPatternException("The \"" + value + "\" is not a day of week.", backup.getBackup(), this.pattern);
         }
         return false;
     }
@@ -90,7 +90,7 @@ public class WeekdayStrategy extends Strategy {
         }
 
         backup.restore();
-        throw new MismatchException("The \"" + value + "\" is not a day of week.", backup.getBackup(), this.pattern);
+        throw new MismatchPatternException("The \"" + value + "\" is not a day of week.", backup.getBackup(), this.pattern);
     }
 
     private void tryParse(
@@ -105,7 +105,7 @@ public class WeekdayStrategy extends Strategy {
             try {
                 this.nextStrategy(chain);
                 storage.put(WEEKDAY, value);
-            } catch (MismatchException e) {
+            } catch (Exception e) {
                 if (throwable) {
                     backup.restore();
                     throw e;

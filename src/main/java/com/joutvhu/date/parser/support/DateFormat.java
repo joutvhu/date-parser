@@ -1,11 +1,10 @@
-package com.joutvhu.date.parser;
+package com.joutvhu.date.parser.support;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
-import com.joutvhu.date.parser.exception.MismatchException;
+import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.strategy.NextStrategy;
 import com.joutvhu.date.parser.strategy.Strategy;
-import com.joutvhu.date.parser.support.DatePatternSplitter;
 
 import java.util.List;
 import java.util.Locale;
@@ -54,7 +53,7 @@ public class DateFormat {
                 @Override
                 public void next() {
                     if (source.getIndex() < source.getLength())
-                        throw new MismatchException("Does not finish at the end of string.", source.getIndex(), null);
+                        throw new MismatchPatternException("Does not finish at the end of string.", source.getIndex(), null);
                 }
             });
         }
