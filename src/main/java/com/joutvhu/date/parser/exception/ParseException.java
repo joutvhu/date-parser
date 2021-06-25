@@ -1,4 +1,4 @@
-package com.joutvhu.date.parser;
+package com.joutvhu.date.parser.exception;
 
 public class ParseException extends RuntimeException {
     private String[] patterns;
