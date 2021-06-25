@@ -2,7 +2,7 @@ package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
-import com.joutvhu.date.parser.exception.MismatchException;
+import com.joutvhu.date.parser.exception.MismatchPatternException;
 
 public class EraStrategy extends Strategy {
     public static final String AD = "AD";
@@ -33,12 +33,12 @@ public class EraStrategy extends Strategy {
                 storage.put(ERA, BC);
                 return;
             }
-        } catch (MismatchException e) {
+        } catch (Exception e) {
             backup.restore();
             throw e;
         }
 
         backup.restore();
-        throw new MismatchException("The \"" + value + "\" must be \"AD\" or \"BC\".", backup.getBackup(), this.pattern);
+        throw new MismatchPatternException("The \"" + value + "\" must be \"AD\" or \"BC\".", backup.getBackup(), this.pattern);
     }
 }

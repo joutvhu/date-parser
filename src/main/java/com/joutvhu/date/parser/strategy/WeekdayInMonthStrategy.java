@@ -2,7 +2,7 @@ package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
-import com.joutvhu.date.parser.exception.MismatchException;
+import com.joutvhu.date.parser.exception.MismatchPatternException;
 
 public class WeekdayInMonthStrategy extends Strategy {
     public static final String WEEKDAY_IN_MONTH = "weekday_in_month";
@@ -27,12 +27,12 @@ public class WeekdayInMonthStrategy extends Strategy {
                 this.nextStrategy(chain);
                 int weekdayInMonth = value - '0';
                 storage.put(WEEKDAY_IN_MONTH, weekdayInMonth);
-            } catch (MismatchException e) {
+            } catch (Exception e) {
                 backup.restore();
                 throw e;
             }
         } else {
-            throw new MismatchException("The \"" + value + "\" is not a week in month.", backup.getBackup(), this.pattern);
+            throw new MismatchPatternException("The \"" + value + "\" is not a week in month.", backup.getBackup(), this.pattern);
         }
     }
 }

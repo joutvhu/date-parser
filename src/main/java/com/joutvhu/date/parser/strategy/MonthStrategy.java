@@ -2,7 +2,7 @@ package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
-import com.joutvhu.date.parser.exception.MismatchException;
+import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.util.Arrays;
@@ -56,7 +56,7 @@ public class MonthStrategy extends Strategy {
                     if (iterator.hasNext())
                         continue;
                     backup.restore();
-                    throw new MismatchException("The \"" + value + "\" of month must be end with an ordinal.", backup.getBackup(), this.pattern);
+                    throw new MismatchPatternException("The \"" + value + "\" of month must be end with an ordinal.", backup.getBackup(), this.pattern);
                 }
             }
 
@@ -64,12 +64,12 @@ public class MonthStrategy extends Strategy {
                 try {
                     int month = Integer.parseInt(value);
                     if (month < 1 || month > 12)
-                        throw new MismatchException("The \"" + month + "\" is not a month.", backup.getBackup(), this.pattern);
+                        throw new MismatchPatternException("The \"" + month + "\" is not a month.", backup.getBackup(), this.pattern);
 
                     this.nextStrategy(chain);
                     storage.setMonth(month);
                     return;
-                } catch (MismatchException e) {
+                } catch (Exception e) {
                     if (iterator.hasNext())
                         continue;
                     backup.restore();
@@ -77,7 +77,7 @@ public class MonthStrategy extends Strategy {
                 }
             } else {
                 backup.restore();
-                throw new MismatchException("The \"" + value + "\" is not a month.", backup.getBackup(), this.pattern);
+                throw new MismatchPatternException("The \"" + value + "\" is not a month.", backup.getBackup(), this.pattern);
             }
         }
     }
@@ -98,7 +98,7 @@ public class MonthStrategy extends Strategy {
         }
 
         backup.restore();
-        throw new MismatchException("The \"" + value + "\" is not a month.", backup.getBackup(), this.pattern);
+        throw new MismatchPatternException("The \"" + value + "\" is not a month.", backup.getBackup(), this.pattern);
     }
 
     private void tryParse(
@@ -112,7 +112,7 @@ public class MonthStrategy extends Strategy {
             try {
                 this.nextStrategy(chain);
                 storage.setMonth(value);
-            } catch (MismatchException e) {
+            } catch (Exception e) {
                 if (throwable) {
                     backup.restore();
                     throw e;

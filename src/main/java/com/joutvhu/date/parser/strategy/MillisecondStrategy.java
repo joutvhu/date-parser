@@ -2,7 +2,7 @@ package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
-import com.joutvhu.date.parser.exception.MismatchException;
+import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.util.Iterator;
@@ -27,13 +27,20 @@ public class MillisecondStrategy extends Strategy {
         while (iterator.hasNext()) {
             String value = iterator.next();
             if (CommonUtil.isNumber(first, value)) {
-                this.nextStrategy(chain);
-                int nano = Integer.parseInt(CommonUtil.rightPad(value, 9, '0'));
-                storage.setNano(nano);
-                return;
+                try {
+                    this.nextStrategy(chain);
+                    int nano = Integer.parseInt(CommonUtil.rightPad(value, 9, '0'));
+                    storage.setNano(nano);
+                    return;
+                } catch (Exception e) {
+                    if (!iterator.hasNext()) {
+                        backup.restore();
+                        throw e;
+                    }
+                }
             } else {
                 backup.restore();
-                throw new MismatchException("The \"" + value + "\" is not a millisecond.", backup.getBackup(), this.pattern);
+                throw new MismatchPatternException("The \"" + value + "\" is not a millisecond.", backup.getBackup(), this.pattern);
             }
         }
     }

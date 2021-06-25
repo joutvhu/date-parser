@@ -2,7 +2,7 @@ package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
-import com.joutvhu.date.parser.exception.MismatchException;
+import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.util.Iterator;
@@ -38,7 +38,7 @@ public class YearStrategy extends Strategy {
                     this.nextStrategy(chain);
                     storage.setYear(Integer.parseInt(value));
                     return;
-                } catch (MismatchException e) {
+                } catch (Exception e) {
                     if (!iterator.hasNext()) {
                         backup.restore();
                         throw e;
@@ -46,7 +46,7 @@ public class YearStrategy extends Strategy {
                 }
             } else {
                 backup.restore();
-                throw new MismatchException("The \"" + value + "\" is not a year.", backup.getBackup(), this.pattern);
+                throw new MismatchPatternException("The \"" + value + "\" is not a year.", backup.getBackup(), this.pattern);
             }
         }
     }

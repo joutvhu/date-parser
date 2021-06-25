@@ -2,7 +2,7 @@ package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
-import com.joutvhu.date.parser.exception.MismatchException;
+import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.util.Iterator;
@@ -38,7 +38,7 @@ public class HourStrategy extends Strategy {
                         if (!startFrom0 && hour == 24)
                             hour = 0;
                         if (hour < 0 || hour > 23)
-                            throw new MismatchException("The \"" + value + "\" is not a hour.", backup.getBackup(), this.pattern);
+                            throw new MismatchPatternException("The \"" + value + "\" is not a hour.", backup.getBackup(), this.pattern);
                         storage.setHour(hour);
                     } else {
                         if (!startFrom0 && hour == 12)
@@ -47,13 +47,13 @@ public class HourStrategy extends Strategy {
                         if (hour < 12 && AmPmStrategy.PM.equals(am_pm))
                             hour += 12;
                         if (hour < 0 || hour > 24 || AmPmStrategy.AM.equals(am_pm) && hour > 11)
-                            throw new MismatchException("The \"" + value + "\" is not a hour.", backup.getBackup(), this.pattern);
+                            throw new MismatchPatternException("The \"" + value + "\" is not a hour.", backup.getBackup(), this.pattern);
                         if (!startFrom0 && hour == 24)
                             hour = 0;
                         storage.setHour(hour);
                     }
                     return;
-                } catch (MismatchException e) {
+                } catch (Exception e) {
                     if (!iterator.hasNext()) {
                         backup.restore();
                         throw e;
@@ -61,7 +61,7 @@ public class HourStrategy extends Strategy {
                 }
             } else {
                 backup.restore();
-                throw new MismatchException("The \"" + value + "\" is not a hour.", backup.getBackup(), this.pattern);
+                throw new MismatchPatternException("The \"" + value + "\" is not a hour.", backup.getBackup(), this.pattern);
             }
         }
     }

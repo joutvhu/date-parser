@@ -2,7 +2,7 @@ package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
-import com.joutvhu.date.parser.exception.MismatchException;
+import com.joutvhu.date.parser.exception.MismatchPatternException;
 
 public class AmPmStrategy extends Strategy {
     public static final String AM = "am";
@@ -39,12 +39,12 @@ public class AmPmStrategy extends Strategy {
                 storage.put(AM_PM, PM);
                 return;
             }
-        } catch (MismatchException e) {
+        } catch (Exception e) {
             backup.restore();
             throw e;
         }
 
         backup.restore();
-        throw new MismatchException("The \"" + value + "\" must be \"AM\" or \"PM\".", backup.getBackup(), this.pattern);
+        throw new MismatchPatternException("The \"" + value + "\" must be \"AM\" or \"PM\".", backup.getBackup(), this.pattern);
     }
 }

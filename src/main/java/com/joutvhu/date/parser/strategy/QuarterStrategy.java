@@ -2,7 +2,7 @@ package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
-import com.joutvhu.date.parser.exception.MismatchException;
+import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 public class QuarterStrategy extends Strategy {
@@ -34,7 +34,7 @@ public class QuarterStrategy extends Strategy {
                 value = value.substring(0, value.length() - 2);
             else {
                 backup.restore();
-                throw new MismatchException("The \"" + value + "\" of quarter must be end with an ordinal.", backup.getBackup(), this.pattern);
+                throw new MismatchPatternException("The \"" + value + "\" of quarter must be end with an ordinal.", backup.getBackup(), this.pattern);
             }
         }
 
@@ -42,10 +42,10 @@ public class QuarterStrategy extends Strategy {
             try {
                 int quarter = Integer.parseInt(value);
                 if (quarter < 1 || quarter > 4)
-                    throw new MismatchException("The \"" + quarter + "\" is not a quarter.", backup.getBackup(), this.pattern);
+                    throw new MismatchPatternException("The \"" + quarter + "\" is not a quarter.", backup.getBackup(), this.pattern);
                 this.nextStrategy(chain);
                 storage.put(QUARTER, quarter);
-            } catch (MismatchException e) {
+            } catch (Exception e) {
                 backup.restore();
                 throw e;
             }
