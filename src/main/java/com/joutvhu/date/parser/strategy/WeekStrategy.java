@@ -6,6 +6,8 @@ import com.joutvhu.date.parser.exception.MismatchException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 public class WeekStrategy extends Strategy {
+    public static final String WEEK = "week";
+
     private boolean weekInYear;
     private boolean ordinal;
 
@@ -66,7 +68,7 @@ public class WeekStrategy extends Strategy {
                 }
 
                 this.nextStrategy(chain);
-                // TODO set week
+                storage.put(WEEK, week);
                 return true;
             } catch (MismatchException e) {
                 backup.restore();

@@ -5,6 +5,8 @@ import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchException;
 
 public class WeekdayInMonthStrategy extends Strategy {
+    public static final String WEEKDAY_IN_MONTH = "weekday_in_month";
+
     public WeekdayInMonthStrategy(char c) {
         super(c);
     }
@@ -23,8 +25,8 @@ public class WeekdayInMonthStrategy extends Strategy {
             source.next();
             try {
                 this.nextStrategy(chain);
-                int weekInMonth = value - '0';
-                // TODO save day of week in month
+                int weekdayInMonth = value - '0';
+                storage.put(WEEKDAY_IN_MONTH, weekdayInMonth);
             } catch (MismatchException e) {
                 backup.restore();
                 throw e;

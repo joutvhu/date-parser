@@ -5,6 +5,10 @@ import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchException;
 
 public class EraStrategy extends Strategy {
+    public static final String AD = "AD";
+    public static final String BC = "BC";
+    public static final String ERA = "era";
+
     public EraStrategy(char c) {
         super(c);
     }
@@ -22,11 +26,11 @@ public class EraStrategy extends Strategy {
         try {
             if ("AD".equalsIgnoreCase(value)) {
                 this.nextStrategy(chain);
-                // TODO save AD
+                storage.put(ERA, AD);
                 return;
             } else if ("BC".equalsIgnoreCase(value)) {
                 this.nextStrategy(chain);
-                // TODO save BC
+                storage.put(ERA, BC);
                 return;
             }
         } catch (MismatchException e) {

@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DayStrategy extends Strategy {
+    public static final String DAYS = "days";
+
     private static final List<Integer> END_DAY_OF_MONTHS = Arrays.asList(0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365);
     private static final List<Integer> CONFLICT_DAYS = Arrays.asList(60, 91, 121, 152, 182, 213, 244, 274, 305, 335);
 
@@ -73,7 +75,7 @@ public class DayStrategy extends Strategy {
                             storage.setMonth(days.get(0).getKey());
                             storage.setDay(days.get(0).getValue());
                         } else {
-                            // TODO select a day
+                            storage.put(DAYS, days);
                         }
                     } else {
                         if (day == 0 || day > 31)

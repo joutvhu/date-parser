@@ -6,6 +6,8 @@ import com.joutvhu.date.parser.exception.MismatchException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 public class QuarterStrategy extends Strategy {
+    public static final String QUARTER = "quarter";
+
     private boolean ordinal;
 
     public QuarterStrategy(char c) {
@@ -42,7 +44,7 @@ public class QuarterStrategy extends Strategy {
                 if (quarter < 1 || quarter > 4)
                     throw new MismatchException("The \"" + quarter + "\" is not a quarter.", backup.getBackup(), this.pattern);
                 this.nextStrategy(chain);
-                // TODO save quarter
+                storage.put(QUARTER, quarter);
             } catch (MismatchException e) {
                 backup.restore();
                 throw e;

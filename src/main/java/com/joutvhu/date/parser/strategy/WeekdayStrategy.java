@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WeekdayStrategy extends Strategy {
+    public static final String WEEKDAY = "weekday";
+
     private static final List<String> SHORT_WEEKDAYS = Arrays.asList("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun");
     private static final List<String> LONG_WEEKDAYS = Arrays.asList("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
 
@@ -57,7 +59,7 @@ public class WeekdayStrategy extends Strategy {
                     throw new MismatchException("The \"" + weekday + "\" is not a day of week.", backup.getBackup(), this.pattern);
 
                 this.nextStrategy(chain);
-                // TODO set weekday
+                storage.put(WEEKDAY, weekday);
                 return true;
             } catch (MismatchException e) {
                 backup.restore();
@@ -102,7 +104,7 @@ public class WeekdayStrategy extends Strategy {
         if (value > 0 && value < 8) {
             try {
                 this.nextStrategy(chain);
-                // TODO set weekday
+                storage.put(WEEKDAY, value);
             } catch (MismatchException e) {
                 if (throwable) {
                     backup.restore();

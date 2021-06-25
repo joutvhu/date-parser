@@ -8,6 +8,8 @@ import com.joutvhu.date.parser.util.CommonUtil;
 import java.util.Iterator;
 
 public class CenturyStrategy extends Strategy {
+    public static final String CENTURY = "century";
+
     public CenturyStrategy(char c) {
         super(c);
     }
@@ -26,8 +28,9 @@ public class CenturyStrategy extends Strategy {
             String value = iterator.next();
             if (CommonUtil.isNumber(value)) {
                 try {
+                    int century = Integer.parseInt(value);
                     this.nextStrategy(chain);
-                    // TODO save century
+                    storage.put(CENTURY, century);
                     return;
                 } catch (MismatchException e) {
                     if (!iterator.hasNext()) {
