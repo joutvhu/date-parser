@@ -4,6 +4,8 @@ import com.joutvhu.date.parser.domain.DateStorage;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 
+import java.util.regex.PatternSyntaxException;
+
 public class QuoteStrategy extends Strategy {
     private final boolean quoted;
     private Boolean end;
@@ -13,6 +15,12 @@ public class QuoteStrategy extends Strategy {
         this.end = false;
         this.quoted = c == '\'';
         this.pattern = this.quoted ? "" : String.valueOf(c);
+    }
+
+    @Override
+    public void afterPatternSet() {
+        if (this.quoted && Boolean.FALSE.equals(this.end))
+            throw new PatternSyntaxException("Quote \"" + this.pattern + "\" is not closed.", this.pattern, -1);
     }
 
     @Override
