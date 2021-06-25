@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -35,7 +34,7 @@ public class DateBuilder {
     private TimeZone zone;
 
     private Map<String, Object> extension;
-    private List<DateListener> listeners;
+    private Map<Class<? extends DateSubscription>, DateSubscription> listeners;
 
     public DateBuilder(Locale locale, TimeZone zone) {
         this.locale = locale;
@@ -108,7 +107,15 @@ public class DateBuilder {
 
     public void dispatch(String key, Object value) {
         if (this.listeners != null)
-            for (DateListener listener : this.listeners)
-                listener.changed(this, key, value);
+            this.listeners.forEach((aClass, listener) -> listener.changed(this, key, value));
+    }
+
+    public void subscribe(DateSubscription listener) {
+        if (!this.listeners.containsKey(listener.getClass()))
+            this.listeners.put(listener.getClass(), listener);
+    }
+
+    public void unsubscribe(Class<? extends DateSubscription> listener) {
+        this.listeners.remove(listener);
     }
 }
