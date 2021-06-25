@@ -1,8 +1,9 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateStorage;
+import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
+import com.joutvhu.date.parser.listener.CenturySubscription;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.util.Iterator;
@@ -20,7 +21,7 @@ public class CenturyStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateStorage storage, StringSource source, NextStrategy chain) {
+    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
         StringSource.PositionBackup backup = source.backup();
         Iterator<String> iterator = source.iterator(this.pattern.length(), 2);
 
@@ -30,7 +31,8 @@ public class CenturyStrategy extends Strategy {
                 try {
                     int century = Integer.parseInt(value);
                     this.nextStrategy(chain);
-                    storage.put(CENTURY, century);
+                    builder.subscribe(new CenturySubscription());
+                    builder.set(CENTURY, century);
                     return;
                 } catch (Exception e) {
                     if (!iterator.hasNext()) {

@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateStorage;
+import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
@@ -33,14 +33,14 @@ public class MonthStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateStorage storage, StringSource source, NextStrategy chain) {
+    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
         if (number)
-            this.parseNumber(storage, source, chain);
+            this.parseNumber(builder, source, chain);
         else
-            this.parseString(storage, source, chain);
+            this.parseString(builder, source, chain);
     }
 
-    private void parseNumber(DateStorage storage, StringSource source, NextStrategy chain) {
+    private void parseNumber(DateBuilder builder, StringSource source, NextStrategy chain) {
         AtomicBoolean first = new AtomicBoolean(true);
         int len = this.ordinal ? this.pattern.length() + 1 : this.pattern.length();
         StringSource.PositionBackup backup = source.backup();
@@ -67,7 +67,7 @@ public class MonthStrategy extends Strategy {
                         throw new MismatchPatternException("The \"" + month + "\" is not a month.", backup.getBackup(), this.pattern);
 
                     this.nextStrategy(chain);
-                    storage.setMonth(month);
+                    builder.setMonth(month);
                     return;
                 } catch (Exception e) {
                     if (iterator.hasNext())
@@ -82,18 +82,18 @@ public class MonthStrategy extends Strategy {
         }
     }
 
-    private void parseString(DateStorage storage, StringSource source, NextStrategy chain) {
+    private void parseString(DateBuilder builder, StringSource source, NextStrategy chain) {
         StringSource.PositionBackup backup = source.backup();
         String value = source.get(3);
 
         if (this.pattern.length() == 3) {
             int index = CommonUtil.indexIgnoreCaseOf(value, SHORT_MONTHS);
-            this.tryParse(storage, chain, backup, index + 1, true);
+            this.tryParse(builder, chain, backup, index + 1, true);
         } else {
             for (int i = 0; i < 6; i++) {
                 value += source.get(1);
                 int index = CommonUtil.indexIgnoreCaseOf(value, LONG_MONTHS);
-                this.tryParse(storage, chain, backup, index + 1, i == 5);
+                this.tryParse(builder, chain, backup, index + 1, i == 5);
             }
         }
 
@@ -102,7 +102,7 @@ public class MonthStrategy extends Strategy {
     }
 
     private void tryParse(
-            DateStorage storage,
+            DateBuilder builder,
             NextStrategy chain,
             StringSource.PositionBackup backup,
             int value,
@@ -111,7 +111,7 @@ public class MonthStrategy extends Strategy {
         if (value > 0 && value < 13) {
             try {
                 this.nextStrategy(chain);
-                storage.setMonth(value);
+                builder.setMonth(value);
             } catch (Exception e) {
                 if (throwable) {
                     backup.restore();

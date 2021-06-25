@@ -1,8 +1,10 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateStorage;
+import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
+
+import java.util.regex.PatternSyntaxException;
 
 public class QuoteStrategy extends Strategy {
     private final boolean quoted;
@@ -13,6 +15,12 @@ public class QuoteStrategy extends Strategy {
         this.end = false;
         this.quoted = c == '\'';
         this.pattern = this.quoted ? "" : String.valueOf(c);
+    }
+
+    @Override
+    public void afterPatternSet() {
+        if (this.quoted && Boolean.FALSE.equals(this.end))
+            throw new PatternSyntaxException("Quote \"" + this.pattern + "\" is not closed.", this.pattern, -1);
     }
 
     @Override
@@ -43,7 +51,7 @@ public class QuoteStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateStorage storage, StringSource source, NextStrategy chain) {
+    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
         StringSource.PositionBackup backup = source.backup();
         String value = source.get(this.pattern.length());
         if (pattern.equals(value)) {

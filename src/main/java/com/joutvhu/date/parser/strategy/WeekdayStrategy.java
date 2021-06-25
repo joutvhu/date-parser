@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateStorage;
+import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
@@ -27,26 +27,26 @@ public class WeekdayStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateStorage storage, StringSource source, NextStrategy chain) {
+    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
         if (text)
-            this.parseString(storage, source, chain);
+            this.parseString(builder, source, chain);
         else
-            this.parseNumber(storage, source, chain);
+            this.parseNumber(builder, source, chain);
     }
 
-    private void parseNumber(DateStorage storage, StringSource source, NextStrategy chain) {
+    private void parseNumber(DateBuilder builder, StringSource source, NextStrategy chain) {
         StringSource.PositionBackup backup = source.backup();
         if (!this.tryParse(
-                storage,
+                builder,
                 chain,
                 backup,
                 source.get(this.pattern.length()),
                 this.pattern.length() > 1))
-            this.tryParse(storage, chain, backup, source.get(1), true);
+            this.tryParse(builder, chain, backup, source.get(1), true);
     }
 
     private boolean tryParse(
-            DateStorage storage,
+            DateBuilder builder,
             NextStrategy chain,
             StringSource.PositionBackup backup,
             String value,
@@ -59,7 +59,7 @@ public class WeekdayStrategy extends Strategy {
                     throw new MismatchPatternException("The \"" + weekday + "\" is not a day of week.", backup.getBackup(), this.pattern);
 
                 this.nextStrategy(chain);
-                storage.put(WEEKDAY, weekday);
+                builder.set(WEEKDAY, weekday);
                 return true;
             } catch (Exception e) {
                 backup.restore();
@@ -74,18 +74,18 @@ public class WeekdayStrategy extends Strategy {
         return false;
     }
 
-    private void parseString(DateStorage storage, StringSource source, NextStrategy chain) {
+    private void parseString(DateBuilder builder, StringSource source, NextStrategy chain) {
         StringSource.PositionBackup backup = source.backup();
         String value = source.get(3);
 
         if (this.pattern.length() < 4) {
             int index = CommonUtil.indexIgnoreCaseOf(value, SHORT_WEEKDAYS);
-            this.tryParse(storage, chain, backup, index + 1, true);
+            this.tryParse(builder, chain, backup, index + 1, true);
         } else {
             for (int i = 0; i < 6; i++) {
                 value += source.get(1);
                 int index = CommonUtil.indexIgnoreCaseOf(value, LONG_WEEKDAYS);
-                this.tryParse(storage, chain, backup, index + 1, i == 5);
+                this.tryParse(builder, chain, backup, index + 1, i == 5);
             }
         }
 
@@ -94,7 +94,7 @@ public class WeekdayStrategy extends Strategy {
     }
 
     private void tryParse(
-            DateStorage storage,
+            DateBuilder builder,
             NextStrategy chain,
             StringSource.PositionBackup backup,
             int value,
@@ -104,7 +104,7 @@ public class WeekdayStrategy extends Strategy {
         if (value > 0 && value < 8) {
             try {
                 this.nextStrategy(chain);
-                storage.put(WEEKDAY, value);
+                builder.set(WEEKDAY, value);
             } catch (Exception e) {
                 if (throwable) {
                     backup.restore();
