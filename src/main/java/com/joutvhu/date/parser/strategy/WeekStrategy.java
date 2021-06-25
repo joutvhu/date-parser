@@ -68,7 +68,7 @@ public class WeekStrategy extends Strategy {
                 }
 
                 this.nextStrategy(chain);
-                builder.put(WEEK, week);
+                builder.set(WEEK, week);
                 return true;
             } catch (Exception e) {
                 backup.restore();

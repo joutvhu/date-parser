@@ -75,7 +75,7 @@ public class DayStrategy extends Strategy {
                             builder.setMonth(days.get(0).getKey());
                             builder.setDay(days.get(0).getValue());
                         } else {
-                            builder.put(DAYS, days);
+                            builder.set(DAYS, days);
                         }
                     } else {
                         if (day == 0 || day > 31)

@@ -26,7 +26,7 @@ public class WeekdayInMonthStrategy extends Strategy {
             try {
                 this.nextStrategy(chain);
                 int weekdayInMonth = value - '0';
-                builder.put(WEEKDAY_IN_MONTH, weekdayInMonth);
+                builder.set(WEEKDAY_IN_MONTH, weekdayInMonth);
             } catch (Exception e) {
                 backup.restore();
                 throw e;

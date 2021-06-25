@@ -29,14 +29,14 @@ public class AmPmStrategy extends Strategy {
         try {
             if ("am".equalsIgnoreCase(value)) {
                 this.nextStrategy(chain);
-                builder.put(AM_PM, AM);
+                builder.set(AM_PM, AM);
                 return;
             } else if ("pm".equalsIgnoreCase(value)) {
                 this.nextStrategy(chain);
                 Integer hour = builder.getHour();
                 if (hour != null && hour < 12)
                     builder.setHour(hour + 12);
-                builder.put(AM_PM, PM);
+                builder.set(AM_PM, PM);
                 return;
             }
         } catch (Exception e) {

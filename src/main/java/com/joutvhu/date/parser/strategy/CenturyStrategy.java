@@ -30,7 +30,7 @@ public class CenturyStrategy extends Strategy {
                 try {
                     int century = Integer.parseInt(value);
                     this.nextStrategy(chain);
-                    builder.put(CENTURY, century);
+                    builder.set(CENTURY, century);
                     return;
                 } catch (Exception e) {
                     if (!iterator.hasNext()) {

@@ -39,7 +39,6 @@ public class HourStrategy extends Strategy {
                             hour = 0;
                         if (hour < 0 || hour > 23)
                             throw new MismatchPatternException("The \"" + value + "\" is not a hour.", backup.getBackup(), this.pattern);
-                        builder.setHour(hour);
                     } else {
                         if (!startFrom0 && hour == 12)
                             hour = 0;
@@ -50,8 +49,8 @@ public class HourStrategy extends Strategy {
                             throw new MismatchPatternException("The \"" + value + "\" is not a hour.", backup.getBackup(), this.pattern);
                         if (!startFrom0 && hour == 24)
                             hour = 0;
-                        builder.setHour(hour);
                     }
+                    builder.set(DateBuilder.HOUR, hour);
                     return;
                 } catch (Exception e) {
                     if (!iterator.hasNext()) {

@@ -59,7 +59,7 @@ public class WeekdayStrategy extends Strategy {
                     throw new MismatchPatternException("The \"" + weekday + "\" is not a day of week.", backup.getBackup(), this.pattern);
 
                 this.nextStrategy(chain);
-                builder.put(WEEKDAY, weekday);
+                builder.set(WEEKDAY, weekday);
                 return true;
             } catch (Exception e) {
                 backup.restore();
@@ -104,7 +104,7 @@ public class WeekdayStrategy extends Strategy {
         if (value > 0 && value < 8) {
             try {
                 this.nextStrategy(chain);
-                builder.put(WEEKDAY, value);
+                builder.set(WEEKDAY, value);
             } catch (Exception e) {
                 if (throwable) {
                     backup.restore();

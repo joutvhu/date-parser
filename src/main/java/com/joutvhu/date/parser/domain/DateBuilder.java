@@ -43,61 +43,70 @@ public class DateBuilder {
         this.extension = new HashMap<>();
     }
 
-    public void setYear(Integer year) {
-        this.year = year;
-        this.dispatch(YEAR, year);
-    }
-
-    public void setMonth(Integer month) {
-        this.month = month;
-        this.dispatch(MONTH, month);
-    }
-
-    public void setDay(Integer day) {
-        this.day = day;
-        this.dispatch(DAY, day);
-    }
-
-    public void setHour(Integer hour) {
-        this.hour = hour;
-        this.dispatch(HOUR, hour);
-    }
-
-    public void setMinute(Integer minute) {
-        this.minute = minute;
-        this.dispatch(MINUTE, minute);
-    }
-
-    public void setSecond(Integer second) {
-        this.second = second;
-        this.dispatch(SECOND, second);
-    }
-
-    public void setNano(Integer nano) {
-        this.nano = nano;
-        this.dispatch(NANO, nano);
-    }
-
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-        this.dispatch(LOCALE, locale);
-    }
-
-    public void setZone(TimeZone zone) {
-        this.zone = zone;
-        this.dispatch(ZONE, zone);
-    }
-
-    public void put(String key, Object value) {
-        this.extension.put(key, value);
+    public void set(String key, Object value) {
+        switch (key) {
+            case YEAR:
+                this.setYear((Integer) value);
+                break;
+            case MONTH:
+                this.setMonth((Integer) value);
+                break;
+            case DAY:
+                this.setDay((Integer) value);
+                break;
+            case HOUR:
+                this.setHour((Integer) value);
+                break;
+            case MINUTE:
+                this.setMinute((Integer) value);
+                break;
+            case SECOND:
+                this.setSecond((Integer) value);
+                break;
+            case NANO:
+                this.setNano((Integer) value);
+                break;
+            case LOCALE:
+                assert value instanceof Locale;
+                this.setLocale((Locale) value);
+                break;
+            case ZONE:
+                assert value instanceof TimeZone;
+                this.setZone((TimeZone) value);
+                break;
+            default:
+                this.extension.put(key, value);
+                break;
+        }
         this.dispatch(key, value);
     }
 
     public <T> T get(String key) {
-        return (T) this.extension.get(key);
+        switch (key) {
+            case YEAR:
+                return (T) this.getYear();
+            case MONTH:
+                return (T) this.getMonth();
+            case DAY:
+                return (T) this.getDay();
+            case HOUR:
+                return (T) this.getHour();
+            case MINUTE:
+                return (T) this.getMinute();
+            case SECOND:
+                return (T) this.getSecond();
+            case NANO:
+                return (T) this.getNano();
+            case LOCALE:
+                return (T) this.getLocale();
+            case ZONE:
+                return (T) this.getZone();
+            default:
+                return (T) this.extension.get(key);
+        }
     }
 
-    private void dispatch(String key, Object value) {
+    public void dispatch(String key, Object value) {
         if (this.listeners != null)
             for (DateListener listener : this.listeners)
                 listener.changed(this, key, value);
