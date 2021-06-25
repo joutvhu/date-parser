@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class YearStrategy extends Strategy {
+    public static final String YEAR2 = "year2";
+
     private int length;
 
     public YearStrategy(char c) {
@@ -36,6 +38,7 @@ public class YearStrategy extends Strategy {
             if (CommonUtil.isNumber(first, value)) {
                 try {
                     this.nextStrategy(chain);
+                    builder.set(YEAR2, this.length < 3 && value.length() < 3);
                     builder.set(DateBuilder.YEAR, Integer.parseInt(value));
                     return;
                 } catch (Exception e) {
