@@ -24,7 +24,7 @@ public class WeekdayInMonthStrategy extends Strategy {
         if ('0' < value && value < '6') {
             source.next();
             try {
-                this.nextStrategy(chain);
+                chain.next();
                 int weekdayInMonth = value - '0';
                 builder.set(WEEKDAY_IN_MONTH, weekdayInMonth);
             } catch (Exception e) {

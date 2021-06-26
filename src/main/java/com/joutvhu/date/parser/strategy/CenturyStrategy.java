@@ -30,7 +30,7 @@ public class CenturyStrategy extends Strategy {
             if (CommonUtil.isNumber(value)) {
                 try {
                     int century = Integer.parseInt(value);
-                    this.nextStrategy(chain);
+                    chain.next();
                     builder.subscribe(new CenturySubscription());
                     builder.set(CENTURY, century);
                     return;

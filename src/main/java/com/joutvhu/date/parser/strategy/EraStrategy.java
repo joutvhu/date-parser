@@ -25,11 +25,11 @@ public class EraStrategy extends Strategy {
 
         try {
             if ("AD".equalsIgnoreCase(value)) {
-                this.nextStrategy(chain);
+                chain.next();
                 builder.set(ERA, AD);
                 return;
             } else if ("BC".equalsIgnoreCase(value)) {
-                this.nextStrategy(chain);
+                chain.next();
                 builder.set(ERA, BC);
                 return;
             }

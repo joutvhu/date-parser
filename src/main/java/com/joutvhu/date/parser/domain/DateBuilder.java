@@ -40,6 +40,7 @@ public class DateBuilder {
         this.locale = locale;
         this.zone = zone;
         this.extension = new HashMap<>();
+        this.listeners = new HashMap<>();
     }
 
     public void set(String key, Object value) {
@@ -106,8 +107,10 @@ public class DateBuilder {
     }
 
     public void dispatch(String key, Object value) {
-        if (this.listeners != null)
-            this.listeners.forEach((aClass, listener) -> listener.changed(this, key, value));
+        if (this.listeners != null) {
+            for (DateSubscription listener : this.listeners.values())
+                listener.changed(this, key, value);
+        }
     }
 
     public void subscribe(DateSubscription listener) {

@@ -30,7 +30,7 @@ public class SecondStrategy extends Strategy {
                     if (second < 0 || second > 59)
                         throw new MismatchPatternException("The \"" + value + "\" is not a second.", backup.getBackup(), this.pattern);
 
-                    this.nextStrategy(chain);
+                    chain.next();
                     builder.setSecond(second);
                     return;
                 } catch (Exception e) {
