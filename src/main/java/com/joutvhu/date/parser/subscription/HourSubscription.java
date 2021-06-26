@@ -1,14 +1,13 @@
-package com.joutvhu.date.parser.listener;
+package com.joutvhu.date.parser.subscription;
 
 import com.joutvhu.date.parser.domain.DateBuilder;
-import com.joutvhu.date.parser.domain.DateSubscription;
 import com.joutvhu.date.parser.exception.ConflictDateException;
 import com.joutvhu.date.parser.strategy.AmPmStrategy;
 import com.joutvhu.date.parser.strategy.HourStrategy;
 
 import java.text.MessageFormat;
 
-public class HourSubscription implements DateSubscription {
+public class HourSubscription implements Subscription {
     @Override
     public void changed(DateBuilder builder, String event, Object value) {
         if (DateBuilder.HOUR.equals(event) || AmPmStrategy.AM_PM.equals(event)) {

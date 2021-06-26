@@ -4,7 +4,7 @@ import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
-import com.joutvhu.date.parser.listener.HourSubscription;
+import com.joutvhu.date.parser.subscription.HourSubscription;
 
 public class AmPmStrategy extends Strategy {
     public static final String AM = "am";

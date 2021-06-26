@@ -1,14 +1,13 @@
-package com.joutvhu.date.parser.listener;
+package com.joutvhu.date.parser.subscription;
 
 import com.joutvhu.date.parser.domain.DateBuilder;
-import com.joutvhu.date.parser.domain.DateSubscription;
 import com.joutvhu.date.parser.exception.ConflictDateException;
 import com.joutvhu.date.parser.strategy.CenturyStrategy;
 import com.joutvhu.date.parser.strategy.YearStrategy;
 
 import java.text.MessageFormat;
 
-public class CenturySubscription implements DateSubscription {
+public class CenturySubscription implements Subscription {
     @Override
     public void changed(DateBuilder builder, String event, Object value) {
         if (DateBuilder.YEAR.equals(event) || CenturyStrategy.CENTURY.equals(event)) {

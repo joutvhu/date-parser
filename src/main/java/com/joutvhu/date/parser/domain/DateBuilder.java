@@ -1,5 +1,6 @@
 package com.joutvhu.date.parser.domain;
 
+import com.joutvhu.date.parser.subscription.Subscription;
 import javafx.util.Pair;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -44,7 +45,7 @@ public class DateBuilder {
     private final Map<String, Object> extension;
 
     @Getter(AccessLevel.PRIVATE)
-    private final Map<Class<? extends DateSubscription>, DateSubscription> listeners;
+    private final Map<Class<? extends Subscription>, Subscription> listeners;
 
     public DateBuilder(Locale locale, TimeZone zone) {
         this.locale = locale;
@@ -133,17 +134,17 @@ public class DateBuilder {
 
     protected void dispatch(String key, Object value) {
         if (this.listeners != null) {
-            for (DateSubscription listener : this.listeners.values())
+            for (Subscription listener : this.listeners.values())
                 listener.changed(this, key, value);
         }
     }
 
-    public void subscribe(DateSubscription listener) {
+    public void subscribe(Subscription listener) {
         if (!this.listeners.containsKey(listener.getClass()))
             this.listeners.put(listener.getClass(), listener);
     }
 
-    public void unsubscribe(Class<? extends DateSubscription> listener) {
+    public void unsubscribe(Class<? extends Subscription> listener) {
         this.listeners.remove(listener);
     }
 
