@@ -1,6 +1,7 @@
 package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 
@@ -18,7 +19,7 @@ public class WeekdayInMonthStrategy extends Strategy {
 
     @Override
     public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
-        StringSource.PositionBackup backup = source.backup();
+        ParseBackup backup = ParseBackup.backup(builder, source);
         Character value = source.character();
 
         if ('0' < value && value < '6') {
@@ -27,12 +28,16 @@ public class WeekdayInMonthStrategy extends Strategy {
                 chain.next();
                 int weekdayInMonth = value - '0';
                 builder.set(WEEKDAY_IN_MONTH, weekdayInMonth);
+                backup.commit();
             } catch (Exception e) {
                 backup.restore();
                 throw e;
             }
         } else {
-            throw new MismatchPatternException("The \"" + value + "\" is not a week in month.", backup.getBackup(), this.pattern);
+            throw new MismatchPatternException(
+                    "The \"" + value + "\" is not a week in month.",
+                    backup.getBackupPosition(),
+                    this.pattern);
         }
     }
 }

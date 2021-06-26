@@ -134,7 +134,7 @@ public class ZoneUtil {
     }
 
     public ZoneId zoneIdOf(String zoneId) {
-        Objects.requireNonNull(zoneId, "zoneId");
+        Objects.requireNonNull(zoneId, "Zone ID must be not null.");
 
         if (zoneId.equalsIgnoreCase("Z"))
             return ZoneOffset.UTC;
@@ -144,7 +144,8 @@ public class ZoneUtil {
             String id = ZoneId.SHORT_IDS
                     .entrySet()
                     .stream()
-                    .filter(entry -> zoneId.equalsIgnoreCase(entry.getKey()) || zoneId.equalsIgnoreCase(entry.getValue()))
+                    .filter(entry -> zoneId.equalsIgnoreCase(entry.getKey()) || zoneId
+                            .equalsIgnoreCase(entry.getValue()))
                     .map(Map.Entry::getKey)
                     .findFirst()
                     .orElse(null);

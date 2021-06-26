@@ -8,6 +8,7 @@ import com.joutvhu.date.parser.strategy.Strategy;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 
 public class DateFormat {
@@ -21,8 +22,8 @@ public class DateFormat {
     }
 
     public DateFormat(String pattern, Locale locale, TimeZone zone) {
-        if (locale == null || zone == null)
-            throw new IllegalArgumentException("Locale and TimeZone must not be null");
+        Objects.requireNonNull(locale, "Locale must be not null.");
+        Objects.requireNonNull(zone, "TimeZone must be not null.");
 
         this.locale = locale;
         this.zone = zone;
@@ -53,7 +54,8 @@ public class DateFormat {
                 @Override
                 public void next() {
                     if (source.getIndex() < source.getLength())
-                        throw new MismatchPatternException("Does not finish at the end of string.", source.getIndex(), null);
+                        throw new MismatchPatternException("Does not finish at the end of string.", source
+                                .getIndex(), null);
                 }
             });
         }

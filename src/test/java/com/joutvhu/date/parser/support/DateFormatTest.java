@@ -12,4 +12,20 @@ public class DateFormatTest {
         DateBuilder builder = new DateFormat("yyyyMd hh:mm:ss.SSS a Z").parse("20211123 02:41:32.651 pm America/Los_Angeles");
         Assertions.assertNotNull(builder);
     }
+
+    @Test
+    public void parse_DayOfYear0() {
+        DateBuilder builder = new DateFormat("yyyyDDD").parse("2021068");
+        Assertions.assertNotNull(builder);
+        Assertions.assertEquals(9, builder.getDay());
+        Assertions.assertEquals(3, builder.getMonth());
+    }
+
+    @Test
+    public void parse_DayOfYear1() {
+        DateBuilder builder = new DateFormat("yyyyDDD").parse("2024060");
+        Assertions.assertNotNull(builder);
+        Assertions.assertEquals(29, builder.getDay());
+        Assertions.assertEquals(2, builder.getMonth());
+    }
 }

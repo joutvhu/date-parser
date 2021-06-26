@@ -111,18 +111,23 @@ public class StringSource extends ParsePosition {
     }
 
     @Getter
-    public class PositionBackup {
+    public static class PositionBackup implements Backup<StringSource> {
         private final int backup;
-        private final StringSource position;
+        private final StringSource source;
 
-        public PositionBackup(StringSource position) {
-            this.position = position;
-            this.backup = position.getIndex();
+        public PositionBackup(StringSource source) {
+            this.source = source;
+            this.backup = source.getIndex();
         }
 
+        @Override
         public StringSource restore() {
-            this.position.setIndex(this.backup);
-            return position;
+            this.source.setIndex(this.backup);
+            return source;
+        }
+
+        @Override
+        public void commit() {
         }
     }
 }

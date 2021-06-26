@@ -1,9 +1,10 @@
 package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
-import com.joutvhu.date.parser.listener.CenturySubscription;
+import com.joutvhu.date.parser.subscription.CenturySubscription;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.util.Iterator;
@@ -22,7 +23,7 @@ public class CenturyStrategy extends Strategy {
 
     @Override
     public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
-        StringSource.PositionBackup backup = source.backup();
+        ParseBackup backup = ParseBackup.backup(builder, source);
         Iterator<String> iterator = source.iterator(this.pattern.length(), 2);
 
         while (iterator.hasNext()) {
@@ -33,6 +34,7 @@ public class CenturyStrategy extends Strategy {
                     chain.next();
                     builder.subscribe(new CenturySubscription());
                     builder.set(CENTURY, century);
+                    backup.commit();
                     return;
                 } catch (Exception e) {
                     if (!iterator.hasNext()) {
@@ -42,7 +44,10 @@ public class CenturyStrategy extends Strategy {
                 }
             } else {
                 backup.restore();
-                throw new MismatchPatternException("The \"" + value + "\" is not a century.", backup.getBackup(), this.pattern);
+                throw new MismatchPatternException(
+                        "\"" + value + "\" is not the century.",
+                        backup.getBackupPosition(),
+                        this.pattern);
             }
         }
     }

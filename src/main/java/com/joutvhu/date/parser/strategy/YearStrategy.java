@@ -1,6 +1,7 @@
 package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
@@ -30,7 +31,7 @@ public class YearStrategy extends Strategy {
     @Override
     public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
         AtomicBoolean first = new AtomicBoolean(true);
-        StringSource.PositionBackup backup = source.backup();
+        ParseBackup backup = ParseBackup.backup(builder, source);
         Iterator<String> iterator = source.iterator(this.length, 4);
 
         while (iterator.hasNext()) {
@@ -40,6 +41,7 @@ public class YearStrategy extends Strategy {
                     chain.next();
                     builder.set(YEAR2, this.length < 3 && value.length() < 3);
                     builder.set(DateBuilder.YEAR, Integer.parseInt(value));
+                    backup.commit();
                     return;
                 } catch (Exception e) {
                     if (!iterator.hasNext()) {
@@ -49,7 +51,10 @@ public class YearStrategy extends Strategy {
                 }
             } else {
                 backup.restore();
-                throw new MismatchPatternException("The \"" + value + "\" is not a year.", backup.getBackup(), this.pattern);
+                throw new MismatchPatternException(
+                        "The \"" + value + "\" is not a year.",
+                        backup.getBackupPosition(),
+                        this.pattern);
             }
         }
     }

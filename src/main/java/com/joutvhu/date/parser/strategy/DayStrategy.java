@@ -1,8 +1,10 @@
 package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
+import com.joutvhu.date.parser.subscription.DaySubscription;
 import com.joutvhu.date.parser.util.CommonUtil;
 import javafx.util.Pair;
 
@@ -14,8 +16,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DayStrategy extends Strategy {
     public static final String DAYS = "days";
+    public static final String DAY_OF_YEAR = "day_of_year";
 
-    private static final List<Integer> END_DAY_OF_MONTHS = Arrays.asList(0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365);
+    private static final List<Integer> END_DAY_OF_MONTHS = Arrays
+            .asList(0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365);
     private static final List<Integer> CONFLICT_DAYS = Arrays.asList(60, 91, 121, 152, 182, 213, 244, 274, 305, 335);
 
     private final boolean dayInYear;
@@ -40,7 +44,7 @@ public class DayStrategy extends Strategy {
     public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
         AtomicBoolean first = new AtomicBoolean(true);
         int len = this.ordinal ? this.pattern.length() + 1 : this.pattern.length();
-        StringSource.PositionBackup backup = source.backup();
+        ParseBackup backup = ParseBackup.backup(builder, source);
         Iterator<String> iterator = source.iterator(len, (this.dayInYear ? 3 : 2) + (this.ordinal ? 2 : 0));
 
         while (iterator.hasNext()) {
@@ -53,8 +57,8 @@ public class DayStrategy extends Strategy {
                     if (!iterator.hasNext()) {
                         backup.restore();
                         throw new MismatchPatternException(
-                                "The \"" + value + "\" of day must be end with an ordinal.",
-                                backup.getBackup(),
+                                "The day \"" + value + "\" must be end with an ordinal indicator.",
+                                backup.getBackupPosition(),
                                 this.pattern);
                     }
                 }
@@ -66,22 +70,36 @@ public class DayStrategy extends Strategy {
 
                     int day = Integer.parseInt(value);
                     if (this.dayInYear) {
-                        if (day == 0 || day > 366)
-                            throw new MismatchPatternException("The \"" + day + "\" is not a day of year.", backup.getBackup(), this.pattern);
+                        if (day == 0 || day > 366) {
+                            throw new MismatchPatternException(
+                                    "\"" + day + "\" is not a day of year.",
+                                    backup.getBackupPosition(),
+                                    this.pattern);
+                        }
                         List<Pair<Integer, Integer>> days = getMonthAndDay(day);
-                        if (days.isEmpty())
-                            throw new MismatchPatternException("The \"" + day + "\" is not a day of year.", backup.getBackup(), this.pattern);
-                        else if (days.size() == 1) {
-                            builder.setMonth(days.get(0).getKey());
-                            builder.setDay(days.get(0).getValue());
+                        builder.set(DAY_OF_YEAR, day);
+                        if (days.isEmpty()) {
+                            throw new MismatchPatternException(
+                                    "\"" + day + "\" is not a day of year.",
+                                    backup.getBackupPosition(),
+                                    this.pattern);
+                        } else if (days.size() == 1) {
+                            builder.set(DateBuilder.MONTH, days.get(0).getKey());
+                            builder.set(DateBuilder.DAY, days.get(0).getValue());
                         } else {
+                            builder.subscribe(new DaySubscription());
                             builder.set(DAYS, days);
                         }
                     } else {
-                        if (day == 0 || day > 31)
-                            throw new MismatchPatternException("The \"" + day + "\" is not a day.", backup.getBackup(), this.pattern);
-                        builder.setDay(Integer.parseInt(value));
+                        if (day == 0 || day > 31) {
+                            throw new MismatchPatternException(
+                                    "\"" + day + "\" is not a day of month.",
+                                    backup.getBackupPosition(),
+                                    this.pattern);
+                        }
+                        builder.set(DateBuilder.DAY, day);
                     }
+                    backup.commit();
                     return;
                 } catch (Exception e) {
                     if (iterator.hasNext())
@@ -91,7 +109,10 @@ public class DayStrategy extends Strategy {
                 }
             } else {
                 backup.restore();
-                throw new MismatchPatternException("The \"" + value + "\" is not a day.", backup.getBackup(), this.pattern);
+                throw new MismatchPatternException(
+                        "\"" + value + "\" is not a day.",
+                        backup.getBackupPosition(),
+                        this.pattern);
             }
         }
     }
@@ -104,6 +125,11 @@ public class DayStrategy extends Strategy {
                     dayOfYear > 31 ? 2 : 1,
                     dayOfYear > 31 ? dayOfYear - 31 : dayOfYear
             ));
+        else if (dayOfYear == 60)
+            return Arrays.asList(
+                    new Pair<>(2, 29),
+                    new Pair<>(3, 1)
+            );
         else {
             for (int i = 2, len = END_DAY_OF_MONTHS.size(); i < len; i++) {
                 if (END_DAY_OF_MONTHS.get(i) + 1 == dayOfYear) {
