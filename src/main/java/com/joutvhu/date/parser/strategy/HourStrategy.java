@@ -1,11 +1,11 @@
 package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
-import java.text.MessageFormat;
 import java.util.Iterator;
 
 public class HourStrategy extends Strategy {
@@ -27,7 +27,7 @@ public class HourStrategy extends Strategy {
 
     @Override
     public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
-        StringSource.PositionBackup backup = source.backup();
+        ParseBackup backup = ParseBackup.backup(builder, source);
         Iterator<String> iterator = source.iterator(this.pattern.length(), 2);
 
         while (iterator.hasNext()) {
@@ -41,13 +41,17 @@ public class HourStrategy extends Strategy {
                         if (hour == 24)
                             hour = 0;
                         if (hour < 0 || hour > 23) {
-                            String message = MessageFormat.format("The value \"{0}\" is not the hour.", hour);
-                            throw new MismatchPatternException(message, backup.getBackup(), this.pattern);
+                            throw new MismatchPatternException(
+                                    "The value \"" + hour + "\" is not a hour.",
+                                    backup.getBackupPosition(),
+                                    this.pattern);
                         }
                     } else {
                         if (hour < 0 || hour > 24) {
-                            String message = MessageFormat.format("The value \"{0}\" is not the hour.", hour);
-                            throw new MismatchPatternException(message, backup.getBackup(), this.pattern);
+                            throw new MismatchPatternException(
+                                    "The value \"" + hour + "\" is not a hour.",
+                                    backup.getBackupPosition(),
+                                    this.pattern);
                         }
                         if (!this.startFrom0 && hour == 12)
                             hour = 0;
@@ -56,6 +60,7 @@ public class HourStrategy extends Strategy {
                             hour = 0;
                     }
                     builder.set(DateBuilder.HOUR, hour);
+                    backup.commit();
                     return;
                 } catch (Exception e) {
                     if (!iterator.hasNext()) {
@@ -65,8 +70,10 @@ public class HourStrategy extends Strategy {
                 }
             } else {
                 backup.restore();
-                String message = MessageFormat.format("The value \"{0}\" is not the hour.", value);
-                throw new MismatchPatternException(message, backup.getBackup(), this.pattern);
+                throw new MismatchPatternException(
+                        "The value \"" + value + "\" is not a hour.",
+                        backup.getBackupPosition(),
+                        this.pattern);
             }
         }
     }

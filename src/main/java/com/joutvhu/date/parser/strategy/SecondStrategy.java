@@ -1,6 +1,7 @@
 package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
@@ -19,7 +20,7 @@ public class SecondStrategy extends Strategy {
 
     @Override
     public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
-        StringSource.PositionBackup backup = source.backup();
+        ParseBackup backup = ParseBackup.backup(builder, source);
         Iterator<String> iterator = source.iterator(this.pattern.length(), 2);
 
         while (iterator.hasNext()) {
@@ -27,11 +28,16 @@ public class SecondStrategy extends Strategy {
             if (CommonUtil.isNumber(value)) {
                 try {
                     int second = Integer.parseInt(value);
-                    if (second < 0 || second > 59)
-                        throw new MismatchPatternException("The \"" + value + "\" is not a second.", backup.getBackup(), this.pattern);
+                    if (second < 0 || second > 59) {
+                        throw new MismatchPatternException(
+                                "The \"" + second + "\" is not a second.",
+                                backup.getBackupPosition(),
+                                this.pattern);
+                    }
 
                     chain.next();
-                    builder.setSecond(second);
+                    builder.set(DateBuilder.SECOND, second);
+                    backup.commit();
                     return;
                 } catch (Exception e) {
                     if (!iterator.hasNext()) {
@@ -41,7 +47,10 @@ public class SecondStrategy extends Strategy {
                 }
             } else {
                 backup.restore();
-                throw new MismatchPatternException("The \"" + value + "\" is not a second.", backup.getBackup(), this.pattern);
+                throw new MismatchPatternException(
+                        "The \"" + value + "\" is not a second.",
+                        backup.getBackupPosition(),
+                        this.pattern);
             }
         }
     }

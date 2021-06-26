@@ -20,7 +20,10 @@ public class QuoteStrategy extends Strategy {
     @Override
     public void afterPatternSet() {
         if (this.quoted && Boolean.FALSE.equals(this.end))
-            throw new PatternSyntaxException("Quote \"" + this.pattern + "\" is not closed.", this.pattern, -1);
+            throw new PatternSyntaxException(
+                    "Quote \"" + this.pattern + "\" is not closed.",
+                    this.pattern,
+                    -1);
     }
 
     @Override
@@ -57,6 +60,7 @@ public class QuoteStrategy extends Strategy {
         if (pattern.equals(value)) {
             try {
                 chain.next();
+                backup.commit();
             } catch (Exception e) {
                 backup.restore();
                 throw e;
@@ -66,8 +70,7 @@ public class QuoteStrategy extends Strategy {
             throw new MismatchPatternException(
                     "The quote \"" + value + "\" not match with \"" + this.pattern + "\".",
                     source.getIndex(),
-                    this.pattern
-            );
+                    this.pattern);
         }
     }
 }

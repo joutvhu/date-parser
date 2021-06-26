@@ -1,6 +1,7 @@
 package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
@@ -11,8 +12,10 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MonthStrategy extends Strategy {
-    private static final List<String> SHORT_MONTHS = Arrays.asList("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
-    private static final List<String> LONG_MONTHS = Arrays.asList("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+    private static final List<String> SHORT_MONTHS = Arrays
+            .asList("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+    private static final List<String> LONG_MONTHS = Arrays
+            .asList("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
 
     private boolean number;
     private boolean ordinal;
@@ -43,7 +46,7 @@ public class MonthStrategy extends Strategy {
     private void parseNumber(DateBuilder builder, StringSource source, NextStrategy chain) {
         AtomicBoolean first = new AtomicBoolean(true);
         int len = this.ordinal ? this.pattern.length() + 1 : this.pattern.length();
-        StringSource.PositionBackup backup = source.backup();
+        ParseBackup backup = ParseBackup.backup(builder, source);
         Iterator<String> iterator = source.iterator(len, this.ordinal ? 4 : 2);
 
         while (iterator.hasNext()) {
@@ -56,18 +59,26 @@ public class MonthStrategy extends Strategy {
                     if (iterator.hasNext())
                         continue;
                     backup.restore();
-                    throw new MismatchPatternException("The \"" + value + "\" of month must be end with an ordinal.", backup.getBackup(), this.pattern);
+                    throw new MismatchPatternException(
+                            "The month \"" + value + "\" must be end with an ordinal indicator.",
+                            backup.getBackupPosition(),
+                            this.pattern);
                 }
             }
 
             if (CommonUtil.isNumber(first, value)) {
                 try {
                     int month = Integer.parseInt(value);
-                    if (month < 1 || month > 12)
-                        throw new MismatchPatternException("The \"" + month + "\" is not a month.", backup.getBackup(), this.pattern);
+                    if (month < 1 || month > 12) {
+                        throw new MismatchPatternException(
+                                "The \"" + month + "\" is not a month.",
+                                backup.getBackupPosition(),
+                                this.pattern);
+                    }
 
                     chain.next();
-                    builder.setMonth(month);
+                    builder.set(DateBuilder.MONTH, month);
+                    backup.commit();
                     return;
                 } catch (Exception e) {
                     if (iterator.hasNext())
@@ -77,13 +88,16 @@ public class MonthStrategy extends Strategy {
                 }
             } else {
                 backup.restore();
-                throw new MismatchPatternException("The \"" + value + "\" is not a month.", backup.getBackup(), this.pattern);
+                throw new MismatchPatternException(
+                        "The \"" + value + "\" is not a month.",
+                        backup.getBackupPosition(),
+                        this.pattern);
             }
         }
     }
 
     private void parseString(DateBuilder builder, StringSource source, NextStrategy chain) {
-        StringSource.PositionBackup backup = source.backup();
+        ParseBackup backup = ParseBackup.backup(builder, source);
         String value = source.get(3);
 
         if (this.pattern.length() == 3) {
@@ -93,25 +107,31 @@ public class MonthStrategy extends Strategy {
             for (int i = 0; i < 6; i++) {
                 value += source.get(1);
                 int index = CommonUtil.indexIgnoreCaseOf(value, LONG_MONTHS);
-                this.tryParse(builder, chain, backup, index + 1, i == 5);
+                if (this.tryParse(builder, chain, backup, index + 1, i == 5))
+                    return;
             }
         }
 
         backup.restore();
-        throw new MismatchPatternException("The \"" + value + "\" is not a month.", backup.getBackup(), this.pattern);
+        throw new MismatchPatternException(
+                "The \"" + value + "\" is not a month.",
+                backup.getBackupPosition(),
+                this.pattern);
     }
 
-    private void tryParse(
+    private boolean tryParse(
             DateBuilder builder,
             NextStrategy chain,
-            StringSource.PositionBackup backup,
+            ParseBackup backup,
             int value,
             boolean throwable
     ) {
         if (value > 0 && value < 13) {
             try {
                 chain.next();
-                builder.setMonth(value);
+                builder.set(DateBuilder.MONTH, value);
+                backup.commit();
+                return true;
             } catch (Exception e) {
                 if (throwable) {
                     backup.restore();
@@ -119,5 +139,6 @@ public class MonthStrategy extends Strategy {
                 }
             }
         }
+        return false;
     }
 }

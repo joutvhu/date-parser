@@ -1,6 +1,7 @@
 package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 
@@ -20,25 +21,27 @@ public class EraStrategy extends Strategy {
 
     @Override
     public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
-        StringSource.PositionBackup backup = source.backup();
+        ParseBackup backup = ParseBackup.backup(builder, source);
         String value = source.get(2);
 
         try {
             if ("AD".equalsIgnoreCase(value)) {
                 chain.next();
                 builder.set(ERA, AD);
-                return;
+                backup.commit();
             } else if ("BC".equalsIgnoreCase(value)) {
                 chain.next();
                 builder.set(ERA, BC);
-                return;
+                backup.commit();
+            } else {
+                throw new MismatchPatternException(
+                        "The \"" + value + "\" is not the value of the Era.",
+                        backup.getBackupPosition(),
+                        this.pattern);
             }
         } catch (Exception e) {
             backup.restore();
             throw e;
         }
-
-        backup.restore();
-        throw new MismatchPatternException("The \"" + value + "\" must be \"AD\" or \"BC\".", backup.getBackup(), this.pattern);
     }
 }

@@ -1,11 +1,10 @@
 package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.listener.HourSubscription;
-
-import java.text.MessageFormat;
 
 public class AmPmStrategy extends Strategy {
     public static final String AM = "am";
@@ -26,7 +25,7 @@ public class AmPmStrategy extends Strategy {
 
     @Override
     public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
-        StringSource.PositionBackup backup = source.backup();
+        ParseBackup backup = ParseBackup.backup(builder, source);
         String value = source.get(2);
 
         try {
@@ -34,13 +33,17 @@ public class AmPmStrategy extends Strategy {
                 chain.next();
                 builder.subscribe(new HourSubscription());
                 builder.set(AM_PM, AM);
+                backup.commit();
             } else if ("pm".equalsIgnoreCase(value)) {
                 chain.next();
                 builder.subscribe(new HourSubscription());
                 builder.set(AM_PM, PM);
+                backup.commit();
             } else {
-                String message = MessageFormat.format("The \"{0}\" value must be \"AM\" or \"PM\".", value);
-                throw new MismatchPatternException(message, backup.getBackup(), this.pattern);
+                throw new MismatchPatternException(
+                        "The \"" + value + "\" value must be \"AM\" or \"PM\".",
+                        backup.getBackupPosition(),
+                        this.pattern);
             }
         } catch (Exception e) {
             backup.restore();

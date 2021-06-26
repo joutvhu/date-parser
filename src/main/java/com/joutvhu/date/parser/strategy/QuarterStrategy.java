@@ -1,6 +1,7 @@
 package com.joutvhu.date.parser.strategy;
 
 import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
@@ -26,7 +27,7 @@ public class QuarterStrategy extends Strategy {
 
     @Override
     public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
-        StringSource.PositionBackup backup = source.backup();
+        ParseBackup backup = ParseBackup.backup(builder, source);
         String value = source.get(this.ordinal ? 3 : 1);
 
         if (this.ordinal) {
@@ -34,17 +35,25 @@ public class QuarterStrategy extends Strategy {
                 value = value.substring(0, value.length() - 2);
             else {
                 backup.restore();
-                throw new MismatchPatternException("The \"" + value + "\" of quarter must be end with an ordinal.", backup.getBackup(), this.pattern);
+                throw new MismatchPatternException(
+                        "The quarter \"" + value + "\" must be end with an ordinal indicator.",
+                        backup.getBackupPosition(),
+                        this.pattern);
             }
         }
 
         if (CommonUtil.isNumber(value)) {
             try {
                 int quarter = Integer.parseInt(value);
-                if (quarter < 1 || quarter > 4)
-                    throw new MismatchPatternException("The \"" + quarter + "\" is not a quarter.", backup.getBackup(), this.pattern);
+                if (quarter < 1 || quarter > 4) {
+                    throw new MismatchPatternException(
+                            "The \"" + quarter + "\" is not a quarter.",
+                            backup.getBackupPosition(),
+                            this.pattern);
+                }
                 chain.next();
                 builder.set(QUARTER, quarter);
+                backup.commit();
             } catch (Exception e) {
                 backup.restore();
                 throw e;

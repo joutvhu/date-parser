@@ -5,6 +5,7 @@ import com.joutvhu.date.parser.strategy.StrategyFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DatePatternSplitter {
     private final String pattern;
@@ -14,8 +15,7 @@ public class DatePatternSplitter {
     private Strategy strategy;
 
     public DatePatternSplitter(String pattern) {
-        if (pattern == null)
-            throw new NullPointerException("Pattern must not be null.");
+        Objects.requireNonNull(pattern, "Pattern must not be null.");
 
         this.pattern = pattern;
         this.position = 0;
