@@ -30,7 +30,7 @@ public class MinuteStrategy extends Strategy {
                     if (minute < 0 || minute > 59)
                         throw new MismatchPatternException("The \"" + value + "\" is not a minute.", backup.getBackup(), this.pattern);
 
-                    this.nextStrategy(chain);
+                    chain.next();
                     builder.setMinute(minute);
                     return;
                 } catch (Exception e) {

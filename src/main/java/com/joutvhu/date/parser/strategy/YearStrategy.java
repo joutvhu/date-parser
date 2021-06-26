@@ -37,7 +37,7 @@ public class YearStrategy extends Strategy {
             String value = iterator.next();
             if (CommonUtil.isNumber(first, value)) {
                 try {
-                    this.nextStrategy(chain);
+                    chain.next();
                     builder.set(YEAR2, this.length < 3 && value.length() < 3);
                     builder.set(DateBuilder.YEAR, Integer.parseInt(value));
                     return;

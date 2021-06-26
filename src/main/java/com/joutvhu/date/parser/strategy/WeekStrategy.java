@@ -67,7 +67,7 @@ public class WeekStrategy extends Strategy {
                         throw new MismatchPatternException("The \"" + week + "\" is not a week of month.", backup.getBackup(), this.pattern);
                 }
 
-                this.nextStrategy(chain);
+                chain.next();
                 builder.set(WEEK, week);
                 return true;
             } catch (Exception e) {

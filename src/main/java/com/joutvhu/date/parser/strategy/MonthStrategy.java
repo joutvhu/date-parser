@@ -66,7 +66,7 @@ public class MonthStrategy extends Strategy {
                     if (month < 1 || month > 12)
                         throw new MismatchPatternException("The \"" + month + "\" is not a month.", backup.getBackup(), this.pattern);
 
-                    this.nextStrategy(chain);
+                    chain.next();
                     builder.setMonth(month);
                     return;
                 } catch (Exception e) {
@@ -110,7 +110,7 @@ public class MonthStrategy extends Strategy {
     ) {
         if (value > 0 && value < 13) {
             try {
-                this.nextStrategy(chain);
+                chain.next();
                 builder.setMonth(value);
             } catch (Exception e) {
                 if (throwable) {

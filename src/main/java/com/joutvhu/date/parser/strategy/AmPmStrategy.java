@@ -31,11 +31,11 @@ public class AmPmStrategy extends Strategy {
 
         try {
             if ("am".equalsIgnoreCase(value)) {
-                this.nextStrategy(chain);
+                chain.next();
                 builder.subscribe(new HourSubscription());
                 builder.set(AM_PM, AM);
             } else if ("pm".equalsIgnoreCase(value)) {
-                this.nextStrategy(chain);
+                chain.next();
                 builder.subscribe(new HourSubscription());
                 builder.set(AM_PM, PM);
             } else {

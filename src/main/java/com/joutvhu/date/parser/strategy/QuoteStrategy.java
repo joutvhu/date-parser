@@ -56,7 +56,7 @@ public class QuoteStrategy extends Strategy {
         String value = source.get(this.pattern.length());
         if (pattern.equals(value)) {
             try {
-                this.nextStrategy(chain);
+                chain.next();
             } catch (Exception e) {
                 backup.restore();
                 throw e;

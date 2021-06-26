@@ -34,7 +34,7 @@ public class HourStrategy extends Strategy {
             String value = iterator.next();
             if (CommonUtil.isNumber(value)) {
                 try {
-                    this.nextStrategy(chain);
+                    chain.next();
 
                     int hour = Integer.parseInt(value);
                     if (hour24) {

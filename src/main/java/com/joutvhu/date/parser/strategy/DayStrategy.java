@@ -62,7 +62,7 @@ public class DayStrategy extends Strategy {
 
             if (CommonUtil.isNumber(first, value)) {
                 try {
-                    this.nextStrategy(chain);
+                    chain.next();
 
                     int day = Integer.parseInt(value);
                     if (this.dayInYear) {

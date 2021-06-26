@@ -28,7 +28,7 @@ public class ZoneStrategy extends Strategy {
             TimeZone timeZone = ZoneUtil.getTimeZone(value);
             if (timeZone != null) {
                 try {
-                    this.nextStrategy(chain);
+                    chain.next();
                     builder.setZone(timeZone);
                     return;
                 } catch (Exception e) {

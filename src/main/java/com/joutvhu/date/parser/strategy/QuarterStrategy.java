@@ -43,7 +43,7 @@ public class QuarterStrategy extends Strategy {
                 int quarter = Integer.parseInt(value);
                 if (quarter < 1 || quarter > 4)
                     throw new MismatchPatternException("The \"" + quarter + "\" is not a quarter.", backup.getBackup(), this.pattern);
-                this.nextStrategy(chain);
+                chain.next();
                 builder.set(QUARTER, quarter);
             } catch (Exception e) {
                 backup.restore();

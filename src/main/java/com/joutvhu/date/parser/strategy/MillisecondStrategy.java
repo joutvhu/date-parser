@@ -29,7 +29,7 @@ public class MillisecondStrategy extends Strategy {
             String value = iterator.next();
             if (CommonUtil.isNumber(first, value)) {
                 try {
-                    this.nextStrategy(chain);
+                    chain.next();
                     int nano = Integer.parseInt(CommonUtil.rightPad(value, 9, '0'));
                     builder.setNano(nano);
                     return;
