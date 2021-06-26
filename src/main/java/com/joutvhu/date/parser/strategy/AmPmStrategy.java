@@ -3,6 +3,9 @@ package com.joutvhu.date.parser.strategy;
 import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
+import com.joutvhu.date.parser.listener.HourSubscription;
+
+import java.text.MessageFormat;
 
 public class AmPmStrategy extends Strategy {
     public static final String AM = "am";
@@ -29,22 +32,19 @@ public class AmPmStrategy extends Strategy {
         try {
             if ("am".equalsIgnoreCase(value)) {
                 this.nextStrategy(chain);
+                builder.subscribe(new HourSubscription());
                 builder.set(AM_PM, AM);
-                return;
             } else if ("pm".equalsIgnoreCase(value)) {
                 this.nextStrategy(chain);
-                Integer hour = builder.getHour();
-                if (hour != null && hour < 12)
-                    builder.setHour(hour + 12);
+                builder.subscribe(new HourSubscription());
                 builder.set(AM_PM, PM);
-                return;
+            } else {
+                String message = MessageFormat.format("The \"{0}\" value must be \"AM\" or \"PM\".", value);
+                throw new MismatchPatternException(message, backup.getBackup(), this.pattern);
             }
         } catch (Exception e) {
             backup.restore();
             throw e;
         }
-
-        backup.restore();
-        throw new MismatchPatternException("The \"" + value + "\" must be \"AM\" or \"PM\".", backup.getBackup(), this.pattern);
     }
 }

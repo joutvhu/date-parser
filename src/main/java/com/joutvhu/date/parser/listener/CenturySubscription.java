@@ -23,7 +23,7 @@ public class CenturySubscription implements DateSubscription {
                 } else {
                     int c = year / 100;
                     if (century != c) {
-                        String message = MessageFormat.format("Conflict century {} and year {}.", century, year);
+                        String message = MessageFormat.format("The year {0} is not the {1} century.", year, century);
                         throw new ConflictDateException(message, century, c);
                     }
                 }

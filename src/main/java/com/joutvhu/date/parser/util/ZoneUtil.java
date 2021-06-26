@@ -136,7 +136,9 @@ public class ZoneUtil {
     public ZoneId zoneIdOf(String zoneId) {
         Objects.requireNonNull(zoneId, "zoneId");
 
-        if (zoneId.length() <= 1 || zoneId.startsWith("+") || zoneId.startsWith("-"))
+        if (zoneId.equalsIgnoreCase("Z"))
+            return ZoneOffset.UTC;
+        else if (zoneId.length() <= 1 || zoneId.startsWith("+") || zoneId.startsWith("-"))
             return ZoneOffset.of(zoneId);
         else if (!zoneId.startsWith("UTC") && !zoneId.startsWith("GMT") && !zoneId.startsWith("UT")) {
             String id = ZoneId.SHORT_IDS

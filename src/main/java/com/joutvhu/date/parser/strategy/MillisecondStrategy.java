@@ -5,6 +5,7 @@ import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
+import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -40,7 +41,8 @@ public class MillisecondStrategy extends Strategy {
                 }
             } else {
                 backup.restore();
-                throw new MismatchPatternException("The \"" + value + "\" is not a millisecond.", backup.getBackup(), this.pattern);
+                String message = MessageFormat.format("The \"{0}\" value is not milliseconds.", value);
+                throw new MismatchPatternException(message, backup.getBackup(), this.pattern);
             }
         }
     }
