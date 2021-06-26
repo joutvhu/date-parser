@@ -5,7 +5,6 @@ import com.joutvhu.date.parser.exception.ConflictDateException;
 import com.joutvhu.date.parser.strategy.AmPmStrategy;
 import com.joutvhu.date.parser.strategy.HourStrategy;
 
-import java.text.MessageFormat;
 import java.util.Calendar;
 
 public class HourSubscription implements Subscription {

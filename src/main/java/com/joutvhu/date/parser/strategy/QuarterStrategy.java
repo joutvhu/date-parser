@@ -4,6 +4,7 @@ import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
+import com.joutvhu.date.parser.subscription.QuarterSubscription;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 public class QuarterStrategy extends Strategy {
@@ -52,6 +53,7 @@ public class QuarterStrategy extends Strategy {
                             this.pattern);
                 }
                 chain.next();
+                builder.subscribe(new QuarterSubscription());
                 builder.set(QUARTER, quarter);
                 backup.commit();
             } catch (Exception e) {
