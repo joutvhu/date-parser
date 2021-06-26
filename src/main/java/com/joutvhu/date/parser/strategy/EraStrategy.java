@@ -5,9 +5,9 @@ import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 
+import java.util.GregorianCalendar;
+
 public class EraStrategy extends Strategy {
-    public static final String AD = "AD";
-    public static final String BC = "BC";
     public static final String ERA = "era";
 
     public EraStrategy(char c) {
@@ -27,11 +27,11 @@ public class EraStrategy extends Strategy {
         try {
             if ("AD".equalsIgnoreCase(value)) {
                 chain.next();
-                builder.set(ERA, AD);
+                builder.set(ERA, GregorianCalendar.AD);
                 backup.commit();
             } else if ("BC".equalsIgnoreCase(value)) {
                 chain.next();
-                builder.set(ERA, BC);
+                builder.set(ERA, GregorianCalendar.BC);
                 backup.commit();
             } else {
                 throw new MismatchPatternException(

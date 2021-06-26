@@ -22,8 +22,10 @@ public class CenturySubscription implements Subscription {
                 } else {
                     int c = year / 100;
                     if (century != c) {
-                        String message = MessageFormat.format("The year {0} is not the {1} century.", year, century);
-                        throw new ConflictDateException(message, century, c);
+                        throw new ConflictDateException(
+                                "The year " + year + " is not the " + century + " century.",
+                                century,
+                                c);
                     }
                 }
             }

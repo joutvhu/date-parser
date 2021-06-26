@@ -6,9 +6,9 @@ import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.subscription.HourSubscription;
 
+import java.util.Calendar;
+
 public class AmPmStrategy extends Strategy {
-    public static final String AM = "am";
-    public static final String PM = "pm";
     public static final String AM_PM = "am/pm";
 
     private final boolean upperCase;
@@ -32,12 +32,12 @@ public class AmPmStrategy extends Strategy {
             if ("am".equalsIgnoreCase(value)) {
                 chain.next();
                 builder.subscribe(new HourSubscription());
-                builder.set(AM_PM, AM);
+                builder.set(AM_PM, Calendar.AM);
                 backup.commit();
             } else if ("pm".equalsIgnoreCase(value)) {
                 chain.next();
                 builder.subscribe(new HourSubscription());
-                builder.set(AM_PM, PM);
+                builder.set(AM_PM, Calendar.PM);
                 backup.commit();
             } else {
                 throw new MismatchPatternException(

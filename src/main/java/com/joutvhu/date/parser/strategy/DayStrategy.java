@@ -4,6 +4,7 @@ import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
+import com.joutvhu.date.parser.subscription.DaySubscription;
 import com.joutvhu.date.parser.util.CommonUtil;
 import javafx.util.Pair;
 
@@ -15,6 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DayStrategy extends Strategy {
     public static final String DAYS = "days";
+    public static final String DAY_OF_YEAR = "day_of_year";
 
     private static final List<Integer> END_DAY_OF_MONTHS = Arrays
             .asList(0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365);
@@ -75,6 +77,7 @@ public class DayStrategy extends Strategy {
                                     this.pattern);
                         }
                         List<Pair<Integer, Integer>> days = getMonthAndDay(day);
+                        builder.set(DAY_OF_YEAR, day);
                         if (days.isEmpty()) {
                             throw new MismatchPatternException(
                                     "\"" + day + "\" is not a day of year.",
@@ -84,6 +87,7 @@ public class DayStrategy extends Strategy {
                             builder.set(DateBuilder.MONTH, days.get(0).getKey());
                             builder.set(DateBuilder.DAY, days.get(0).getValue());
                         } else {
+                            builder.subscribe(new DaySubscription());
                             builder.set(DAYS, days);
                         }
                     } else {
@@ -121,6 +125,11 @@ public class DayStrategy extends Strategy {
                     dayOfYear > 31 ? 2 : 1,
                     dayOfYear > 31 ? dayOfYear - 31 : dayOfYear
             ));
+        else if (dayOfYear == 60)
+            return Arrays.asList(
+                    new Pair<>(2, 29),
+                    new Pair<>(3, 1)
+            );
         else {
             for (int i = 2, len = END_DAY_OF_MONTHS.size(); i < len; i++) {
                 if (END_DAY_OF_MONTHS.get(i) + 1 == dayOfYear) {
