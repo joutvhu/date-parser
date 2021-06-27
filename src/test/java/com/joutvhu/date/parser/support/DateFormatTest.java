@@ -28,4 +28,17 @@ public class DateFormatTest {
         Assertions.assertEquals(29, builder.getDay());
         Assertions.assertEquals(2, builder.getMonth());
     }
+
+    @Test
+    public void parse_Quarter0() {
+        Assertions.assertThrows(Exception.class, () -> {
+            new DateFormat("yyyyMd Q").parse("20210523 3");
+        });
+    }
+
+    @Test
+    public void parse_Quarter1() {
+        DateBuilder builder = new DateFormat("yyyyMd Q").parse("20210523 2");
+        Assertions.assertNotNull(builder);
+    }
 }

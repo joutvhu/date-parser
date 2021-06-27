@@ -4,6 +4,7 @@ import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
+import com.joutvhu.date.parser.subscription.WeekdayInMonthSubscription;
 
 public class WeekdayInMonthStrategy extends Strategy {
     public static final String WEEKDAY_IN_MONTH = "weekday_in_month";
@@ -27,6 +28,7 @@ public class WeekdayInMonthStrategy extends Strategy {
             try {
                 chain.next();
                 int weekdayInMonth = value - '0';
+                builder.subscribe(new WeekdayInMonthSubscription());
                 builder.set(WEEKDAY_IN_MONTH, weekdayInMonth);
                 backup.commit();
             } catch (Exception e) {

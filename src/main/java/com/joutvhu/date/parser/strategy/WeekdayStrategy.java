@@ -58,7 +58,7 @@ public class WeekdayStrategy extends Strategy {
         if (CommonUtil.isNumber(value)) {
             try {
                 int weekday = Integer.parseInt(value);
-                if (weekday < 1 || weekday > 6)
+                if (weekday < 1 || weekday > 7)
                     throw new MismatchPatternException(
                             "The \"" + weekday + "\" is not a day of week.",
                             backup.getBackupPosition(),

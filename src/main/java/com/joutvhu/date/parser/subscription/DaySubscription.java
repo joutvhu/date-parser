@@ -5,6 +5,7 @@ import com.joutvhu.date.parser.exception.ConflictDateException;
 import com.joutvhu.date.parser.strategy.DayStrategy;
 import javafx.util.Pair;
 
+import java.time.LocalDate;
 import java.time.chrono.IsoChronology;
 import java.util.List;
 
@@ -29,6 +30,8 @@ public class DaySubscription implements Subscription {
                     day = day2.getValue();
                 }
 
+                // Check date is valid.
+                LocalDate.of(year, month, day);
                 Integer oldMonth = builder.getMonth();
                 if (oldMonth != null && !oldMonth.equals(month)) {
                     Integer dayOfYear = builder.get(DayStrategy.DAY_OF_YEAR);

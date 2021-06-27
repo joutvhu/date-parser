@@ -57,7 +57,7 @@ public class DateParser {
         } else if (Date.class.equals(type)) {
             result = calendar.getTime();
         } else if (Long.class.equals(type)) {
-            result = calendar.getTime().getTime();
+            result = calendar.getTimeInMillis();
         } else if (Instant.class.equals(type)) {
             result = calendar.toInstant();
         } else if (TimeZone.class.equals(type)) {

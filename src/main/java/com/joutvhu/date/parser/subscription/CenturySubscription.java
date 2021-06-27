@@ -5,8 +5,6 @@ import com.joutvhu.date.parser.exception.ConflictDateException;
 import com.joutvhu.date.parser.strategy.CenturyStrategy;
 import com.joutvhu.date.parser.strategy.YearStrategy;
 
-import java.text.MessageFormat;
-
 public class CenturySubscription implements Subscription {
     @Override
     public void changed(DateBuilder builder, String event, Object value) {
