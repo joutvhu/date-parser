@@ -8,7 +8,6 @@ import com.joutvhu.date.parser.strategy.Strategy;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.TimeZone;
 
 public class DateFormat {
@@ -18,15 +17,12 @@ public class DateFormat {
     private int endIndex;
 
     public DateFormat(String pattern) {
-        this(pattern, Locale.getDefault(), TimeZone.getDefault());
+        this(pattern, null, null);
     }
 
     public DateFormat(String pattern, Locale locale, TimeZone zone) {
-        Objects.requireNonNull(locale, "Locale must be not null.");
-        Objects.requireNonNull(zone, "TimeZone must be not null.");
-
-        this.locale = locale;
-        this.zone = zone;
+        this.locale = locale != null ? locale : Locale.getDefault();
+        this.zone = zone != null ? zone : TimeZone.getDefault();
         this.strategies = new DatePatternSplitter(pattern).getStrategyChain();
         this.endIndex = this.strategies.size() - 1;
     }

@@ -30,7 +30,10 @@ public class MillisecondStrategy extends Strategy {
             if (CommonUtil.isNumber(first, value)) {
                 try {
                     chain.next();
-                    int nano = Integer.parseInt(CommonUtil.rightPad(value, 9, '0'));
+                    int nano = Integer.parseInt(value.length() > 9 ?
+                            value.substring(0, 9) :
+                            CommonUtil.rightPad(value, 9, '0')
+                    );
                     builder.set(DateBuilder.NANO, nano);
                     backup.commit();
                     return;

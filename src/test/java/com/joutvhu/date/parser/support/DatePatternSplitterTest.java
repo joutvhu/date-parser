@@ -11,7 +11,7 @@ import java.util.List;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DatePatternSplitterTest {
     @Test
-    public void testGetStrategyChain() {
+    public void getStrategyChain_Case0() {
         List<Strategy> result = new DatePatternSplitter("yyyy/MM/dd'T'HH:mm:ss.SSS")
                 .getStrategyChain();
         Assertions.assertNotNull(result);

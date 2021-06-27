@@ -9,7 +9,8 @@ import org.junit.jupiter.api.TestInstance;
 public class DateFormatTest {
     @Test
     public void parse_Case0() {
-        DateBuilder builder = new DateFormat("yyyyMd hh:mm:ss.SSS a Z").parse("20211123 02:41:32.651 pm America/Los_Angeles");
+        DateBuilder builder = new DateFormat("yyyyDDD hh:mm:ss.SSS a Z")
+                .parse("2021068 02:41:32.651 pm America/Los_Angeles");
         Assertions.assertNotNull(builder);
     }
 

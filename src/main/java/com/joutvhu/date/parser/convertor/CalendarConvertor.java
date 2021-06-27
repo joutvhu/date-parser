@@ -19,18 +19,13 @@ public class CalendarConvertor implements Convertor<Calendar> {
         Calendar calendar = Calendar.getInstance(builder.getZone(), builder.getLocale());
         calendar.set(
                 builder.getYear(),
-                builder.getMonth(),
-                builder.getDay()
+                builder.getMonth() - 1,
+                builder.getDay(),
+                builder.getHour() != null ? builder.getHour() : 0,
+                builder.getMinute() != null ? builder.getMinute() : 0,
+                builder.getSecond() != null ? builder.getSecond() : 0
         );
-
-        if (builder.getHour() != null)
-            calendar.set(Calendar.HOUR, builder.getHour());
-        if (builder.getMinute() != null)
-            calendar.set(Calendar.MINUTE, builder.getMinute());
-        if (builder.getSecond() != null)
-            calendar.set(Calendar.SECOND, builder.getSecond());
-        if (builder.getNano() != null)
-            calendar.set(Calendar.MILLISECOND, builder.getNano() / 1000);
+        calendar.set(Calendar.MILLISECOND, builder.getNano() != null ? builder.getNano() / 1000000 : 0);
 
         return calendar;
     }
