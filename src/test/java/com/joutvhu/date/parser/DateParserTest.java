@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -73,6 +74,13 @@ public class DateParserTest {
                 .parse(LocalDateTime.class, "2021/06/27 21:52:25.408", "yyyy/MM/dd HH:mm:ss.SSS");
         Assertions.assertNotNull(result);
         Assertions.assertEquals("2021-06-27T21:52:25.408", result.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+    }
+
+    @Test
+    public void parse_Instant0() {
+        Instant result = DateParser.quickParse(Instant.class, "2021/06/27 21:52:25.403841585", "yyyy/MM/dd HH:mm:ss.SSSSSSSSS");
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(403841585, result.getNano());
     }
 
     private String format(Date date, String format) {
