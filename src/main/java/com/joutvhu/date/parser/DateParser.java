@@ -99,4 +99,8 @@ public class DateParser {
 
         throw new ParseException("Unable to parse the date: " + value, patterns);
     }
+
+    public static <T> T quickParse(Class<T> type, String value, String... patterns) {
+        return DateParser.instance().parse(type, value, patterns);
+    }
 }
