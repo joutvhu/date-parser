@@ -4,10 +4,13 @@ import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
+import com.joutvhu.date.parser.subscription.WeekOfMonthSubscription;
+import com.joutvhu.date.parser.subscription.WeekOfYearSubscription;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 public class WeekStrategy extends Strategy {
-    public static final String WEEK = "week";
+    public static final String WEEK_OF_YEAR = "week_of_year";
+    public static final String WEEK_OF_MONTH = "week_of_month";
 
     private final boolean weekInYear;
     private boolean ordinal;
@@ -64,21 +67,27 @@ public class WeekStrategy extends Strategy {
             try {
                 int week = Integer.parseInt(value);
                 if (weekInYear) {
-                    if (week < 1 || week > 53)
+                    if (week < 1 || week > 54)
                         throw new MismatchPatternException(
                                 "The \"" + week + "\" is not a week of year.",
                                 backup.getBackupPosition(),
                                 this.pattern);
+
+                    chain.next();
+                    builder.subscribe(new WeekOfYearSubscription());
+                    builder.set(WEEK_OF_YEAR, week);
                 } else {
                     if (week < 1 || week > 6)
                         throw new MismatchPatternException(
                                 "The \"" + week + "\" is not a week of month.",
                                 backup.getBackupPosition(),
                                 this.pattern);
+
+                    chain.next();
+                    builder.subscribe(new WeekOfMonthSubscription());
+                    builder.set(WEEK_OF_MONTH, week);
                 }
 
-                chain.next();
-                builder.set(WEEK, week);
                 backup.commit();
                 return true;
             } catch (Exception e) {
