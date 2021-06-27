@@ -86,18 +86,20 @@ public class DateParser {
         if (value == null || patterns == null)
             throw new IllegalArgumentException("Date and Patterns must not be null");
 
+        DateBuilder builder;
+        Throwable cause = null;
         for (final String pattern : patterns) {
             DateFormat dateFormat = new DateFormat(pattern, defaultLocale, defaultZone);
-            DateBuilder builder;
             try {
                 builder = dateFormat.parse(value);
             } catch (Exception e) {
+                cause = e;
                 continue;
             }
             return this.convert(type, builder);
         }
 
-        throw new ParseException("Unable to parse the date: " + value, patterns);
+        throw new ParseException("Unable to parse the date: " + value, cause, patterns);
     }
 
     public static <T> T quickParse(Class<T> type, String value, String... patterns) {
