@@ -13,6 +13,9 @@ public class ZoneOffsetConvertor implements Convertor<ZoneOffset> {
     public ZoneOffset convert(DateBuilder builder) {
         Objects.requireNonNull(builder.getZone());
 
-        return builder.getZone().toZoneId().getRules().getOffset(Instant.now());
+        if (builder.getZone().toZoneId() instanceof ZoneOffset)
+            return (ZoneOffset) builder.getZone().toZoneId();
+        else
+            return builder.getZone().toZoneId().getRules().getOffset(Instant.now());
     }
 }
