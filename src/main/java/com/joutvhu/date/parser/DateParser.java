@@ -1,26 +1,83 @@
 package com.joutvhu.date.parser;
 
+import com.joutvhu.date.parser.convertor.*;
+import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.exception.ParseException;
-import lombok.experimental.UtilityClass;
-import org.apache.commons.lang3.time.FastDateParser;
+import com.joutvhu.date.parser.support.DateFormat;
 
-import java.text.ParsePosition;
-import java.time.*;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 import java.util.TimeZone;
 
-@UtilityClass
 public class DateParser {
-    private static class ApacheDateParser extends FastDateParser {
-        public ApacheDateParser(String pattern, TimeZone timeZone, Locale locale) {
-            this(pattern, timeZone, locale, null);
+    private static DateParser INSTANCE;
+
+    private Locale defaultLocale;
+    private TimeZone defaultZone;
+    private Map<Class<?>, Convertor<?>> convertors;
+
+    public DateParser() {
+        this.convertors = new HashMap<>();
+    }
+
+    public static DateParser instance() {
+        if (INSTANCE == null) {
+            INSTANCE = new DateParser()
+                    .convertor(CalendarConvertor.INSTANCE)
+                    .convertor(DateConvertor.INSTANCE)
+                    .convertor(LocalDateConvertor.INSTANCE)
+                    .convertor(LocalDateTimeConvertor.INSTANCE)
+                    .convertor(LocalTimeConvertor.INSTANCE)
+                    .convertor(InstantConvertor.INSTANCE)
+                    .convertor(SqlDateConvertor.INSTANCE)
+                    .convertor(SqlTimeConvertor.INSTANCE)
+                    .convertor(SqlTimestampConvertor.INSTANCE)
+                    .convertor(DayOfWeekConvertor.INSTANCE)
+                    .convertor(LongConvertor.INSTANCE)
+                    .convertor(MonthConvertor.INSTANCE)
+                    .convertor(MonthDayConvertor.INSTANCE)
+                    .convertor(OffsetDateTimeConvertor.INSTANCE)
+                    .convertor(OffsetTimeConvertor.INSTANCE)
+                    .convertor(TimeZoneConvertor.INSTANCE)
+                    .convertor(YearConvertor.INSTANCE)
+                    .convertor(YearMonthConvertor.INSTANCE)
+                    .convertor(ZonedDateTimeConvertor.INSTANCE)
+                    .convertor(ZoneOffsetConvertor.INSTANCE);
+        }
+        return INSTANCE;
+    }
+
+    public <T> DateParser convertor(Class<T> typeOfConvertor, Convertor<T> convertor) {
+        this.convertors.put(typeOfConvertor, convertor);
+        return this;
+    }
+
+    public <T> DateParser convertor(Convertor<T> convertor) {
+        Class<T> typeOfConvertor = Convertor.typeOfConvertor(convertor);
+        Objects.requireNonNull(typeOfConvertor);
+        return this.convertor(typeOfConvertor, convertor);
+    }
+
+    public DateParser locale(Locale defaultLocale) {
+        this.defaultLocale = defaultLocale;
+        return this;
+    }
+
+    public DateParser zone(TimeZone defaultZone) {
+        this.defaultZone = defaultZone;
+        return this;
+    }
+
+    public <T> T convert(Class<T> type, DateBuilder builder) {
+        if (this.convertors.containsKey(type)) {
+            Convertor<T> convertor = (Convertor<T>) this.convertors.get(type);
+            if (convertor != null)
+                return convertor.convert(builder);
         }
 
-        public ApacheDateParser(String pattern, TimeZone timeZone, Locale locale, Date centuryStart) {
-            super(pattern, timeZone, locale, centuryStart);
-        }
+        throw new ClassCastException("Unsupported " + type.getName() + " class.");
     }
 
     public <T> T parse(Class<T> type, String value, String... patterns) {
@@ -29,121 +86,17 @@ public class DateParser {
         if (value == null || patterns == null)
             throw new IllegalArgumentException("Date and Patterns must not be null");
 
-        TimeZone timeZone = TimeZone.getDefault();
-        Locale locale = Locale.getDefault();
-        ParsePosition pos = new ParsePosition(0);
-        Calendar calendar = Calendar.getInstance(timeZone, locale);
-
         for (final String pattern : patterns) {
-            final FastDateParser fdp = new DateParser.ApacheDateParser(pattern, timeZone, locale);
-            calendar.clear();
+            DateFormat dateFormat = new DateFormat(pattern, defaultLocale, defaultZone);
+            DateBuilder builder;
             try {
-                if (fdp.parse(value, pos, calendar) && pos.getIndex() == value.length())
-                    return parse(type, calendar);
-            } catch (final IllegalArgumentException ignore) {
-                // leniency is preventing calendar from being set
+                builder = dateFormat.parse(value);
+            } catch (Exception e) {
+                continue;
             }
-            pos.setIndex(0);
+            return this.convert(type, builder);
         }
 
         throw new ParseException("Unable to parse the date: " + value, patterns);
-    }
-
-    private <T> T parse(Class<T> type, Calendar calendar) {
-        Object result = null;
-
-        if (Calendar.class.equals(type)) {
-            result = calendar;
-        } else if (Date.class.equals(type)) {
-            result = calendar.getTime();
-        } else if (Long.class.equals(type)) {
-            result = calendar.getTimeInMillis();
-        } else if (Instant.class.equals(type)) {
-            result = calendar.toInstant();
-        } else if (TimeZone.class.equals(type)) {
-            result = calendar.getTimeZone();
-        } else if (ZoneOffset.class.equals(type)) {
-            result = calendar.getTimeZone()
-                    .toZoneId()
-                    .getRules()
-                    .getOffset(Instant.now());
-        } else if (LocalDate.class.equals(type)) {
-            result = LocalDate.of(
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH)
-            );
-        } else if (LocalTime.class.equals(type)) {
-            result = LocalTime.of(
-                    calendar.get(Calendar.HOUR_OF_DAY),
-                    calendar.get(Calendar.MINUTE),
-                    calendar.get(Calendar.SECOND),
-                    calendar.get(Calendar.MILLISECOND) * 1000000
-            );
-        } else if (LocalDateTime.class.equals(type)) {
-            result = LocalDateTime.of(
-                    parse(LocalDate.class, calendar),
-                    parse(LocalTime.class, calendar)
-            );
-        } else if (java.sql.Date.class.equals(type)) {
-            result = java.sql.Date.valueOf(
-                    parse(LocalDate.class, calendar)
-            );
-        } else if (java.sql.Time.class.equals(type)) {
-            result = java.sql.Time.valueOf(
-                    parse(LocalTime.class, calendar)
-            );
-        } else if (java.sql.Timestamp.class.equals(type)) {
-            result = java.sql.Timestamp.valueOf(
-                    parse(LocalDateTime.class, calendar)
-            );
-        } else if (ZonedDateTime.class.equals(type)) {
-            result = ZonedDateTime.of(
-                    parse(LocalDateTime.class, calendar),
-                    calendar.getTimeZone().toZoneId()
-            );
-        } else if (OffsetTime.class.equals(type)) {
-            result = OffsetTime.of(
-                    parse(LocalTime.class, calendar),
-                    calendar.getTimeZone()
-                            .toZoneId()
-                            .getRules()
-                            .getOffset(Instant.now())
-            );
-        } else if (OffsetDateTime.class.equals(type)) {
-            result = OffsetDateTime.of(
-                    parse(LocalDateTime.class, calendar),
-                    calendar.getTimeZone()
-                            .toZoneId()
-                            .getRules()
-                            .getOffset(Instant.now())
-            );
-        } else if (DayOfWeek.class.equals(type)) {
-            result = DayOfWeek.of(
-                    calendar.get(Calendar.DAY_OF_WEEK)
-            );
-        } else if (MonthDay.class.equals(type)) {
-            result = MonthDay.of(
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH)
-            );
-        } else if (Month.class.equals(type)) {
-            result = Month.of(
-                    calendar.get(Calendar.MONTH)
-            );
-        } else if (Year.class.equals(type)) {
-            result = Year.of(
-                    calendar.get(Calendar.YEAR)
-            );
-        } else if (YearMonth.class.equals(type)) {
-            result = YearMonth.of(
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH)
-            );
-        } else {
-            throw new ClassCastException("Unsupported " + type.getName() + " class.");
-        }
-
-        return (T) result;
     }
 }
