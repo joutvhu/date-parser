@@ -119,6 +119,10 @@ public class CommonUtil {
     }
 
     public int dayOfYear(int weekOfYear, int dayOfWeek, int startDayOfYear) {
-        return weekOfYear * 7 - (7 - dayOfWeek) - (startDayOfYear - 1);
+        return (weekOfYear * 7) - (7 - dayOfWeek) - (startDayOfYear - 1);
+    }
+
+    public int dayOfMonth(int weekdayInMonth, int dayOfWeek, int startDayOfYear) {
+        return (weekdayInMonth * 7) - startDayOfYear + dayOfWeek - ((dayOfWeek > startDayOfYear) ? 7 : 0);
     }
 }
