@@ -1,5 +1,6 @@
 package com.joutvhu.date.parser;
 
+import com.joutvhu.date.parser.exception.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -217,6 +218,13 @@ public class DateParserTest {
     public void parse_SqlTimestamp0() {
         java.sql.Timestamp result = DateParser.quickParse(java.sql.Timestamp.class, "5/1/2020 1:20:42.234 pm", "d/M/yyyy h:m:s.SSS a");
         Assertions.assertEquals("2020-01-05 13:20:42.234", result.toString());
+    }
+
+    @Test
+    public void parse_Fail0() {
+        Assertions.assertThrows(ParseException.class, () -> {
+            DateParser.quickParse(Instant.class, "5/1/2020 1:20:42.234 cm", "d/M/yyyy h:m:s.SSS a");
+        });
     }
 
     private String format(Date date, String format) {
