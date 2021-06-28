@@ -3,9 +3,9 @@ package com.joutvhu.date.parser.subscription;
 import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.exception.ConflictDateException;
 import com.joutvhu.date.parser.strategy.DayStrategy;
-import javafx.util.Pair;
 
 import java.time.LocalDate;
+import java.time.MonthDay;
 import java.time.chrono.IsoChronology;
 import java.util.List;
 
@@ -14,26 +14,14 @@ public class DaySubscription implements Subscription {
     public void changed(ObjectiveDate objective, String event, Object value) {
         if (ObjectiveDate.YEAR.equals(event) || DayStrategy.DAYS.equals(event)) {
             Integer year = objective.getYear();
-            List<Pair<Integer, Integer>> days = objective.get(DayStrategy.DAYS);
+            List<MonthDay> days = objective.get(DayStrategy.DAYS);
 
             if (year != null && days != null && days.size() == 2) {
-                Integer day;
-                Integer month;
-                Pair<Integer, Integer> day1 = days.get(0);
-                Pair<Integer, Integer> day2 = days.get(1);
-
-                if (IsoChronology.INSTANCE.isLeapYear(year)) {
-                    month = day1.getKey();
-                    day = day1.getValue();
-                } else {
-                    month = day2.getKey();
-                    day = day2.getValue();
-                }
-
+                MonthDay monthDay = IsoChronology.INSTANCE.isLeapYear(year) ? days.get(0) : days.get(1);
                 // Check date is valid.
-                LocalDate.of(year, month, day);
+                LocalDate.of(year, monthDay.getMonth(), monthDay.getDayOfMonth());
                 Integer oldMonth = objective.getMonth();
-                if (oldMonth != null && !oldMonth.equals(month)) {
+                if (oldMonth != null && !oldMonth.equals(monthDay.getMonthValue())) {
                     Integer dayOfYear = objective.get(DayStrategy.DAY_OF_YEAR);
                     throw new ConflictDateException(
                             "Conflict month (" + oldMonth + ") and day of year (" + dayOfYear + ").",
@@ -41,8 +29,8 @@ public class DaySubscription implements Subscription {
                             dayOfYear);
                 }
 
-                objective.set(ObjectiveDate.MONTH, month);
-                objective.set(ObjectiveDate.DAY, day);
+                objective.set(ObjectiveDate.MONTH, monthDay.getMonthValue());
+                objective.set(ObjectiveDate.DAY, monthDay.getDayOfMonth());
 
                 objective.unsubscribe(DaySubscription.class);
             }

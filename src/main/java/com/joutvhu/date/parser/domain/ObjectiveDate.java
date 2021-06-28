@@ -1,12 +1,12 @@
 package com.joutvhu.date.parser.domain;
 
 import com.joutvhu.date.parser.subscription.Subscription;
-import javafx.util.Pair;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.temporal.WeekFields;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -167,7 +167,7 @@ public class ObjectiveDate {
     }
 
     public interface Tracer {
-        List<Pair<String, Object>> share();
+        List<Map.Entry<String, Object>> share();
 
         void trace(String key, Object oldValue);
     }
@@ -176,7 +176,7 @@ public class ObjectiveDate {
     public static class DateBackup implements Backup<ObjectiveDate>, Tracer {
         private final int startAt;
         private final ObjectiveDate objective;
-        private final List<Pair<String, Object>> diary;
+        private final List<Map.Entry<String, Object>> diary;
 
         public DateBackup(ObjectiveDate objective) {
             this.objective = objective;
@@ -193,19 +193,19 @@ public class ObjectiveDate {
         }
 
         @Override
-        public List<Pair<String, Object>> share() {
+        public List<Map.Entry<String, Object>> share() {
             return diary;
         }
 
         @Override
         public void trace(String key, Object oldValue) {
-            this.diary.add(new Pair<>(key, oldValue));
+            this.diary.add(new AbstractMap.SimpleEntry<>(key, oldValue));
         }
 
         @Override
         public ObjectiveDate restore() {
             for (int i = this.diary.size() - 1; i >= this.startAt; i--) {
-                Pair<String, Object> pair = this.diary.get(i);
+                Map.Entry<String, Object> pair = this.diary.get(i);
                 this.objective.set(pair.getKey(), pair.getValue(), false, false);
                 this.diary.remove(i);
             }

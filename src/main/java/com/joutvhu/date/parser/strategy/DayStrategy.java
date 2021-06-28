@@ -6,8 +6,8 @@ import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.subscription.DaySubscription;
 import com.joutvhu.date.parser.util.CommonUtil;
-import javafx.util.Pair;
 
+import java.time.MonthDay;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -75,19 +75,19 @@ public class DayStrategy extends Strategy {
                                     backup.getBackupPosition(),
                                     this.pattern);
                         }
-                        List<Pair<Integer, Integer>> days = getMonthAndDay(day);
+                        List<MonthDay> monthDays = getMonthAndDay(day);
                         objective.set(DAY_OF_YEAR, day);
-                        if (days.isEmpty()) {
+                        if (monthDays.isEmpty()) {
                             throw new MismatchPatternException(
                                     "\"" + day + "\" is not a day of year.",
                                     backup.getBackupPosition(),
                                     this.pattern);
-                        } else if (days.size() == 1) {
-                            objective.set(ObjectiveDate.MONTH, days.get(0).getKey());
-                            objective.set(ObjectiveDate.DAY, days.get(0).getValue());
+                        } else if (monthDays.size() == 1) {
+                            objective.set(ObjectiveDate.MONTH, monthDays.get(0).getMonthValue());
+                            objective.set(ObjectiveDate.DAY, monthDays.get(0).getDayOfMonth());
                         } else {
                             objective.subscribe(new DaySubscription());
-                            objective.set(DAYS, days);
+                            objective.set(DAYS, monthDays);
                         }
                     } else {
                         if (day == 0 || day > 31) {
@@ -116,31 +116,31 @@ public class DayStrategy extends Strategy {
         }
     }
 
-    public List<Pair<Integer, Integer>> getMonthAndDay(int dayOfYear) {
+    public List<MonthDay> getMonthAndDay(int dayOfYear) {
         if (dayOfYear == 366)
-            return Collections.singletonList(new Pair<>(12, 31));
+            return Collections.singletonList(MonthDay.of(12, 31));
         else if (dayOfYear < 60)
-            return Collections.singletonList(new Pair<>(
+            return Collections.singletonList(MonthDay.of(
                     dayOfYear > 31 ? 2 : 1,
                     dayOfYear > 31 ? dayOfYear - 31 : dayOfYear
             ));
         else if (dayOfYear == 60)
             return Arrays.asList(
-                    new Pair<>(2, 29),
-                    new Pair<>(3, 1)
+                    MonthDay.of(2, 29),
+                    MonthDay.of(3, 1)
             );
         else {
             for (int i = 2, len = END_DAY_OF_MONTHS.size(); i < len; i++) {
                 if (END_DAY_OF_MONTHS.get(i) + 1 == dayOfYear) {
                     return Arrays.asList(
-                            new Pair<>(i, dayOfYear - END_DAY_OF_MONTHS.get(i - 1) - 1),
-                            new Pair<>(i + 1, 1)
+                            MonthDay.of(i, dayOfYear - END_DAY_OF_MONTHS.get(i - 1) - 1),
+                            MonthDay.of(i + 1, 1)
                     );
                 }
                 if (END_DAY_OF_MONTHS.get(i - 1) < dayOfYear && dayOfYear <= END_DAY_OF_MONTHS.get(i)) {
                     return Arrays.asList(
-                            new Pair<>(i, dayOfYear - END_DAY_OF_MONTHS.get(i - 1) - 1),
-                            new Pair<>(i, dayOfYear - END_DAY_OF_MONTHS.get(i - 1))
+                            MonthDay.of(i, dayOfYear - END_DAY_OF_MONTHS.get(i - 1) - 1),
+                            MonthDay.of(i, dayOfYear - END_DAY_OF_MONTHS.get(i - 1))
                     );
                 }
             }
