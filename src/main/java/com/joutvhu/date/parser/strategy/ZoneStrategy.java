@@ -30,7 +30,7 @@ public class ZoneStrategy extends Strategy {
             if (timeZone != null) {
                 try {
                     chain.next();
-                    objective.setZone(timeZone);
+                    objective.set(ObjectiveDate.ZONE, timeZone);
                     backup.commit();
                     return;
                 } catch (Exception e) {

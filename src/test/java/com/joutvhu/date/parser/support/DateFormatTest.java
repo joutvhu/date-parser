@@ -31,6 +31,13 @@ public class DateFormatTest {
     }
 
     @Test
+    public void parse_DayOfYear2() {
+        ObjectiveDate objective = new DateFormat("yyyy DDDo").parse("2021 60th");
+        Assertions.assertEquals(1, objective.getDay());
+        Assertions.assertEquals(3, objective.getMonth());
+    }
+
+    @Test
     public void parse_Quarter0() {
         Assertions.assertThrows(Exception.class, () -> {
             new DateFormat("yyyyMd Q").parse("20210523 3");

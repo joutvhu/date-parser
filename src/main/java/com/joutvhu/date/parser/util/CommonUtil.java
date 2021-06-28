@@ -27,7 +27,7 @@ public class CommonUtil {
     }
 
     public boolean hasOrdinal(String value) {
-        return value.matches("(st|nd|rd|th)$");
+        return value.matches(".*(st|nd|rd|th)");
     }
 
     public int indexIgnoreCaseOf(String value, List<String> in) {
