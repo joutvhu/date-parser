@@ -34,30 +34,32 @@ public class DateParser {
 
     /**
      * Get default instance of {@link DateParser}.
+     *
+     * @return The date parser.
      */
     public static DateParser instance() {
         if (INSTANCE == null) {
             INSTANCE = new DateParser()
-                    .convertor(CalendarConvertor.INSTANCE)
-                    .convertor(DateConvertor.INSTANCE)
-                    .convertor(LocalDateConvertor.INSTANCE)
-                    .convertor(LocalDateTimeConvertor.INSTANCE)
-                    .convertor(LocalTimeConvertor.INSTANCE)
-                    .convertor(InstantConvertor.INSTANCE)
-                    .convertor(SqlDateConvertor.INSTANCE)
-                    .convertor(SqlTimeConvertor.INSTANCE)
-                    .convertor(SqlTimestampConvertor.INSTANCE)
-                    .convertor(DayOfWeekConvertor.INSTANCE)
-                    .convertor(LongConvertor.INSTANCE)
-                    .convertor(MonthConvertor.INSTANCE)
-                    .convertor(MonthDayConvertor.INSTANCE)
-                    .convertor(OffsetDateTimeConvertor.INSTANCE)
-                    .convertor(OffsetTimeConvertor.INSTANCE)
-                    .convertor(TimeZoneConvertor.INSTANCE)
-                    .convertor(YearConvertor.INSTANCE)
-                    .convertor(YearMonthConvertor.INSTANCE)
-                    .convertor(ZonedDateTimeConvertor.INSTANCE)
-                    .convertor(ZoneOffsetConvertor.INSTANCE);
+                    .with(CalendarConvertor.INSTANCE)
+                    .with(DateConvertor.INSTANCE)
+                    .with(LocalDateConvertor.INSTANCE)
+                    .with(LocalDateTimeConvertor.INSTANCE)
+                    .with(LocalTimeConvertor.INSTANCE)
+                    .with(InstantConvertor.INSTANCE)
+                    .with(SqlDateConvertor.INSTANCE)
+                    .with(SqlTimeConvertor.INSTANCE)
+                    .with(SqlTimestampConvertor.INSTANCE)
+                    .with(DayOfWeekConvertor.INSTANCE)
+                    .with(LongConvertor.INSTANCE)
+                    .with(MonthConvertor.INSTANCE)
+                    .with(MonthDayConvertor.INSTANCE)
+                    .with(OffsetDateTimeConvertor.INSTANCE)
+                    .with(OffsetTimeConvertor.INSTANCE)
+                    .with(TimeZoneConvertor.INSTANCE)
+                    .with(YearConvertor.INSTANCE)
+                    .with(YearMonthConvertor.INSTANCE)
+                    .with(ZonedDateTimeConvertor.INSTANCE)
+                    .with(ZoneOffsetConvertor.INSTANCE);
         }
         return INSTANCE;
     }
@@ -66,25 +68,33 @@ public class DateParser {
      * Set a convertor for new target type
      *
      * @param typeOfConvertor is target type class
-     * @param convertor       is {@link Convertor<T>} for the target type
+     * @param convertor       is Convertor for the target type
      * @param <T>             is target type
+     * @return The current date parser.
      */
-    public <T> DateParser convertor(Class<T> typeOfConvertor, Convertor<T> convertor) {
+    public <T> DateParser with(Class<T> typeOfConvertor, Convertor<T> convertor) {
         this.convertors.put(typeOfConvertor, convertor);
         return this;
     }
 
     /**
      * Set a convertor for new Target Type
+     *
+     * @param convertor is Convertor for the target type
+     * @param <T>       is target type
+     * @return The current date parser.
      */
-    public <T> DateParser convertor(Convertor<T> convertor) {
+    public <T> DateParser with(Convertor<T> convertor) {
         Class<T> typeOfConvertor = Convertor.typeOfConvertor(convertor);
         Objects.requireNonNull(typeOfConvertor);
-        return this.convertor(typeOfConvertor, convertor);
+        return this.with(typeOfConvertor, convertor);
     }
 
     /**
      * Set default {@link Locale}
+     *
+     * @param defaultLocale The default locale
+     * @return The current date parser.
      */
     public DateParser with(Locale defaultLocale) {
         this.defaultLocale = defaultLocale;
@@ -93,6 +103,9 @@ public class DateParser {
 
     /**
      * Set default {@link TimeZone}
+     *
+     * @param defaultZone The default time zone
+     * @return The current date parser.
      */
     public DateParser with(TimeZone defaultZone) {
         this.defaultZone = defaultZone;
@@ -101,6 +114,9 @@ public class DateParser {
 
     /**
      * Set default {@link TimeZone}
+     *
+     * @param defaultWeekFields The default week fields
+     * @return The current date parser.
      */
     public DateParser with(WeekFields defaultWeekFields) {
         this.defaultWeekFields = defaultWeekFields;
@@ -109,8 +125,11 @@ public class DateParser {
 
     /**
      * Load a custom {@link StrategyFactory}
+     *
+     * @param strategyFactory The default strategy factory
+     * @return The current date parser.
      */
-    public DateParser strategyFactory(StrategyFactory strategyFactory) {
+    public DateParser with(StrategyFactory strategyFactory) {
         this.strategyFactory = strategyFactory;
         return this;
     }
@@ -161,6 +180,12 @@ public class DateParser {
 
     /**
      * Quick parse with default {@link DateParser#instance()}
+     *
+     * @param type     is the target type class
+     * @param value    is string of date need to parse
+     * @param patterns are possible formats of the value
+     * @param <T>      is the target type
+     * @return target object
      */
     public static <T> T quickParse(Class<T> type, String value, String... patterns) {
         return DateParser.instance().parse(type, value, patterns);
