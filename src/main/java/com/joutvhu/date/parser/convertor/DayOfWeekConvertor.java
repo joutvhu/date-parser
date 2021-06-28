@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.convertor;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.strategy.WeekdayStrategy;
 
 import java.time.DayOfWeek;
@@ -10,13 +10,13 @@ public class DayOfWeekConvertor implements Convertor<DayOfWeek> {
     public static final DayOfWeekConvertor INSTANCE = new DayOfWeekConvertor();
 
     @Override
-    public DayOfWeek convert(DateBuilder builder) {
-        if (builder.getYear() != null && builder.getMonth() != null && builder.getDay() != null)
+    public DayOfWeek convert(ObjectiveDate objective) {
+        if (objective.getYear() != null && objective.getMonth() != null && objective.getDay() != null)
             return LocalDate
-                    .of(builder.getYear(), builder.getMonth(), builder.getDay())
+                    .of(objective.getYear(), objective.getMonth(), objective.getDay())
                     .getDayOfWeek();
 
-        Integer dayOfWeek = builder.get(WeekdayStrategy.WEEKDAY);
+        Integer dayOfWeek = objective.get(WeekdayStrategy.WEEKDAY);
         if (dayOfWeek != null)
             return DayOfWeek
                     .of(dayOfWeek);

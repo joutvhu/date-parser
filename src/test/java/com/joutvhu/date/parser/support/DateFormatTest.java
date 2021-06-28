@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.support;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -9,25 +9,25 @@ import org.junit.jupiter.api.TestInstance;
 public class DateFormatTest {
     @Test
     public void parse_Case0() {
-        DateBuilder builder = new DateFormat("yyyyDDD hh:mm:ss.SSS a Z")
+        ObjectiveDate objective = new DateFormat("yyyyDDD hh:mm:ss.SSS a Z")
                 .parse("2021068 02:41:32.651 pm America/Los_Angeles");
-        Assertions.assertNotNull(builder);
+        Assertions.assertNotNull(objective);
     }
 
     @Test
     public void parse_DayOfYear0() {
-        DateBuilder builder = new DateFormat("yyyyDDD").parse("2021068");
-        Assertions.assertNotNull(builder);
-        Assertions.assertEquals(9, builder.getDay());
-        Assertions.assertEquals(3, builder.getMonth());
+        ObjectiveDate objective = new DateFormat("yyyyDDD").parse("2021068");
+        Assertions.assertNotNull(objective);
+        Assertions.assertEquals(9, objective.getDay());
+        Assertions.assertEquals(3, objective.getMonth());
     }
 
     @Test
     public void parse_DayOfYear1() {
-        DateBuilder builder = new DateFormat("yyyyDDD").parse("2024060");
-        Assertions.assertNotNull(builder);
-        Assertions.assertEquals(29, builder.getDay());
-        Assertions.assertEquals(2, builder.getMonth());
+        ObjectiveDate objective = new DateFormat("yyyyDDD").parse("2024060");
+        Assertions.assertNotNull(objective);
+        Assertions.assertEquals(29, objective.getDay());
+        Assertions.assertEquals(2, objective.getMonth());
     }
 
     @Test
@@ -39,7 +39,7 @@ public class DateFormatTest {
 
     @Test
     public void parse_Quarter1() {
-        DateBuilder builder = new DateFormat("yyyyMd Q").parse("20210523 2");
-        Assertions.assertNotNull(builder);
+        ObjectiveDate objective = new DateFormat("yyyyMd Q").parse("20210523 2");
+        Assertions.assertNotNull(objective);
     }
 }

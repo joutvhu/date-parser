@@ -1,7 +1,7 @@
 package com.joutvhu.date.parser.subscription;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 
 public interface Subscription {
-    void changed(DateBuilder builder, String event, Object value);
+    void changed(ObjectiveDate objective, String event, Object value);
 }

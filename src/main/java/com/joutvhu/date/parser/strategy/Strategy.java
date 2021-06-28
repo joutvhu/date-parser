@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.domain.StringSource;
 
 public abstract class Strategy {
@@ -37,5 +37,5 @@ public abstract class Strategy {
         }
     }
 
-    public abstract void parse(DateBuilder builder, StringSource source, NextStrategy chain);
+    public abstract void parse(ObjectiveDate objective, StringSource source, NextStrategy chain);
 }

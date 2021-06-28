@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
@@ -27,8 +27,8 @@ public class QuarterStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
-        ParseBackup backup = ParseBackup.backup(builder, source);
+    public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
+        ParseBackup backup = ParseBackup.backup(objective, source);
         String value = source.get(this.ordinal ? 3 : 1);
 
         if (this.ordinal) {
@@ -53,8 +53,8 @@ public class QuarterStrategy extends Strategy {
                             this.pattern);
                 }
                 chain.next();
-                builder.subscribe(new QuarterSubscription());
-                builder.set(QUARTER, quarter);
+                objective.subscribe(new QuarterSubscription());
+                objective.set(QUARTER, quarter);
                 backup.commit();
             } catch (Exception e) {
                 backup.restore();

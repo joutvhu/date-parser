@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.subscription;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.exception.ConflictDateException;
 import com.joutvhu.date.parser.strategy.DayStrategy;
 import javafx.util.Pair;
@@ -11,10 +11,10 @@ import java.util.List;
 
 public class DaySubscription implements Subscription {
     @Override
-    public void changed(DateBuilder builder, String event, Object value) {
-        if (DateBuilder.YEAR.equals(event) || DayStrategy.DAYS.equals(event)) {
-            Integer year = builder.getYear();
-            List<Pair<Integer, Integer>> days = builder.get(DayStrategy.DAYS);
+    public void changed(ObjectiveDate objective, String event, Object value) {
+        if (ObjectiveDate.YEAR.equals(event) || DayStrategy.DAYS.equals(event)) {
+            Integer year = objective.getYear();
+            List<Pair<Integer, Integer>> days = objective.get(DayStrategy.DAYS);
 
             if (year != null && days != null && days.size() == 2) {
                 Integer day;
@@ -32,19 +32,19 @@ public class DaySubscription implements Subscription {
 
                 // Check date is valid.
                 LocalDate.of(year, month, day);
-                Integer oldMonth = builder.getMonth();
+                Integer oldMonth = objective.getMonth();
                 if (oldMonth != null && !oldMonth.equals(month)) {
-                    Integer dayOfYear = builder.get(DayStrategy.DAY_OF_YEAR);
+                    Integer dayOfYear = objective.get(DayStrategy.DAY_OF_YEAR);
                     throw new ConflictDateException(
                             "Conflict month (" + oldMonth + ") and day of year (" + dayOfYear + ").",
                             oldMonth,
                             dayOfYear);
                 }
 
-                builder.set(DateBuilder.MONTH, month);
-                builder.set(DateBuilder.DAY, day);
+                objective.set(ObjectiveDate.MONTH, month);
+                objective.set(ObjectiveDate.DAY, day);
 
-                builder.unsubscribe(DaySubscription.class);
+                objective.unsubscribe(DaySubscription.class);
             }
         }
     }

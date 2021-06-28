@@ -1,7 +1,7 @@
 package com.joutvhu.date.parser;
 
 import com.joutvhu.date.parser.convertor.*;
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.exception.ParseException;
 import com.joutvhu.date.parser.strategy.StrategyFactory;
 import com.joutvhu.date.parser.support.DateFormat;
@@ -105,11 +105,11 @@ public class DateParser {
         return this;
     }
 
-    public <T> T convert(Class<T> type, DateBuilder builder) {
+    public <T> T convert(Class<T> type, ObjectiveDate objective) {
         if (this.convertors.containsKey(type)) {
             Convertor<T> convertor = (Convertor<T>) this.convertors.get(type);
             if (convertor != null)
-                return convertor.convert(builder);
+                return convertor.convert(objective);
         }
 
         throw new ClassCastException("Unsupported " + type.getName() + " class.");
@@ -130,17 +130,17 @@ public class DateParser {
         if (value == null || patterns == null)
             throw new IllegalArgumentException("Date and Patterns must not be null");
 
-        DateBuilder builder;
+        ObjectiveDate objective;
         Throwable cause = null;
         for (final String pattern : patterns) {
             DateFormat dateFormat = new DateFormat(pattern, defaultLocale, defaultZone, strategyFactory);
             try {
-                builder = dateFormat.parse(value);
+                objective = dateFormat.parse(value);
             } catch (Exception e) {
                 cause = e;
                 continue;
             }
-            return this.convert(type, builder);
+            return this.convert(type, objective);
         }
 
         throw new ParseException("Unable to parse the date: " + value, cause, patterns);

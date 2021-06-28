@@ -13,9 +13,16 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+/**
+ * {@link ObjectiveDate} is a temporary date storage object.
+ * It is available to convert to other data types through a {@link com.joutvhu.date.parser.convertor.Convertor}.
+ *
+ * @author Giao Ho
+ * @since 1.0.0
+ */
 @Getter
 @Setter
-public class DateBuilder {
+public class ObjectiveDate {
     public static final String YEAR = "year";
     public static final String MONTH = "month";
     public static final String DAY = "day";
@@ -47,7 +54,7 @@ public class DateBuilder {
     @Getter(AccessLevel.PRIVATE)
     private final Map<Class<? extends Subscription>, Subscription> listeners;
 
-    public DateBuilder(Locale locale, TimeZone zone) {
+    public ObjectiveDate(Locale locale, TimeZone zone) {
         this.locale = locale;
         this.zone = zone;
         this.tracers = new ArrayList<>();
@@ -159,23 +166,23 @@ public class DateBuilder {
     }
 
     @Getter
-    public static class DateBackup implements Backup<DateBuilder>, Tracer {
+    public static class DateBackup implements Backup<ObjectiveDate>, Tracer {
         private final int startAt;
-        private final DateBuilder builder;
+        private final ObjectiveDate objective;
         private final List<Pair<String, Object>> diary;
 
-        public DateBackup(DateBuilder builder) {
-            this.builder = builder;
+        public DateBackup(ObjectiveDate objective) {
+            this.objective = objective;
 
-            if (builder.tracers != null && !builder.tracers.isEmpty()) {
-                this.diary = builder.tracers.get(0).share();
-                this.startAt = builder.tracers.size();
+            if (objective.tracers != null && !objective.tracers.isEmpty()) {
+                this.diary = objective.tracers.get(0).share();
+                this.startAt = objective.tracers.size();
             } else {
                 this.diary = new ArrayList<>();
                 this.startAt = 0;
             }
 
-            this.builder.tracers.add(this);
+            this.objective.tracers.add(this);
         }
 
         @Override
@@ -189,19 +196,19 @@ public class DateBuilder {
         }
 
         @Override
-        public DateBuilder restore() {
+        public ObjectiveDate restore() {
             for (int i = this.diary.size() - 1; i >= this.startAt; i--) {
                 Pair<String, Object> pair = this.diary.get(i);
-                this.builder.set(pair.getKey(), pair.getValue(), false, false);
+                this.objective.set(pair.getKey(), pair.getValue(), false, false);
                 this.diary.remove(i);
             }
-            this.builder.tracers.remove(this);
-            return builder;
+            this.objective.tracers.remove(this);
+            return objective;
         }
 
         @Override
         public void commit() {
-            this.builder.tracers.remove(this);
+            this.objective.tracers.remove(this);
         }
     }
 }

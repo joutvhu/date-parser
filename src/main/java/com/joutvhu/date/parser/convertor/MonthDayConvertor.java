@@ -1,8 +1,7 @@
 package com.joutvhu.date.parser.convertor;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 
-import java.time.Month;
 import java.time.MonthDay;
 import java.util.Objects;
 
@@ -10,10 +9,10 @@ public class MonthDayConvertor implements Convertor<MonthDay> {
     public static final MonthDayConvertor INSTANCE = new MonthDayConvertor();
 
     @Override
-    public MonthDay convert(DateBuilder builder) {
-        Objects.requireNonNull(builder.getMonth());
-        Objects.requireNonNull(builder.getDay());
+    public MonthDay convert(ObjectiveDate objective) {
+        Objects.requireNonNull(objective.getMonth());
+        Objects.requireNonNull(objective.getDay());
 
-        return MonthDay.of(builder.getMonth(), builder.getDay());
+        return MonthDay.of(objective.getMonth(), objective.getDay());
     }
 }

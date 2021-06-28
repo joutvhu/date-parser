@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 
@@ -54,7 +54,7 @@ public class QuoteStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
+    public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         StringSource.PositionBackup backup = source.backup();
         String value = source.get(this.pattern.length());
         if (pattern.equals(value)) {

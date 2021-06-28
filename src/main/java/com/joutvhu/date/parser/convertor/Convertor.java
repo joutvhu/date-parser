@@ -1,12 +1,12 @@
 package com.joutvhu.date.parser.convertor;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 public interface Convertor<T> {
-    T convert(DateBuilder builder);
+    T convert(ObjectiveDate objective);
 
     static <T> Class<T> typeOfConvertor(Convertor<T> convertor) {
         Class<? extends Convertor> convertorClass = convertor.getClass();
