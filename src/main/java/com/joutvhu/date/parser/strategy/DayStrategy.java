@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
@@ -40,10 +40,10 @@ public class DayStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
+    public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         AtomicBoolean first = new AtomicBoolean(true);
         int len = this.ordinal ? this.pattern.length() + 1 : this.pattern.length();
-        ParseBackup backup = ParseBackup.backup(builder, source);
+        ParseBackup backup = ParseBackup.backup(objective, source);
         Iterator<String> iterator = source.iterator(len, (this.dayInYear ? 3 : 2) + (this.ordinal ? 2 : 0));
 
         while (iterator.hasNext()) {
@@ -76,18 +76,18 @@ public class DayStrategy extends Strategy {
                                     this.pattern);
                         }
                         List<Pair<Integer, Integer>> days = getMonthAndDay(day);
-                        builder.set(DAY_OF_YEAR, day);
+                        objective.set(DAY_OF_YEAR, day);
                         if (days.isEmpty()) {
                             throw new MismatchPatternException(
                                     "\"" + day + "\" is not a day of year.",
                                     backup.getBackupPosition(),
                                     this.pattern);
                         } else if (days.size() == 1) {
-                            builder.set(DateBuilder.MONTH, days.get(0).getKey());
-                            builder.set(DateBuilder.DAY, days.get(0).getValue());
+                            objective.set(ObjectiveDate.MONTH, days.get(0).getKey());
+                            objective.set(ObjectiveDate.DAY, days.get(0).getValue());
                         } else {
-                            builder.subscribe(new DaySubscription());
-                            builder.set(DAYS, days);
+                            objective.subscribe(new DaySubscription());
+                            objective.set(DAYS, days);
                         }
                     } else {
                         if (day == 0 || day > 31) {
@@ -96,7 +96,7 @@ public class DayStrategy extends Strategy {
                                     backup.getBackupPosition(),
                                     this.pattern);
                         }
-                        builder.set(DateBuilder.DAY, day);
+                        objective.set(ObjectiveDate.DAY, day);
                     }
                     backup.commit();
                     return;

@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.subscription;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.exception.ConflictDateException;
 import com.joutvhu.date.parser.strategy.AmPmStrategy;
 import com.joutvhu.date.parser.strategy.HourStrategy;
@@ -9,11 +9,11 @@ import java.util.Calendar;
 
 public class HourSubscription implements Subscription {
     @Override
-    public void changed(DateBuilder builder, String event, Object value) {
-        if (DateBuilder.HOUR.equals(event) || AmPmStrategy.AM_PM.equals(event)) {
-            Integer hour = builder.getHour();
-            Integer amPm = builder.get(AmPmStrategy.AM_PM);
-            Integer hour12 = builder.get(HourStrategy.HOUR12);
+    public void changed(ObjectiveDate objective, String event, Object value) {
+        if (ObjectiveDate.HOUR.equals(event) || AmPmStrategy.AM_PM.equals(event)) {
+            Integer hour = objective.getHour();
+            Integer amPm = objective.get(AmPmStrategy.AM_PM);
+            Integer hour12 = objective.get(HourStrategy.HOUR12);
 
             if (amPm != null) {
                 if (hour12 != null) {
@@ -33,11 +33,11 @@ public class HourSubscription implements Subscription {
                                 amPm);
                     }
 
-                    builder.unsubscribe(HourSubscription.class);
+                    objective.unsubscribe(HourSubscription.class);
                 }
 
                 if (hour12 != null)
-                    builder.set(DateBuilder.HOUR, hour);
+                    objective.set(ObjectiveDate.HOUR, hour);
             }
         }
     }

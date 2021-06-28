@@ -1,11 +1,13 @@
 package com.joutvhu.date.parser.support;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.strategy.NextStrategy;
 import com.joutvhu.date.parser.strategy.Strategy;
+import com.joutvhu.date.parser.strategy.StrategyFactory;
 
+import java.time.temporal.WeekFields;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -13,23 +15,37 @@ import java.util.TimeZone;
 public class DateFormat {
     private Locale locale;
     private TimeZone zone;
+    private WeekFields weekFields;
     private List<Strategy> strategies;
     private int endIndex;
 
     public DateFormat(String pattern) {
-        this(pattern, null, null);
+        this(pattern, null);
     }
 
-    public DateFormat(String pattern, Locale locale, TimeZone zone) {
-        this.locale = locale != null ? locale : Locale.getDefault();
-        this.zone = zone != null ? zone : TimeZone.getDefault();
-        this.strategies = new DatePatternSplitter(pattern).getStrategyChain();
+    public DateFormat(String pattern, StrategyFactory strategyFactory) {
+        this.strategies = new DatePatternSplitter(pattern, strategyFactory).getStrategyChain();
         this.endIndex = this.strategies.size() - 1;
     }
 
-    private void parse(DateBuilder builder, StringSource source, int index) {
+    public DateFormat with(Locale locale) {
+        this.locale = locale;
+        return this;
+    }
+
+    public DateFormat with(TimeZone zone) {
+        this.zone = zone;
+        return this;
+    }
+
+    public DateFormat with(WeekFields weekFields) {
+        this.weekFields = weekFields;
+        return this;
+    }
+
+    private void parse(ObjectiveDate objective, StringSource source, int index) {
         if (index < this.endIndex) {
-            this.strategies.get(index).parse(builder, source, new NextStrategy() {
+            this.strategies.get(index).parse(objective, source, new NextStrategy() {
                 @Override
                 public Strategy get() {
                     return DateFormat.this.strategies.get(index + 1);
@@ -37,11 +53,11 @@ public class DateFormat {
 
                 @Override
                 public void next() {
-                    DateFormat.this.parse(builder, source, index + 1);
+                    DateFormat.this.parse(objective, source, index + 1);
                 }
             });
         } else if (index == this.endIndex) {
-            this.strategies.get(index).parse(builder, source, new NextStrategy() {
+            this.strategies.get(index).parse(objective, source, new NextStrategy() {
                 @Override
                 public Strategy get() {
                     return null;
@@ -57,10 +73,11 @@ public class DateFormat {
         }
     }
 
-    public DateBuilder parse(String value) {
-        DateBuilder builder = new DateBuilder(this.locale, this.zone);
+    public ObjectiveDate parse(String value) {
+        ObjectiveDate objective = new ObjectiveDate(this.locale, this.zone, this.weekFields);
         StringSource source = new StringSource(value);
-        this.parse(builder, source, 0);
-        return builder;
+        this.parse(objective, source, 0);
+        this.strategies.forEach(strategy -> strategy.afterCompletion(objective));
+        return objective;
     }
 }

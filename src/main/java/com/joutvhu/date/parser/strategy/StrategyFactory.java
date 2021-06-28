@@ -1,9 +1,8 @@
 package com.joutvhu.date.parser.strategy;
 
-import lombok.experimental.UtilityClass;
-
-@UtilityClass
 public class StrategyFactory {
+    public static final StrategyFactory INSTANCE = new StrategyFactory();
+
     public Strategy getStrategy(char c) {
         switch (c) {
             case 'a':

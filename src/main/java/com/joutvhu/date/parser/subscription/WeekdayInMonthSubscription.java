@@ -1,32 +1,35 @@
 package com.joutvhu.date.parser.subscription;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.strategy.WeekdayInMonthStrategy;
 import com.joutvhu.date.parser.strategy.WeekdayStrategy;
-import com.joutvhu.date.parser.util.CommonUtil;
+import com.joutvhu.date.parser.util.WeekUtil;
 
 import java.time.LocalDate;
 
 public class WeekdayInMonthSubscription implements Subscription {
     @Override
-    public void changed(DateBuilder builder, String event, Object value) {
-        if (DateBuilder.YEAR.equals(event) ||
-                DateBuilder.MONTH.equals(event) ||
-                WeekdayStrategy.WEEKDAY.equals(event) ||
-                WeekdayInMonthStrategy.WEEKDAY_IN_MONTH.equals(event)) {
-            Integer year = builder.getYear();
-            Integer month = builder.getMonth();
-            Integer dayOfWeek = builder.get(WeekdayStrategy.WEEKDAY);
-            Integer weekdayInMonth = builder.get(WeekdayInMonthStrategy.WEEKDAY_IN_MONTH);
+    public void changed(ObjectiveDate objective, String event, Object value) {
+        if (ObjectiveDate.YEAR.equals(event) ||
+            ObjectiveDate.MONTH.equals(event) ||
+            WeekdayStrategy.WEEKDAY.equals(event) ||
+            WeekdayInMonthStrategy.WEEKDAY_IN_MONTH.equals(event)) {
+            Integer year = objective.getYear();
+            Integer month = objective.getMonth();
+            Integer dayOfWeek = objective.get(WeekdayStrategy.WEEKDAY);
+            Integer weekdayInMonth = objective.get(WeekdayInMonthStrategy.WEEKDAY_IN_MONTH);
 
             if (year != null && month != null && dayOfWeek != null && weekdayInMonth != null) {
-                LocalDate date = LocalDate.of(year, month, 1);
-                int dayOfMonth = CommonUtil.dayOfMonth(weekdayInMonth, dayOfWeek, date.getDayOfWeek().getValue());
+                int dayOfMonth = WeekUtil.getDayOfMonthByWeekdayInMonth(
+                        objective.getWeekFields(),
+                        weekdayInMonth,
+                        dayOfWeek,
+                        LocalDate.of(year, month, 1).getDayOfWeek().getValue());
                 // Check date is valid.
                 LocalDate.of(year, month, dayOfMonth);
 
-                builder.set(DateBuilder.DAY, dayOfMonth);
-                builder.unsubscribe(WeekdayInMonthSubscription.class);
+                objective.set(ObjectiveDate.DAY, dayOfMonth);
+                objective.unsubscribe(WeekdayInMonthSubscription.class);
             }
         }
     }

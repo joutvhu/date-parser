@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.convertor;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 
 import java.util.Calendar;
 import java.util.Objects;
@@ -9,23 +9,23 @@ public class CalendarConvertor implements Convertor<Calendar> {
     public static final CalendarConvertor INSTANCE = new CalendarConvertor();
 
     @Override
-    public Calendar convert(DateBuilder builder) {
-        Objects.requireNonNull(builder.getZone());
-        Objects.requireNonNull(builder.getLocale());
-        Objects.requireNonNull(builder.getYear());
-        Objects.requireNonNull(builder.getMonth());
-        Objects.requireNonNull(builder.getDay());
+    public Calendar convert(ObjectiveDate objective) {
+        Objects.requireNonNull(objective.getZone());
+        Objects.requireNonNull(objective.getLocale());
+        Objects.requireNonNull(objective.getYear());
+        Objects.requireNonNull(objective.getMonth());
+        Objects.requireNonNull(objective.getDay());
 
-        Calendar calendar = Calendar.getInstance(builder.getZone(), builder.getLocale());
+        Calendar calendar = Calendar.getInstance(objective.getZone(), objective.getLocale());
         calendar.set(
-                builder.getYear(),
-                builder.getMonth() - 1,
-                builder.getDay(),
-                builder.getHour() != null ? builder.getHour() : 0,
-                builder.getMinute() != null ? builder.getMinute() : 0,
-                builder.getSecond() != null ? builder.getSecond() : 0
+                objective.getYear(),
+                objective.getMonth() - 1,
+                objective.getDay(),
+                objective.getHour() != null ? objective.getHour() : 0,
+                objective.getMinute() != null ? objective.getMinute() : 0,
+                objective.getSecond() != null ? objective.getSecond() : 0
         );
-        calendar.set(Calendar.MILLISECOND, builder.getNano() != null ? builder.getNano() / 1000000 : 0);
+        calendar.set(Calendar.MILLISECOND, objective.getNano() != null ? objective.getNano() / 1000000 : 0);
 
         return calendar;
     }

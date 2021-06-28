@@ -1,18 +1,17 @@
 package com.joutvhu.date.parser.convertor;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 
 import java.time.Month;
-import java.time.YearMonth;
 import java.util.Objects;
 
 public class MonthConvertor implements Convertor<Month> {
     public static final MonthConvertor INSTANCE = new MonthConvertor();
 
     @Override
-    public Month convert(DateBuilder builder) {
-        Objects.requireNonNull(builder.getMonth());
+    public Month convert(ObjectiveDate objective) {
+        Objects.requireNonNull(objective.getMonth());
 
-        return Month.of(builder.getMonth());
+        return Month.of(objective.getMonth());
     }
 }

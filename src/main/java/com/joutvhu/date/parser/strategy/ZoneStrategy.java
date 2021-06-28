@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
@@ -20,8 +20,8 @@ public class ZoneStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
-        ParseBackup backup = ParseBackup.backup(builder, source);
+    public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
+        ParseBackup backup = ParseBackup.backup(objective, source);
         Iterator<String> iterator = source.iterator(this.pattern.length());
 
         while (iterator.hasNext()) {
@@ -30,7 +30,7 @@ public class ZoneStrategy extends Strategy {
             if (timeZone != null) {
                 try {
                     chain.next();
-                    builder.setZone(timeZone);
+                    objective.set(ObjectiveDate.ZONE, timeZone);
                     backup.commit();
                     return;
                 } catch (Exception e) {

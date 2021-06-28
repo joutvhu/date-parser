@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
@@ -31,20 +31,20 @@ public class WeekStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
-        ParseBackup backup = ParseBackup.backup(builder, source);
+    public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
+        ParseBackup backup = ParseBackup.backup(objective, source);
 
         if (!this.tryParse(
-                builder,
+                objective,
                 chain,
                 backup,
                 source.get(this.ordinal ? this.pattern.length() + 1 : this.pattern.length()),
                 this.pattern.length() > (this.ordinal ? 2 : 1)))
-            this.tryParse(builder, chain, backup, source.get(this.ordinal ? 3 : 1), true);
+            this.tryParse(objective, chain, backup, source.get(this.ordinal ? 3 : 1), true);
     }
 
     private boolean tryParse(
-            DateBuilder builder,
+            ObjectiveDate objective,
             NextStrategy chain,
             ParseBackup backup,
             String value,
@@ -67,15 +67,15 @@ public class WeekStrategy extends Strategy {
             try {
                 int week = Integer.parseInt(value);
                 if (weekInYear) {
-                    if (week < 1 || week > 54)
+                    if (week < 0 || week > 54)
                         throw new MismatchPatternException(
                                 "The \"" + week + "\" is not a week of year.",
                                 backup.getBackupPosition(),
                                 this.pattern);
 
                     chain.next();
-                    builder.subscribe(new WeekOfYearSubscription());
-                    builder.set(WEEK_OF_YEAR, week);
+                    objective.subscribe(new WeekOfYearSubscription());
+                    objective.set(WEEK_OF_YEAR, week);
                 } else {
                     if (week < 1 || week > 6)
                         throw new MismatchPatternException(
@@ -84,8 +84,8 @@ public class WeekStrategy extends Strategy {
                                 this.pattern);
 
                     chain.next();
-                    builder.subscribe(new WeekOfMonthSubscription());
-                    builder.set(WEEK_OF_MONTH, week);
+                    objective.subscribe(new WeekOfMonthSubscription());
+                    objective.set(WEEK_OF_MONTH, week);
                 }
 
                 backup.commit();

@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
@@ -29,27 +29,27 @@ public class WeekdayStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
+    public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         if (text)
-            this.parseString(builder, source, chain);
+            this.parseString(objective, source, chain);
         else
-            this.parseNumber(builder, source, chain);
+            this.parseNumber(objective, source, chain);
     }
 
-    private void parseNumber(DateBuilder builder, StringSource source, NextStrategy chain) {
-        ParseBackup backup = ParseBackup.backup(builder, source);
+    private void parseNumber(ObjectiveDate objective, StringSource source, NextStrategy chain) {
+        ParseBackup backup = ParseBackup.backup(objective, source);
 
         if (!this.tryParse(
-                builder,
+                objective,
                 chain,
                 backup,
                 source.get(this.pattern.length()),
                 this.pattern.length() > 1))
-            this.tryParse(builder, chain, backup, source.get(1), true);
+            this.tryParse(objective, chain, backup, source.get(1), true);
     }
 
     private boolean tryParse(
-            DateBuilder builder,
+            ObjectiveDate objective,
             NextStrategy chain,
             ParseBackup backup,
             String value,
@@ -65,7 +65,7 @@ public class WeekdayStrategy extends Strategy {
                             this.pattern);
 
                 chain.next();
-                builder.set(WEEKDAY, weekday);
+                objective.set(WEEKDAY, weekday);
                 backup.commit();
                 return true;
             } catch (Exception e) {
@@ -84,18 +84,19 @@ public class WeekdayStrategy extends Strategy {
         return false;
     }
 
-    private void parseString(DateBuilder builder, StringSource source, NextStrategy chain) {
-        ParseBackup backup = ParseBackup.backup(builder, source);
+    private void parseString(ObjectiveDate objective, StringSource source, NextStrategy chain) {
+        ParseBackup backup = ParseBackup.backup(objective, source);
         String value = source.get(3);
 
         if (this.pattern.length() < 4) {
             int index = CommonUtil.indexIgnoreCaseOf(value, SHORT_WEEKDAYS);
-            this.tryParse(builder, chain, backup, index + 1, true);
+            if (this.tryParse(objective, chain, backup, index + 1, true))
+                return;
         } else {
             for (int i = 0; i < 6; i++) {
                 value += source.get(1);
                 int index = CommonUtil.indexIgnoreCaseOf(value, LONG_WEEKDAYS);
-                if (this.tryParse(builder, chain, backup, index + 1, i == 5))
+                if (this.tryParse(objective, chain, backup, index + 1, i == 5))
                     return;
             }
         }
@@ -108,7 +109,7 @@ public class WeekdayStrategy extends Strategy {
     }
 
     private boolean tryParse(
-            DateBuilder builder,
+            ObjectiveDate objective,
             NextStrategy chain,
             ParseBackup backup,
             int value,
@@ -118,7 +119,7 @@ public class WeekdayStrategy extends Strategy {
         if (value > 0 && value < 8) {
             try {
                 chain.next();
-                builder.set(WEEKDAY, value);
+                objective.set(WEEKDAY, value);
                 backup.commit();
                 return true;
             } catch (Exception e) {

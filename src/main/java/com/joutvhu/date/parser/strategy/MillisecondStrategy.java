@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
@@ -20,9 +20,9 @@ public class MillisecondStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
+    public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         AtomicBoolean first = new AtomicBoolean(true);
-        ParseBackup backup = ParseBackup.backup(builder, source);
+        ParseBackup backup = ParseBackup.backup(objective, source);
         Iterator<String> iterator = source.iterator(this.pattern.length(), 6);
 
         while (iterator.hasNext()) {
@@ -34,7 +34,7 @@ public class MillisecondStrategy extends Strategy {
                             value.substring(0, 9) :
                             CommonUtil.rightPad(value, 9, '0')
                     );
-                    builder.set(DateBuilder.NANO, nano);
+                    objective.set(ObjectiveDate.NANO, nano);
                     backup.commit();
                     return;
                 } catch (Exception e) {

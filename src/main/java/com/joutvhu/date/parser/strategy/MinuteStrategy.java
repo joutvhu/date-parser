@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
@@ -19,8 +19,8 @@ public class MinuteStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
-        ParseBackup backup = ParseBackup.backup(builder, source);
+    public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
+        ParseBackup backup = ParseBackup.backup(objective, source);
         Iterator<String> iterator = source.iterator(this.pattern.length(), 2);
 
         while (iterator.hasNext()) {
@@ -36,7 +36,7 @@ public class MinuteStrategy extends Strategy {
                     }
 
                     chain.next();
-                    builder.set(DateBuilder.MINUTE, minute);
+                    objective.set(ObjectiveDate.MINUTE, minute);
                     backup.commit();
                     return;
                 } catch (Exception e) {

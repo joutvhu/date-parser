@@ -1,6 +1,6 @@
 package com.joutvhu.date.parser.strategy;
 
-import com.joutvhu.date.parser.domain.DateBuilder;
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
@@ -20,18 +20,18 @@ public class EraStrategy extends Strategy {
     }
 
     @Override
-    public void parse(DateBuilder builder, StringSource source, NextStrategy chain) {
-        ParseBackup backup = ParseBackup.backup(builder, source);
+    public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
+        ParseBackup backup = ParseBackup.backup(objective, source);
         String value = source.get(2);
 
         try {
             if ("AD".equalsIgnoreCase(value)) {
                 chain.next();
-                builder.set(ERA, GregorianCalendar.AD);
+                objective.set(ERA, GregorianCalendar.AD);
                 backup.commit();
             } else if ("BC".equalsIgnoreCase(value)) {
                 chain.next();
-                builder.set(ERA, GregorianCalendar.BC);
+                objective.set(ERA, GregorianCalendar.BC);
                 backup.commit();
             } else {
                 throw new MismatchPatternException(
@@ -42,6 +42,18 @@ public class EraStrategy extends Strategy {
         } catch (Exception e) {
             backup.restore();
             throw e;
+        }
+    }
+
+    @Override
+    public void afterCompletion(ObjectiveDate objective) {
+        Integer era = objective.get(ERA);
+        Integer year = objective.getYear();
+        if (year != null && (era == GregorianCalendar.AD || era == GregorianCalendar.BC)) {
+            year = Math.abs(year);
+            if (era == GregorianCalendar.BC)
+                year = -year;
+            objective.setYear(year);
         }
     }
 }

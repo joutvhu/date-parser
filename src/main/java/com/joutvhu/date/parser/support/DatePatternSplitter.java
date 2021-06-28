@@ -13,6 +13,7 @@ public class DatePatternSplitter {
 
     private int position;
     private Strategy strategy;
+    private StrategyFactory strategyFactory = StrategyFactory.INSTANCE;
 
     public DatePatternSplitter(String pattern) {
         Objects.requireNonNull(pattern, "Pattern must not be null.");
@@ -22,18 +23,24 @@ public class DatePatternSplitter {
         this.length = pattern.length();
     }
 
+    public DatePatternSplitter(String pattern, StrategyFactory strategyFactory) {
+        this(pattern);
+        if (strategyFactory != null)
+            this.strategyFactory = strategyFactory;
+    }
+
     public Strategy getNextStrategy() {
         while (this.position < this.length) {
             char c = this.pattern.charAt(this.position);
 
             if (strategy == null) {
-                this.strategy = StrategyFactory.getStrategy(c);
+                this.strategy = this.strategyFactory.getStrategy(c);
                 this.position++;
             } else if (strategy.add(c)) {
                 this.position++;
             } else {
                 Strategy result = this.strategy;
-                this.strategy = StrategyFactory.getStrategy(c);
+                this.strategy = this.strategyFactory.getStrategy(c);
                 this.position++;
                 result.afterPatternSet();
                 return result;
