@@ -5,16 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.MonthDay;
-import java.time.Year;
-import java.time.YearMonth;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DateParserTest {
@@ -174,6 +169,54 @@ public class DateParserTest {
         Assertions.assertThrows(NullPointerException.class, () -> {
             DateParser.quickParse(DayOfWeek.class, "2021/06", "yyyy/MM");
         });
+    }
+
+    @Test
+    public void parse_ZoneOffset0() {
+        ZoneOffset result = DateParser.quickParse(ZoneOffset.class, "SE Asia Standard Time", "Z");
+        Assertions.assertEquals("+07:00", result.toString());
+    }
+
+    @Test
+    public void parse_TimeZone0() {
+        TimeZone result = DateParser.quickParse(TimeZone.class, "SE Asia Standard Time", "Z");
+        Assertions.assertEquals("GMT+07:00", result.getID());
+    }
+
+    @Test
+    public void parse_OffsetTime0() {
+        OffsetTime result = DateParser.quickParse(OffsetTime.class, "16:12:53.221 SE Asia Standard Time", "HH:mm:ss.SSS Z");
+        Assertions.assertEquals("16:12:53.221+07:00", result.toString());
+    }
+
+    @Test
+    public void parse_OffsetDateTime0() {
+        OffsetDateTime result = DateParser.quickParse(OffsetDateTime.class, "2021/06/28 12:12:53.221 CAST", "yyyy/MM/dd HH:mm:ss.SSS Z");
+        Assertions.assertEquals("2021-06-28T12:12:53.221-06:00", result.toString());
+    }
+
+    @Test
+    public void parse_ZonedDateTime0() {
+        ZonedDateTime result = DateParser.quickParse(ZonedDateTime.class, "5/1/2020 1:20:42.234 PST", "M/d/yyyy H:m:s.SSS Z");
+        Assertions.assertEquals("2020-05-01T01:20:42.234-07:00[America/Los_Angeles]", result.toString());
+    }
+
+    @Test
+    public void parse_SqlDate0() {
+        java.sql.Date result = DateParser.quickParse(java.sql.Date.class, "5/1/2020", "d/M/yyyy");
+        Assertions.assertEquals("2020-01-05", result.toString());
+    }
+
+    @Test
+    public void parse_SqlTime0() {
+        java.sql.Time result = DateParser.quickParse(java.sql.Time.class, "1:20:42 pm", "h:m:s a");
+        Assertions.assertEquals("13:20:42", result.toString());
+    }
+
+    @Test
+    public void parse_SqlTimestamp0() {
+        java.sql.Timestamp result = DateParser.quickParse(java.sql.Timestamp.class, "5/1/2020 1:20:42.234 pm", "d/M/yyyy h:m:s.SSS a");
+        Assertions.assertEquals("2020-01-05 13:20:42.234", result.toString());
     }
 
     private String format(Date date, String format) {
