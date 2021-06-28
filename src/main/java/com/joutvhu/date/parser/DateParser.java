@@ -3,6 +3,7 @@ package com.joutvhu.date.parser;
 import com.joutvhu.date.parser.convertor.*;
 import com.joutvhu.date.parser.domain.DateBuilder;
 import com.joutvhu.date.parser.exception.ParseException;
+import com.joutvhu.date.parser.strategy.StrategyFactory;
 import com.joutvhu.date.parser.support.DateFormat;
 
 import java.util.HashMap;
@@ -17,6 +18,7 @@ public class DateParser {
     private Locale defaultLocale;
     private TimeZone defaultZone;
     private Map<Class<?>, Convertor<?>> convertors;
+    private StrategyFactory strategyFactory = StrategyFactory.INSTANCE;
 
     public DateParser() {
         this.convertors = new HashMap<>();
@@ -70,6 +72,14 @@ public class DateParser {
         return this;
     }
 
+    /**
+     * Load a custom {@link StrategyFactory}
+     */
+    public DateParser strategyFactory(StrategyFactory strategyFactory) {
+        this.strategyFactory = strategyFactory;
+        return this;
+    }
+
     public <T> T convert(Class<T> type, DateBuilder builder) {
         if (this.convertors.containsKey(type)) {
             Convertor<T> convertor = (Convertor<T>) this.convertors.get(type);
@@ -89,7 +99,7 @@ public class DateParser {
         DateBuilder builder;
         Throwable cause = null;
         for (final String pattern : patterns) {
-            DateFormat dateFormat = new DateFormat(pattern, defaultLocale, defaultZone);
+            DateFormat dateFormat = new DateFormat(pattern, defaultLocale, defaultZone, strategyFactory);
             try {
                 builder = dateFormat.parse(value);
             } catch (Exception e) {

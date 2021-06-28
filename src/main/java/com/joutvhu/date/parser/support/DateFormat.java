@@ -5,6 +5,7 @@ import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.strategy.NextStrategy;
 import com.joutvhu.date.parser.strategy.Strategy;
+import com.joutvhu.date.parser.strategy.StrategyFactory;
 
 import java.util.List;
 import java.util.Locale;
@@ -21,9 +22,13 @@ public class DateFormat {
     }
 
     public DateFormat(String pattern, Locale locale, TimeZone zone) {
+        this(pattern, locale, zone,  null);
+    }
+
+    public DateFormat(String pattern, Locale locale, TimeZone zone, StrategyFactory strategyFactory) {
         this.locale = locale != null ? locale : Locale.getDefault();
         this.zone = zone != null ? zone : TimeZone.getDefault();
-        this.strategies = new DatePatternSplitter(pattern).getStrategyChain();
+        this.strategies = new DatePatternSplitter(pattern, strategyFactory).getStrategyChain();
         this.endIndex = this.strategies.size() - 1;
     }
 
