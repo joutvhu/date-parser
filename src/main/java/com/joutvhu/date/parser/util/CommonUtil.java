@@ -2,6 +2,10 @@ package com.joutvhu.date.parser.util;
 
 import lombok.experimental.UtilityClass;
 
+import java.time.DateTimeException;
+import java.time.Month;
+import java.time.chrono.IsoChronology;
+import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -81,5 +85,34 @@ public class CommonUtil {
         final char[] buf = new char[repeat];
         Arrays.fill(buf, ch);
         return new String(buf);
+    }
+
+    @SuppressWarnings("java:S131")
+    public void checkValidDate(int year, int month, int dayOfMonth) {
+        ChronoField.YEAR.checkValidValue(year);
+        ChronoField.MONTH_OF_YEAR.checkValidValue(month);
+        ChronoField.DAY_OF_MONTH.checkValidValue(dayOfMonth);
+
+        if (dayOfMonth > 28) {
+            int dom = 31;
+            switch (month) {
+                case 2:
+                    dom = (IsoChronology.INSTANCE.isLeapYear(year) ? 29 : 28);
+                    break;
+                case 4:
+                case 6:
+                case 9:
+                case 11:
+                    dom = 30;
+                    break;
+            }
+
+            if (dayOfMonth > dom) {
+                if (dayOfMonth == 29)
+                    throw new DateTimeException("Invalid date 'February 29' as '" + year + "' is not a leap year");
+                else
+                    throw new DateTimeException("Invalid date '" + Month.of(month).name() + " " + dayOfMonth + "'");
+            }
+        }
     }
 }

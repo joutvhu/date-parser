@@ -1,8 +1,13 @@
 package com.joutvhu.date.parser.exception;
 
+import lombok.Getter;
+
+@Getter
 public class MismatchPatternException extends RuntimeException {
-    private int position;
-    private String pattern;
+    private static final long serialVersionUID = 4307834084681642132L;
+
+    private final int position;
+    private final String pattern;
 
     public MismatchPatternException(String message, int position, String pattern) {
         super(message);

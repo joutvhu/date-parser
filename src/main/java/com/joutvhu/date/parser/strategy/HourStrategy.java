@@ -6,10 +6,13 @@ import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
+import java.text.MessageFormat;
 import java.util.Iterator;
 
 public class HourStrategy extends Strategy {
     public static final String HOUR12 = "hour12";
+
+    private static final String NOT_HOUR_MESSAGE = "The value '{0}' is not a hour.";
 
     private final boolean hour24;
     private final boolean startFrom0;
@@ -26,6 +29,7 @@ public class HourStrategy extends Strategy {
     }
 
     @Override
+    @SuppressWarnings("java:S3776")
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
         Iterator<String> iterator = source.iterator(this.pattern.length(), 2);
@@ -42,14 +46,14 @@ public class HourStrategy extends Strategy {
                             hour = 0;
                         if (hour < 0 || hour > 23) {
                             throw new MismatchPatternException(
-                                    "The value \"" + hour + "\" is not a hour.",
+                                    MessageFormat.format(NOT_HOUR_MESSAGE, hour),
                                     backup.getBackupPosition(),
                                     this.pattern);
                         }
                     } else {
                         if (hour < 0 || hour > 24) {
                             throw new MismatchPatternException(
-                                    "The value \"" + hour + "\" is not a hour.",
+                                    MessageFormat.format(NOT_HOUR_MESSAGE, hour),
                                     backup.getBackupPosition(),
                                     this.pattern);
                         }
@@ -71,7 +75,7 @@ public class HourStrategy extends Strategy {
             } else {
                 backup.restore();
                 throw new MismatchPatternException(
-                        "The value \"" + value + "\" is not a hour.",
+                        MessageFormat.format(NOT_HOUR_MESSAGE, value),
                         backup.getBackupPosition(),
                         this.pattern);
             }

@@ -8,6 +8,8 @@ import com.joutvhu.date.parser.subscription.WeekOfMonthSubscription;
 import com.joutvhu.date.parser.subscription.WeekOfYearSubscription;
 import com.joutvhu.date.parser.util.CommonUtil;
 
+import java.text.MessageFormat;
+
 public class WeekStrategy extends Strategy {
     public static final String WEEK_OF_YEAR = "week_of_year";
     public static final String WEEK_OF_MONTH = "week_of_month";
@@ -43,6 +45,7 @@ public class WeekStrategy extends Strategy {
             this.tryParse(objective, chain, backup, source.get(this.ordinal ? 3 : 1), true);
     }
 
+    @SuppressWarnings("java:S3776")
     private boolean tryParse(
             ObjectiveDate objective,
             NextStrategy chain,
@@ -57,7 +60,7 @@ public class WeekStrategy extends Strategy {
                 backup.restore();
                 if (throwable)
                     throw new MismatchPatternException(
-                            "The week \"" + value + "\" must be end with an ordinal indicator.",
+                            "The week '" + value + "' must be end with an ordinal indicator.",
                             backup.getBackupPosition(),
                             this.pattern);
             }
@@ -69,7 +72,7 @@ public class WeekStrategy extends Strategy {
                 if (weekInYear) {
                     if (week < 0 || week > 54)
                         throw new MismatchPatternException(
-                                "The \"" + week + "\" is not a week of year.",
+                                MessageFormat.format("The '{}' is not a week of year.", week),
                                 backup.getBackupPosition(),
                                 this.pattern);
 
@@ -79,7 +82,7 @@ public class WeekStrategy extends Strategy {
                 } else {
                     if (week < 1 || week > 6)
                         throw new MismatchPatternException(
-                                "The \"" + week + "\" is not a week of month.",
+                                MessageFormat.format("The '{}' is not a week of month.", week),
                                 backup.getBackupPosition(),
                                 this.pattern);
 
@@ -99,7 +102,7 @@ public class WeekStrategy extends Strategy {
             backup.restore();
             if (throwable)
                 throw new MismatchPatternException(
-                        "The \"" + value + "\" is not a week.",
+                        MessageFormat.format("The '{}' is not a week.", value),
                         backup.getBackupPosition(),
                         this.pattern);
         }

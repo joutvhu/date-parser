@@ -52,7 +52,7 @@ public class YearStrategy extends Strategy {
             } else {
                 backup.restore();
                 throw new MismatchPatternException(
-                        "The \"" + value + "\" is not a year.",
+                        "The '" + value + "' is not a year.",
                         backup.getBackupPosition(),
                         this.pattern);
             }

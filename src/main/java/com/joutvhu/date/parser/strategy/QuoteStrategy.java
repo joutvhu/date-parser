@@ -21,12 +21,13 @@ public class QuoteStrategy extends Strategy {
     public void afterPatternSet() {
         if (this.quoted && Boolean.FALSE.equals(this.end))
             throw new PatternSyntaxException(
-                    "Quote \"" + this.pattern + "\" is not closed.",
+                    "Quote '" + this.pattern + "' is not closed.",
                     this.pattern,
                     -1);
     }
 
     @Override
+    @SuppressWarnings("java:S3776")
     public boolean add(char c) {
         if (this.quoted) {
             if (Boolean.TRUE.equals(this.end))
@@ -68,7 +69,7 @@ public class QuoteStrategy extends Strategy {
         } else {
             backup.restore();
             throw new MismatchPatternException(
-                    "The quote \"" + value + "\" not match with \"" + this.pattern + "\".",
+                    "The quote '" + value + "' not match with '" + this.pattern + "'.",
                     source.getIndex(),
                     this.pattern);
         }

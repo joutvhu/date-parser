@@ -3,13 +3,17 @@ package com.joutvhu.date.parser.domain;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.text.ParsePosition;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 @Getter
 @Setter
-public class StringSource extends ParsePosition {
+@SuppressWarnings({"java:S2055", "java:S2160"})
+public class StringSource extends ParsePosition implements Serializable {
+    private static final long serialVersionUID = -6246057517978279890L;
+
     private String source;
     private Integer backupPosition;
 
@@ -65,6 +69,7 @@ public class StringSource extends ParsePosition {
         return iterator(from, this.getLength() - this.getIndex());
     }
 
+    @SuppressWarnings("java:S3776")
     public Iterator<String> iterator(int from, int to) {
         return new Iterator<String>() {
             private final StringSource source = StringSource.this;
@@ -128,6 +133,7 @@ public class StringSource extends ParsePosition {
 
         @Override
         public void commit() {
+            // Do nothing
         }
     }
 }

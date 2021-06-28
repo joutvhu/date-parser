@@ -37,7 +37,7 @@ public class WeekdayInMonthStrategy extends Strategy {
             }
         } else {
             throw new MismatchPatternException(
-                    "The \"" + value + "\" is not a week in month.",
+                    "The '" + value + "' is not a week in month.",
                     backup.getBackupPosition(),
                     this.pattern);
         }

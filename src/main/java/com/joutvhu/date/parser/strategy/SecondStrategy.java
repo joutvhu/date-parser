@@ -30,7 +30,7 @@ public class SecondStrategy extends Strategy {
                     int second = Integer.parseInt(value);
                     if (second < 0 || second > 59) {
                         throw new MismatchPatternException(
-                                "The \"" + second + "\" is not a second.",
+                                "The '" + second + "' is not a second.",
                                 backup.getBackupPosition(),
                                 this.pattern);
                     }
@@ -48,7 +48,7 @@ public class SecondStrategy extends Strategy {
             } else {
                 backup.restore();
                 throw new MismatchPatternException(
-                        "The \"" + value + "\" is not a second.",
+                        "The '" + value + "' is not a second.",
                         backup.getBackupPosition(),
                         this.pattern);
             }

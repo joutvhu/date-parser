@@ -30,7 +30,7 @@ public class MinuteStrategy extends Strategy {
                     int minute = Integer.parseInt(value);
                     if (minute < 0 || minute > 59) {
                         throw new MismatchPatternException(
-                                "The \"" + minute + "\" value is not minute.",
+                                "The '" + minute + "' value is not minute.",
                                 backup.getBackupPosition(),
                                 this.pattern);
                     }
@@ -48,7 +48,7 @@ public class MinuteStrategy extends Strategy {
             } else {
                 backup.restore();
                 throw new MismatchPatternException(
-                        "The \"" + value + "\" value is not minute.",
+                        "The '" + value + "' value is not minute.",
                         backup.getBackupPosition(),
                         this.pattern);
             }

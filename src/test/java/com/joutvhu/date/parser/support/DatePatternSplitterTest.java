@@ -14,9 +14,9 @@ import org.junit.jupiter.api.TestInstance;
 import java.util.List;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DatePatternSplitterTest {
+class DatePatternSplitterTest {
     @Test
-    public void getStrategyChain_Case0() {
+    void getStrategyChain_Case0() {
         List<Strategy> result = new DatePatternSplitter("yyyy/MM/dd'T'HH:mm:ss.SSS")
                 .getStrategyChain();
         Assertions.assertNotNull(result);
@@ -25,7 +25,7 @@ public class DatePatternSplitterTest {
     }
 
     @Test
-    public void getStrategyChain_Case1() {
+    void getStrategyChain_Case1() {
         List<Strategy> result = new DatePatternSplitter("EEEE")
                 .getStrategyChain();
         Assertions.assertNotNull(result);
@@ -34,7 +34,7 @@ public class DatePatternSplitterTest {
     }
 
     @Test
-    public void getStrategyChain_Case2() {
+    void getStrategyChain_Case2() {
         List<Strategy> result = new DatePatternSplitter("G")
                 .getStrategyChain();
         Assertions.assertNotNull(result);
@@ -43,7 +43,7 @@ public class DatePatternSplitterTest {
     }
 
     @Test
-    public void getStrategyChain_Case3() {
+    void getStrategyChain_Case3() {
         List<Strategy> result = new DatePatternSplitter("C")
                 .getStrategyChain();
         Assertions.assertNotNull(result);
@@ -52,7 +52,7 @@ public class DatePatternSplitterTest {
     }
 
     @Test
-    public void getStrategyChain_Case4() {
+    void getStrategyChain_Case4() {
         List<Strategy> result = new DatePatternSplitter("F")
                 .getStrategyChain();
         Assertions.assertNotNull(result);
@@ -61,7 +61,7 @@ public class DatePatternSplitterTest {
     }
 
     @Test
-    public void getStrategyChain_Case5() {
+    void getStrategyChain_Case5() {
         List<Strategy> result = new DatePatternSplitter("w")
                 .getStrategyChain();
         Assertions.assertNotNull(result);

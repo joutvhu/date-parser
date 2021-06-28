@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public class ParseBackup implements Backup<Object> {
-    private ObjectiveDate.DateBackup dateBackup;
-    private StringSource.PositionBackup positionBackup;
+    private final ObjectiveDate.DateBackup dateBackup;
+    private final StringSource.PositionBackup positionBackup;
 
     public ParseBackup(ObjectiveDate objective, StringSource position) {
         this.dateBackup = objective.backup();

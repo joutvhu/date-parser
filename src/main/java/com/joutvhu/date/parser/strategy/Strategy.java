@@ -7,7 +7,7 @@ public abstract class Strategy {
     private boolean end;
     protected String pattern;
 
-    public Strategy(char c) {
+    protected Strategy(char c) {
         this.end = false;
         this.pattern = String.valueOf(c);
     }

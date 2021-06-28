@@ -20,12 +20,12 @@ import java.util.TimeZone;
  * @since 1.0.0
  */
 public class DateParser {
-    private static DateParser INSTANCE;
+    private static DateParser parser;
 
     private Locale defaultLocale;
     private TimeZone defaultZone;
     private WeekFields defaultWeekFields;
-    private Map<Class<?>, Convertor<?>> convertors;
+    private final Map<Class<?>, Convertor<?>> convertors;
     private StrategyFactory strategyFactory = StrategyFactory.INSTANCE;
 
     public DateParser() {
@@ -38,8 +38,8 @@ public class DateParser {
      * @return The date parser.
      */
     public static DateParser instance() {
-        if (INSTANCE == null) {
-            INSTANCE = new DateParser()
+        if (parser == null) {
+            parser = new DateParser()
                     .with(CalendarConvertor.INSTANCE)
                     .with(DateConvertor.INSTANCE)
                     .with(LocalDateConvertor.INSTANCE)
@@ -61,7 +61,7 @@ public class DateParser {
                     .with(ZonedDateTimeConvertor.INSTANCE)
                     .with(ZoneOffsetConvertor.INSTANCE);
         }
-        return INSTANCE;
+        return parser;
     }
 
     /**
