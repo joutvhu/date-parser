@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +45,7 @@ public class ObjectiveDate {
 
     private Locale locale;
     private TimeZone zone;
+    private WeekFields weekFields;
 
     @Getter(AccessLevel.PRIVATE)
     private final List<Tracer> tracers;
@@ -55,8 +57,13 @@ public class ObjectiveDate {
     private final Map<Class<? extends Subscription>, Subscription> listeners;
 
     public ObjectiveDate(Locale locale, TimeZone zone) {
-        this.locale = locale;
-        this.zone = zone;
+        this(locale, zone, WeekFields.of(locale));
+    }
+
+    public ObjectiveDate(Locale locale, TimeZone zone, WeekFields weekFields) {
+        this.locale = locale != null ? locale : Locale.getDefault();
+        this.zone = zone != null ? zone : TimeZone.getDefault();
+        this.weekFields = weekFields != null ? weekFields : WeekFields.ISO;
         this.tracers = new ArrayList<>();
         this.extension = new HashMap<>();
         this.listeners = new HashMap<>();

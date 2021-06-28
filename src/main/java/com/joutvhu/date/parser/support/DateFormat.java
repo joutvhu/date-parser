@@ -7,6 +7,7 @@ import com.joutvhu.date.parser.strategy.NextStrategy;
 import com.joutvhu.date.parser.strategy.Strategy;
 import com.joutvhu.date.parser.strategy.StrategyFactory;
 
+import java.time.temporal.WeekFields;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -14,22 +15,32 @@ import java.util.TimeZone;
 public class DateFormat {
     private Locale locale;
     private TimeZone zone;
+    private WeekFields weekFields;
     private List<Strategy> strategies;
     private int endIndex;
 
     public DateFormat(String pattern) {
-        this(pattern, null, null);
+        this(pattern, null);
     }
 
-    public DateFormat(String pattern, Locale locale, TimeZone zone) {
-        this(pattern, locale, zone,  null);
-    }
-
-    public DateFormat(String pattern, Locale locale, TimeZone zone, StrategyFactory strategyFactory) {
-        this.locale = locale != null ? locale : Locale.getDefault();
-        this.zone = zone != null ? zone : TimeZone.getDefault();
+    public DateFormat(String pattern, StrategyFactory strategyFactory) {
         this.strategies = new DatePatternSplitter(pattern, strategyFactory).getStrategyChain();
         this.endIndex = this.strategies.size() - 1;
+    }
+
+    public DateFormat with(Locale locale) {
+        this.locale = locale;
+        return this;
+    }
+
+    public DateFormat with(TimeZone zone) {
+        this.zone = zone;
+        return this;
+    }
+
+    public DateFormat with(WeekFields weekFields) {
+        this.weekFields = weekFields;
+        return this;
     }
 
     private void parse(ObjectiveDate objective, StringSource source, int index) {
@@ -63,7 +74,7 @@ public class DateFormat {
     }
 
     public ObjectiveDate parse(String value) {
-        ObjectiveDate objective = new ObjectiveDate(this.locale, this.zone);
+        ObjectiveDate objective = new ObjectiveDate(this.locale, this.zone, this.weekFields);
         StringSource source = new StringSource(value);
         this.parse(objective, source, 0);
         return objective;

@@ -3,7 +3,7 @@ package com.joutvhu.date.parser.subscription;
 import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.strategy.WeekStrategy;
 import com.joutvhu.date.parser.strategy.WeekdayStrategy;
-import com.joutvhu.date.parser.util.CommonUtil;
+import com.joutvhu.date.parser.util.WeekUtil;
 
 import java.time.LocalDate;
 
@@ -18,7 +18,11 @@ public class WeekOfYearSubscription implements Subscription {
             Integer weekOfYear = objective.get(WeekStrategy.WEEK_OF_YEAR);
 
             if (year != null && dayOfWeek != null && weekOfYear != null) {
-                int dayOfYear = CommonUtil.dayOfYear(weekOfYear, dayOfWeek, year, 1);
+                int dayOfYear = WeekUtil.getDayOfYearByWeekOfYear(
+                        objective.getWeekFields(),
+                        weekOfYear,
+                        dayOfWeek,
+                        LocalDate.of(year, 1, 1).getDayOfWeek().getValue());
                 LocalDate date = LocalDate.ofYearDay(year, dayOfYear);
 
                 objective.set(ObjectiveDate.MONTH, date.getMonthValue());

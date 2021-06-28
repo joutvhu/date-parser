@@ -67,7 +67,7 @@ public class WeekStrategy extends Strategy {
             try {
                 int week = Integer.parseInt(value);
                 if (weekInYear) {
-                    if (week < 1 || week > 54)
+                    if (week < 0 || week > 54)
                         throw new MismatchPatternException(
                                 "The \"" + week + "\" is not a week of year.",
                                 backup.getBackupPosition(),

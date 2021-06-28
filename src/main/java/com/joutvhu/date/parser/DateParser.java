@@ -6,6 +6,7 @@ import com.joutvhu.date.parser.exception.ParseException;
 import com.joutvhu.date.parser.strategy.StrategyFactory;
 import com.joutvhu.date.parser.support.DateFormat;
 
+import java.time.temporal.WeekFields;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -23,6 +24,7 @@ public class DateParser {
 
     private Locale defaultLocale;
     private TimeZone defaultZone;
+    private WeekFields defaultWeekFields;
     private Map<Class<?>, Convertor<?>> convertors;
     private StrategyFactory strategyFactory = StrategyFactory.INSTANCE;
 
@@ -84,7 +86,7 @@ public class DateParser {
     /**
      * Set default {@link Locale}
      */
-    public DateParser locale(Locale defaultLocale) {
+    public DateParser with(Locale defaultLocale) {
         this.defaultLocale = defaultLocale;
         return this;
     }
@@ -92,8 +94,16 @@ public class DateParser {
     /**
      * Set default {@link TimeZone}
      */
-    public DateParser zone(TimeZone defaultZone) {
+    public DateParser with(TimeZone defaultZone) {
         this.defaultZone = defaultZone;
+        return this;
+    }
+
+    /**
+     * Set default {@link TimeZone}
+     */
+    public DateParser with(WeekFields defaultWeekFields) {
+        this.defaultWeekFields = defaultWeekFields;
         return this;
     }
 
@@ -133,7 +143,10 @@ public class DateParser {
         ObjectiveDate objective;
         Throwable cause = null;
         for (final String pattern : patterns) {
-            DateFormat dateFormat = new DateFormat(pattern, defaultLocale, defaultZone, strategyFactory);
+            DateFormat dateFormat = new DateFormat(pattern, strategyFactory)
+                    .with(defaultLocale)
+                    .with(defaultZone)
+                    .with(defaultWeekFields);
             try {
                 objective = dateFormat.parse(value);
             } catch (Exception e) {

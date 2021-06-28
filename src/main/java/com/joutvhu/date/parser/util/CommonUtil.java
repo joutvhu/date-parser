@@ -2,7 +2,6 @@ package com.joutvhu.date.parser.util;
 
 import lombok.experimental.UtilityClass;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -82,47 +81,5 @@ public class CommonUtil {
         final char[] buf = new char[repeat];
         Arrays.fill(buf, ch);
         return new String(buf);
-    }
-
-    /**
-     * @param dayOfWeek   start on Monday
-     * @param startWeekOn a week start on (Monday - 1), (Sunday - 7)
-     * @return day of week (startWeekOn)
-     */
-    public int convertWeekDay(int dayOfWeek, int startWeekOn) {
-        return (dayOfWeek + 7 - startWeekOn) % 7 + 1;
-    }
-
-    /**
-     * @param date        (year, month, day)
-     * @param startWeekOn a week start on (Monday - 1), (Sunday - 7)
-     * @return week of year (1 - 54)
-     */
-    public int weekOfYear(LocalDate date, int startWeekOn) {
-        return weekOfYear(date.getDayOfYear(), convertWeekDay(date.getDayOfWeek().getValue(), startWeekOn));
-    }
-
-    /**
-     * @param dayOfYear (1 - 366)
-     * @param dayOfWeek (1 - 7)
-     * @return week of year (1 - 54)
-     */
-    public int weekOfYear(int dayOfYear, int dayOfWeek) {
-        return (dayOfYear / 7) + ((dayOfYear % 7) > dayOfWeek ? 2 : 1);
-    }
-
-    public int dayOfYear(int weekOfYear, int dayOfWeek, int year, int startWeekOn) {
-        return dayOfYear(weekOfYear, dayOfWeek, convertWeekDay(
-                LocalDate.of(year, 1, 1).getDayOfWeek().getValue(),
-                startWeekOn
-        ));
-    }
-
-    public int dayOfYear(int weekOfYear, int dayOfWeek, int startDayOfYear) {
-        return (weekOfYear * 7) - (7 - dayOfWeek) - (startDayOfYear - 1);
-    }
-
-    public int dayOfMonth(int weekdayInMonth, int dayOfWeek, int startDayOfYear) {
-        return (weekdayInMonth * 7) - startDayOfYear + dayOfWeek - ((dayOfWeek > startDayOfYear) ? 7 : 0);
     }
 }
