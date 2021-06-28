@@ -90,7 +90,8 @@ public class WeekdayStrategy extends Strategy {
 
         if (this.pattern.length() < 4) {
             int index = CommonUtil.indexIgnoreCaseOf(value, SHORT_WEEKDAYS);
-            this.tryParse(builder, chain, backup, index + 1, true);
+            if (this.tryParse(builder, chain, backup, index + 1, true))
+                return;
         } else {
             for (int i = 0; i < 6; i++) {
                 value += source.get(1);
