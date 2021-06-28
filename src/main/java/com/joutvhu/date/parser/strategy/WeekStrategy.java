@@ -57,7 +57,7 @@ public class WeekStrategy extends Strategy {
                 backup.restore();
                 if (throwable)
                     throw new MismatchPatternException(
-                            "The week \"" + value + "\" must be end with an ordinal indicator.",
+                            "The week '" + value + "' must be end with an ordinal indicator.",
                             backup.getBackupPosition(),
                             this.pattern);
             }
@@ -69,7 +69,7 @@ public class WeekStrategy extends Strategy {
                 if (weekInYear) {
                     if (week < 0 || week > 54)
                         throw new MismatchPatternException(
-                                "The \"" + week + "\" is not a week of year.",
+                                "The '" + week + "' is not a week of year.",
                                 backup.getBackupPosition(),
                                 this.pattern);
 
@@ -79,7 +79,7 @@ public class WeekStrategy extends Strategy {
                 } else {
                     if (week < 1 || week > 6)
                         throw new MismatchPatternException(
-                                "The \"" + week + "\" is not a week of month.",
+                                "The '" + week + "' is not a week of month.",
                                 backup.getBackupPosition(),
                                 this.pattern);
 
@@ -99,7 +99,7 @@ public class WeekStrategy extends Strategy {
             backup.restore();
             if (throwable)
                 throw new MismatchPatternException(
-                        "The \"" + value + "\" is not a week.",
+                        "The '" + value + "' is not a week.",
                         backup.getBackupPosition(),
                         this.pattern);
         }

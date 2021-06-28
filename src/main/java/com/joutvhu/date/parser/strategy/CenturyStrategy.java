@@ -45,7 +45,7 @@ public class CenturyStrategy extends Strategy {
             } else {
                 backup.restore();
                 throw new MismatchPatternException(
-                        "\"" + value + "\" is not the century.",
+                        "'" + value + "' is not the century.",
                         backup.getBackupPosition(),
                         this.pattern);
             }

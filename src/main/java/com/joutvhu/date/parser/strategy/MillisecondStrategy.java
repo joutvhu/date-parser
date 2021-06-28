@@ -46,7 +46,7 @@ public class MillisecondStrategy extends Strategy {
             } else {
                 backup.restore();
                 throw new MismatchPatternException(
-                        "The \"" + value + "\" value is not milliseconds.",
+                        "The '" + value + "' value is not milliseconds.",
                         backup.getBackupPosition(),
                         this.pattern);
             }

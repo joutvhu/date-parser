@@ -60,7 +60,7 @@ public class MonthStrategy extends Strategy {
                         continue;
                     backup.restore();
                     throw new MismatchPatternException(
-                            "The month \"" + value + "\" must be end with an ordinal indicator.",
+                            "The month '" + value + "' must be end with an ordinal indicator.",
                             backup.getBackupPosition(),
                             this.pattern);
                 }
@@ -71,7 +71,7 @@ public class MonthStrategy extends Strategy {
                     int month = Integer.parseInt(value);
                     if (month < 1 || month > 12) {
                         throw new MismatchPatternException(
-                                "The \"" + month + "\" is not a month.",
+                                "The '" + month + "' is not a month.",
                                 backup.getBackupPosition(),
                                 this.pattern);
                     }
@@ -89,7 +89,7 @@ public class MonthStrategy extends Strategy {
             } else {
                 backup.restore();
                 throw new MismatchPatternException(
-                        "The \"" + value + "\" is not a month.",
+                        "The '" + value + "' is not a month.",
                         backup.getBackupPosition(),
                         this.pattern);
             }
@@ -114,7 +114,7 @@ public class MonthStrategy extends Strategy {
 
         backup.restore();
         throw new MismatchPatternException(
-                "The \"" + value + "\" is not a month.",
+                "The '" + value + "' is not a month.",
                 backup.getBackupPosition(),
                 this.pattern);
     }

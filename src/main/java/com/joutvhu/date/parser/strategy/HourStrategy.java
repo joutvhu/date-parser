@@ -42,14 +42,14 @@ public class HourStrategy extends Strategy {
                             hour = 0;
                         if (hour < 0 || hour > 23) {
                             throw new MismatchPatternException(
-                                    "The value \"" + hour + "\" is not a hour.",
+                                    "The value '" + hour + "' is not a hour.",
                                     backup.getBackupPosition(),
                                     this.pattern);
                         }
                     } else {
                         if (hour < 0 || hour > 24) {
                             throw new MismatchPatternException(
-                                    "The value \"" + hour + "\" is not a hour.",
+                                    "The value '" + hour + "' is not a hour.",
                                     backup.getBackupPosition(),
                                     this.pattern);
                         }
@@ -71,7 +71,7 @@ public class HourStrategy extends Strategy {
             } else {
                 backup.restore();
                 throw new MismatchPatternException(
-                        "The value \"" + value + "\" is not a hour.",
+                        "The value '" + value + "' is not a hour.",
                         backup.getBackupPosition(),
                         this.pattern);
             }

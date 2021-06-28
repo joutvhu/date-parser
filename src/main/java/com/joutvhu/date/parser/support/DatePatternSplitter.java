@@ -58,13 +58,13 @@ public class DatePatternSplitter {
     }
 
     public List<Strategy> getStrategyChain() {
-        Strategy strategy;
         List<Strategy> result = new ArrayList<>();
-        do {
-            strategy = this.getNextStrategy();
-            if (strategy != null)
-                result.add(strategy);
-        } while (strategy != null);
-        return result;
+        while (true) {
+            Strategy nextStrategy = this.getNextStrategy();
+            if (nextStrategy != null)
+                result.add(nextStrategy);
+            else
+                return result;
+        }
     }
 }

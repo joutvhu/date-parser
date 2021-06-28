@@ -11,11 +11,9 @@ import java.util.Calendar;
 public class AmPmStrategy extends Strategy {
     public static final String AM_PM = "am/pm";
 
-    private final boolean upperCase;
-
     public AmPmStrategy(char c) {
         super(c);
-        this.upperCase = c == 'A';
+        // Upper Case when c == 'A';
     }
 
     @Override
@@ -41,7 +39,7 @@ public class AmPmStrategy extends Strategy {
                 backup.commit();
             } else {
                 throw new MismatchPatternException(
-                        "The \"" + value + "\" value must be \"AM\" or \"PM\".",
+                        "The '" + value + "' value must be 'AM' or 'PM'.",
                         backup.getBackupPosition(),
                         this.pattern);
             }

@@ -56,7 +56,7 @@ public class DayStrategy extends Strategy {
                     if (!iterator.hasNext()) {
                         backup.restore();
                         throw new MismatchPatternException(
-                                "The day \"" + value + "\" must be end with an ordinal indicator.",
+                                "The day '" + value + "' must be end with an ordinal indicator.",
                                 backup.getBackupPosition(),
                                 this.pattern);
                     }
@@ -71,7 +71,7 @@ public class DayStrategy extends Strategy {
                     if (this.dayInYear) {
                         if (day == 0 || day > 366) {
                             throw new MismatchPatternException(
-                                    "\"" + day + "\" is not a day of year.",
+                                    "'" + day + "' is not a day of year.",
                                     backup.getBackupPosition(),
                                     this.pattern);
                         }
@@ -79,7 +79,7 @@ public class DayStrategy extends Strategy {
                         objective.set(DAY_OF_YEAR, day);
                         if (monthDays.isEmpty()) {
                             throw new MismatchPatternException(
-                                    "\"" + day + "\" is not a day of year.",
+                                    "'" + day + "' is not a day of year.",
                                     backup.getBackupPosition(),
                                     this.pattern);
                         } else if (monthDays.size() == 1) {
@@ -92,7 +92,7 @@ public class DayStrategy extends Strategy {
                     } else {
                         if (day == 0 || day > 31) {
                             throw new MismatchPatternException(
-                                    "\"" + day + "\" is not a day of month.",
+                                    "'" + day + "' is not a day of month.",
                                     backup.getBackupPosition(),
                                     this.pattern);
                         }
@@ -109,7 +109,7 @@ public class DayStrategy extends Strategy {
             } else {
                 backup.restore();
                 throw new MismatchPatternException(
-                        "\"" + value + "\" is not a day.",
+                        "'" + value + "' is not a day.",
                         backup.getBackupPosition(),
                         this.pattern);
             }

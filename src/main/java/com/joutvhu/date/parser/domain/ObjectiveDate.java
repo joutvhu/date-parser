@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.temporal.WeekFields;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -23,7 +24,9 @@ import java.util.TimeZone;
  */
 @Getter
 @Setter
-public class ObjectiveDate {
+public class ObjectiveDate implements Serializable {
+    private static final long serialVersionUID = -8615336398200738252L;
+
     public static final String YEAR = "year";
     public static final String MONTH = "month";
     public static final String DAY = "day";
@@ -100,11 +103,13 @@ public class ObjectiveDate {
                 this.setNano((Integer) value);
                 break;
             case LOCALE:
-                assert value instanceof Locale;
+                if (!(value instanceof Locale))
+                    throw new IllegalArgumentException("Invalid Locale: " + value);
                 this.setLocale((Locale) value);
                 break;
             case ZONE:
-                assert value instanceof TimeZone;
+                if (!(value instanceof TimeZone))
+                    throw new IllegalArgumentException("Invalid TimeZone: " + value);
                 this.setZone((TimeZone) value);
                 break;
             default:

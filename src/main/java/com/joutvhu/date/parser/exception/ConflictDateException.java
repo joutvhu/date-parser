@@ -1,7 +1,12 @@
 package com.joutvhu.date.parser.exception;
 
+import lombok.Getter;
+
+@Getter
 public class ConflictDateException extends RuntimeException {
-    private Object[] conflict;
+    private static final long serialVersionUID = -4791053116414709832L;
+
+    private final Object[] conflict;
 
     public ConflictDateException(String message, Object... conflict) {
         super(message);

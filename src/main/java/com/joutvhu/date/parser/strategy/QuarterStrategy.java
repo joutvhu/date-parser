@@ -37,7 +37,7 @@ public class QuarterStrategy extends Strategy {
             else {
                 backup.restore();
                 throw new MismatchPatternException(
-                        "The quarter \"" + value + "\" must be end with an ordinal indicator.",
+                        "The quarter '" + value + "' must be end with an ordinal indicator.",
                         backup.getBackupPosition(),
                         this.pattern);
             }
@@ -48,7 +48,7 @@ public class QuarterStrategy extends Strategy {
                 int quarter = Integer.parseInt(value);
                 if (quarter < 1 || quarter > 4) {
                     throw new MismatchPatternException(
-                            "The \"" + quarter + "\" is not a quarter.",
+                            "The '" + quarter + "' is not a quarter.",
                             backup.getBackupPosition(),
                             this.pattern);
                 }

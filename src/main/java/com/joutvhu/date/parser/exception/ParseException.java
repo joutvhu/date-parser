@@ -1,7 +1,12 @@
 package com.joutvhu.date.parser.exception;
 
+import lombok.Getter;
+
+@Getter
 public class ParseException extends RuntimeException {
-    private String[] patterns;
+    private static final long serialVersionUID = -2340887372568868746L;
+
+    private final String[] patterns;
 
     public ParseException(String message, String... patterns) {
         super(message);

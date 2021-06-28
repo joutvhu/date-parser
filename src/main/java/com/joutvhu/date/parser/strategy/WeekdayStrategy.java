@@ -60,7 +60,7 @@ public class WeekdayStrategy extends Strategy {
                 int weekday = Integer.parseInt(value);
                 if (weekday < 1 || weekday > 7)
                     throw new MismatchPatternException(
-                            "The \"" + weekday + "\" is not a day of week.",
+                            "The '" + weekday + "' is not a day of week.",
                             backup.getBackupPosition(),
                             this.pattern);
 
@@ -77,7 +77,7 @@ public class WeekdayStrategy extends Strategy {
             backup.restore();
             if (throwable)
                 throw new MismatchPatternException(
-                        "The \"" + value + "\" is not a day of week.",
+                        "The '" + value + "' is not a day of week.",
                         backup.getBackupPosition(),
                         this.pattern);
         }
@@ -103,7 +103,7 @@ public class WeekdayStrategy extends Strategy {
 
         backup.restore();
         throw new MismatchPatternException(
-                "The \"" + value + "\" is not a day of week.",
+                "The '" + value + "' is not a day of week.",
                 backup.getBackupPosition(),
                 this.pattern);
     }

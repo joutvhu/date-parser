@@ -35,7 +35,7 @@ public class EraStrategy extends Strategy {
                 backup.commit();
             } else {
                 throw new MismatchPatternException(
-                        "The \"" + value + "\" is not the value of the Era.",
+                        "The '" + value + "' is not the value of the Era.",
                         backup.getBackupPosition(),
                         this.pattern);
             }
