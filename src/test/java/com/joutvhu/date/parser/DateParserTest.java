@@ -89,6 +89,19 @@ public class DateParserTest {
     }
 
     @Test
+    public void parse_Instant1() {
+        Instant result = DateParser.quickParse(Instant.class, "2021-06-28T02:22:48.780101Z", "yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals("2021-06-28T02:22:48.780101Z", result.toString());
+    }
+
+    @Test
+    public void parse_Long1() {
+        Long result = DateParser.quickParse(Long.class, "2021-06-28T02:22:48.780Z", "yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        Assertions.assertEquals(1624846968780L, result);
+    }
+
+    @Test
     public void parse_Year0() {
         Year result = DateParser.quickParse(Year.class, "2021", "yyyy");
         Assertions.assertEquals(2021, result.getValue());
