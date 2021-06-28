@@ -138,6 +138,31 @@ public class DateParserTest {
         Assertions.assertEquals(1, result.getValue());
     }
 
+    @Test
+    public void parse_DayOfWeek2() {
+        DayOfWeek result = DateParser.quickParse(DayOfWeek.class, "Wednesday", "EEEE");
+        Assertions.assertEquals(3, result.getValue());
+    }
+
+    @Test
+    public void parse_DayOfWeek4() {
+        DayOfWeek result = DateParser.quickParse(DayOfWeek.class, "2", "u");
+        Assertions.assertEquals(2, result.getValue());
+    }
+
+    @Test
+    public void parse_DayOfWeek5() {
+        DayOfWeek result = DateParser.quickParse(DayOfWeek.class, "Sun", "EEE");
+        Assertions.assertEquals(7, result.getValue());
+    }
+
+    @Test
+    public void parse_DayOfWeek6() {
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            DateParser.quickParse(DayOfWeek.class, "2021/06", "yyyy/MM");
+        });
+    }
+
     private String format(Date date, String format) {
         SimpleDateFormat dt = new SimpleDateFormat(format);
         return dt.format(date);
