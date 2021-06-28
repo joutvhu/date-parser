@@ -14,12 +14,12 @@ public class CenturySubscription implements Subscription {
 
             if (year != null && century != null) {
                 if (year < 100 && Boolean.TRUE.equals(objective.get(YearStrategy.YEAR2))) {
-                    year += century * 100;
+                    year += (century - 1) * 100;
                     objective.unsubscribe(CenturySubscription.class);
                     objective.set(ObjectiveDate.YEAR, year);
                 } else {
                     int c = year / 100;
-                    if (century != c) {
+                    if (century - 1 != c) {
                         throw new ConflictDateException(
                                 "The year " + year + " is not the " + century + " century.",
                                 century,

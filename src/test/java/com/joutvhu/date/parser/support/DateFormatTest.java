@@ -7,6 +7,7 @@ import org.junit.jupiter.api.TestInstance;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.ChronoField;
 import java.time.temporal.WeekFields;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -80,5 +81,17 @@ public class DateFormatTest {
         ObjectiveDate objective = new DateFormat("yyyy MM F u").parse("2021 06 3 7");
         Assertions.assertEquals(20, objective.getDay());
         Assertions.assertEquals(6, objective.getMonth());
+    }
+
+    @Test
+    public void parse_Century0() {
+        ObjectiveDate objective = new DateFormat("yy CC").parse("21 21");
+        Assertions.assertEquals(2021, objective.getYear());
+    }
+
+    @Test
+    public void parse_Century1() {
+        ObjectiveDate objective = new DateFormat("yy CC").parse("95 20");
+        Assertions.assertEquals(1995, objective.getYear());
     }
 }
