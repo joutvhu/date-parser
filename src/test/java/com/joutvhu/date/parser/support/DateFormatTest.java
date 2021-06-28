@@ -94,4 +94,16 @@ public class DateFormatTest {
         ObjectiveDate objective = new DateFormat("yy CC").parse("95 20");
         Assertions.assertEquals(1995, objective.getYear());
     }
+
+    @Test
+    public void parse_Era0() {
+        ObjectiveDate objective = new DateFormat("yyyy GG").parse("2021 BC");
+        Assertions.assertEquals(-2021, objective.getYear());
+    }
+
+    @Test
+    public void parse_Era1() {
+        ObjectiveDate objective = new DateFormat("yyyy GG").parse("2021 AD");
+        Assertions.assertEquals(2021, objective.getYear());
+    }
 }

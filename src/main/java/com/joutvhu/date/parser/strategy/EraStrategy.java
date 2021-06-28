@@ -44,4 +44,16 @@ public class EraStrategy extends Strategy {
             throw e;
         }
     }
+
+    @Override
+    public void afterCompletion(ObjectiveDate objective) {
+        Integer era = objective.get(ERA);
+        Integer year = objective.getYear();
+        if (year != null && (era == GregorianCalendar.AD || era == GregorianCalendar.BC)) {
+            year = Math.abs(year);
+            if (era == GregorianCalendar.BC)
+                year = -year;
+            objective.setYear(year);
+        }
+    }
 }

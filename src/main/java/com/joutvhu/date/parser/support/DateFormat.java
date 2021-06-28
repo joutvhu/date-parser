@@ -77,6 +77,7 @@ public class DateFormat {
         ObjectiveDate objective = new ObjectiveDate(this.locale, this.zone, this.weekFields);
         StringSource source = new StringSource(value);
         this.parse(objective, source, 0);
+        this.strategies.forEach(strategy -> strategy.afterCompletion(objective));
         return objective;
     }
 }

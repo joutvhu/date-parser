@@ -38,4 +38,8 @@ public abstract class Strategy {
     }
 
     public abstract void parse(ObjectiveDate objective, StringSource source, NextStrategy chain);
+
+    public void afterCompletion(ObjectiveDate objective) {
+        // Do nothing
+    }
 }
