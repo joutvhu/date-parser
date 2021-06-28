@@ -12,6 +12,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.TimeZone;
 
+/**
+ * The date parser
+ *
+ * @author Giao Ho
+ * @since 1.0.0
+ */
 public class DateParser {
     private static DateParser INSTANCE;
 
@@ -24,6 +30,9 @@ public class DateParser {
         this.convertors = new HashMap<>();
     }
 
+    /**
+     * Get default instance of {@link DateParser}.
+     */
     public static DateParser instance() {
         if (INSTANCE == null) {
             INSTANCE = new DateParser()
@@ -51,22 +60,38 @@ public class DateParser {
         return INSTANCE;
     }
 
+    /**
+     * Set a convertor for new target type
+     *
+     * @param typeOfConvertor is target type class
+     * @param convertor       is {@link Convertor<T>} for the target type
+     * @param <T>             is target type
+     */
     public <T> DateParser convertor(Class<T> typeOfConvertor, Convertor<T> convertor) {
         this.convertors.put(typeOfConvertor, convertor);
         return this;
     }
 
+    /**
+     * Set a convertor for new Target Type
+     */
     public <T> DateParser convertor(Convertor<T> convertor) {
         Class<T> typeOfConvertor = Convertor.typeOfConvertor(convertor);
         Objects.requireNonNull(typeOfConvertor);
         return this.convertor(typeOfConvertor, convertor);
     }
 
+    /**
+     * Set default {@link Locale}
+     */
     public DateParser locale(Locale defaultLocale) {
         this.defaultLocale = defaultLocale;
         return this;
     }
 
+    /**
+     * Set default {@link TimeZone}
+     */
     public DateParser zone(TimeZone defaultZone) {
         this.defaultZone = defaultZone;
         return this;
@@ -90,6 +115,15 @@ public class DateParser {
         throw new ClassCastException("Unsupported " + type.getName() + " class.");
     }
 
+    /**
+     * Parse the string of date to the target type
+     *
+     * @param type     is the target type class
+     * @param value    is string of date need to parse
+     * @param patterns are possible formats of the value
+     * @param <T>      is the target type
+     * @return target object
+     */
     public <T> T parse(Class<T> type, String value, String... patterns) {
         if (type == null)
             throw new IllegalArgumentException("Date Type must not be null");
@@ -112,6 +146,9 @@ public class DateParser {
         throw new ParseException("Unable to parse the date: " + value, cause, patterns);
     }
 
+    /**
+     * Quick parse with default {@link DateParser#instance()}
+     */
     public static <T> T quickParse(Class<T> type, String value, String... patterns) {
         return DateParser.instance().parse(type, value, patterns);
     }
