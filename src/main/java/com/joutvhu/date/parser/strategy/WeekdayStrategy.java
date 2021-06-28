@@ -6,11 +6,14 @@ import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 
 public class WeekdayStrategy extends Strategy {
     public static final String WEEKDAY = "weekday";
+
+    private static final String NOT_DAY_OF_WEEK_MESSAGE = "The '{0}' is not a day of week.";
 
     private static final List<String> SHORT_WEEKDAYS = Arrays.asList("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun");
     private static final List<String> LONG_WEEKDAYS = Arrays
@@ -60,7 +63,7 @@ public class WeekdayStrategy extends Strategy {
                 int weekday = Integer.parseInt(value);
                 if (weekday < 1 || weekday > 7)
                     throw new MismatchPatternException(
-                            "The '" + weekday + "' is not a day of week.",
+                            MessageFormat.format(NOT_DAY_OF_WEEK_MESSAGE, weekday),
                             backup.getBackupPosition(),
                             this.pattern);
 
@@ -77,13 +80,14 @@ public class WeekdayStrategy extends Strategy {
             backup.restore();
             if (throwable)
                 throw new MismatchPatternException(
-                        "The '" + value + "' is not a day of week.",
+                        MessageFormat.format(NOT_DAY_OF_WEEK_MESSAGE, value),
                         backup.getBackupPosition(),
                         this.pattern);
         }
         return false;
     }
 
+    @SuppressWarnings("java:S1643")
     private void parseString(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
         String value = source.get(3);
@@ -103,7 +107,7 @@ public class WeekdayStrategy extends Strategy {
 
         backup.restore();
         throw new MismatchPatternException(
-                "The '" + value + "' is not a day of week.",
+                MessageFormat.format(NOT_DAY_OF_WEEK_MESSAGE, value),
                 backup.getBackupPosition(),
                 this.pattern);
     }

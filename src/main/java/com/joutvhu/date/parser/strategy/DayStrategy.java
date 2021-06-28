@@ -40,6 +40,7 @@ public class DayStrategy extends Strategy {
     }
 
     @Override
+    @SuppressWarnings("java:S3776")
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         AtomicBoolean first = new AtomicBoolean(true);
         int len = this.ordinal ? this.pattern.length() + 1 : this.pattern.length();
@@ -116,6 +117,7 @@ public class DayStrategy extends Strategy {
         }
     }
 
+    @SuppressWarnings("java:S3776")
     public List<MonthDay> getMonthAndDay(int dayOfYear) {
         if (dayOfYear == 366)
             return Collections.singletonList(MonthDay.of(12, 31));

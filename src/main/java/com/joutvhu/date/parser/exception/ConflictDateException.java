@@ -6,6 +6,7 @@ import lombok.Getter;
 public class ConflictDateException extends RuntimeException {
     private static final long serialVersionUID = -4791053116414709832L;
 
+    @SuppressWarnings("java:S1948")
     private final Object[] conflict;
 
     public ConflictDateException(String message, Object... conflict) {

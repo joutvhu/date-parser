@@ -87,6 +87,7 @@ public class CommonUtil {
         return new String(buf);
     }
 
+    @SuppressWarnings("java:S131")
     public void checkValidDate(int year, int month, int dayOfMonth) {
         ChronoField.YEAR.checkValidValue(year);
         ChronoField.MONTH_OF_YEAR.checkValidValue(month);

@@ -27,6 +27,7 @@ public class QuoteStrategy extends Strategy {
     }
 
     @Override
+    @SuppressWarnings("java:S3776")
     public boolean add(char c) {
         if (this.quoted) {
             if (Boolean.TRUE.equals(this.end))

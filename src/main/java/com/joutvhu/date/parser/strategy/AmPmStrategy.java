@@ -11,6 +11,7 @@ import java.util.Calendar;
 public class AmPmStrategy extends Strategy {
     public static final String AM_PM = "am/pm";
 
+    @SuppressWarnings("java:S125")
     public AmPmStrategy(char c) {
         super(c);
         // Upper Case when c == 'A';

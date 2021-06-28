@@ -10,6 +10,7 @@ import java.util.NoSuchElementException;
 
 @Getter
 @Setter
+@SuppressWarnings({"java:S2055", "java:S2160"})
 public class StringSource extends ParsePosition implements Serializable {
     private static final long serialVersionUID = -6246057517978279890L;
 
@@ -68,6 +69,7 @@ public class StringSource extends ParsePosition implements Serializable {
         return iterator(from, this.getLength() - this.getIndex());
     }
 
+    @SuppressWarnings("java:S3776")
     public Iterator<String> iterator(int from, int to) {
         return new Iterator<String>() {
             private final StringSource source = StringSource.this;

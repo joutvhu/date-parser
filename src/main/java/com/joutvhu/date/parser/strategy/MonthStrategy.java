@@ -6,12 +6,15 @@ import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MonthStrategy extends Strategy {
+    private static final String NOT_MONTH_MESSAGE = "The '{0}' is not a month.";
+
     private static final List<String> SHORT_MONTHS = Arrays
             .asList("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
     private static final List<String> LONG_MONTHS = Arrays
@@ -43,6 +46,7 @@ public class MonthStrategy extends Strategy {
             this.parseString(objective, source, chain);
     }
 
+    @SuppressWarnings({"java:S3776", "java:S135"})
     private void parseNumber(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         AtomicBoolean first = new AtomicBoolean(true);
         int len = this.ordinal ? this.pattern.length() + 1 : this.pattern.length();
@@ -71,7 +75,7 @@ public class MonthStrategy extends Strategy {
                     int month = Integer.parseInt(value);
                     if (month < 1 || month > 12) {
                         throw new MismatchPatternException(
-                                "The '" + month + "' is not a month.",
+                                MessageFormat.format(NOT_MONTH_MESSAGE, month),
                                 backup.getBackupPosition(),
                                 this.pattern);
                     }
@@ -89,13 +93,14 @@ public class MonthStrategy extends Strategy {
             } else {
                 backup.restore();
                 throw new MismatchPatternException(
-                        "The '" + value + "' is not a month.",
+                        MessageFormat.format(NOT_MONTH_MESSAGE, value),
                         backup.getBackupPosition(),
                         this.pattern);
             }
         }
     }
 
+    @SuppressWarnings("java:S1643")
     private void parseString(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
         String value = source.get(3);
@@ -114,7 +119,7 @@ public class MonthStrategy extends Strategy {
 
         backup.restore();
         throw new MismatchPatternException(
-                "The '" + value + "' is not a month.",
+                MessageFormat.format(NOT_MONTH_MESSAGE, value),
                 backup.getBackupPosition(),
                 this.pattern);
     }

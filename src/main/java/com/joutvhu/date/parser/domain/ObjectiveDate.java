@@ -24,6 +24,7 @@ import java.util.TimeZone;
  */
 @Getter
 @Setter
+@SuppressWarnings("java:S1845")
 public class ObjectiveDate implements Serializable {
     private static final long serialVersionUID = -8615336398200738252L;
 
@@ -51,12 +52,15 @@ public class ObjectiveDate implements Serializable {
     private WeekFields weekFields;
 
     @Getter(AccessLevel.PRIVATE)
+    @SuppressWarnings("java:S1948")
     private final List<Tracer> tracers;
 
     @Getter(AccessLevel.PRIVATE)
+    @SuppressWarnings("java:S1948")
     private final Map<String, Object> extension;
 
     @Getter(AccessLevel.PRIVATE)
+    @SuppressWarnings("java:S1948")
     private final Map<Class<? extends Subscription>, Subscription> listeners;
 
     public ObjectiveDate(Locale locale, TimeZone zone) {

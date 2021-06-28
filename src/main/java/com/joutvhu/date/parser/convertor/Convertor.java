@@ -13,11 +13,12 @@ public interface Convertor<T> {
         for (Type type : convertorClass.getGenericInterfaces()) {
             if (type instanceof ParameterizedType) {
                 ParameterizedType parameterizedType = (ParameterizedType) type;
-                if ("com.joutvhu.date.parser.convertor.Convertor"
-                        .equals(parameterizedType.getRawType().getTypeName()) ||
-                        parameterizedType.getActualTypeArguments().length == 1) {
+                String rawTypeName = parameterizedType.getRawType().getTypeName();
+                if ("com.joutvhu.date.parser.convertor.Convertor".equals(rawTypeName) &&
+                    parameterizedType.getActualTypeArguments().length == 1) {
                     try {
-                        return (Class<T>) Class.forName(parameterizedType.getActualTypeArguments()[0].getTypeName());
+                        return (Class<T>) Class.forName(parameterizedType
+                                .getActualTypeArguments()[0].getTypeName());
                     } catch (ClassNotFoundException e) {
                         return null;
                     }
