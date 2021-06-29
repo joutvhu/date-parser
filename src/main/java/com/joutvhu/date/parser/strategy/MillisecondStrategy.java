@@ -23,7 +23,7 @@ public class MillisecondStrategy extends Strategy {
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         AtomicBoolean first = new AtomicBoolean(true);
         ParseBackup backup = ParseBackup.backup(objective, source);
-        Iterator<String> iterator = source.iterator(this.pattern.length(), 6);
+        Iterator<String> iterator = source.iterator(this.length(), 6);
 
         while (iterator.hasNext()) {
             String value = iterator.next();

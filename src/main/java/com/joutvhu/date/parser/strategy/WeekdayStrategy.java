@@ -46,8 +46,8 @@ public class WeekdayStrategy extends Strategy {
                 objective,
                 chain,
                 backup,
-                source.get(this.pattern.length()),
-                this.pattern.length() > 1))
+                source.get(this.length()),
+                this.length() > 1))
             this.tryParse(objective, chain, backup, source.get(1), true);
     }
 
@@ -92,7 +92,7 @@ public class WeekdayStrategy extends Strategy {
         ParseBackup backup = ParseBackup.backup(objective, source);
         String value = source.get(3);
 
-        if (this.pattern.length() < 4) {
+        if (this.length() < 4) {
             int index = CommonUtil.indexIgnoreCaseOf(value, SHORT_WEEKDAYS);
             if (this.tryParse(objective, chain, backup, index + 1, true))
                 return;

@@ -25,7 +25,7 @@ public class CenturyStrategy extends Strategy {
     @Override
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
-        Iterator<String> iterator = source.iterator(this.pattern.length(), 2);
+        Iterator<String> iterator = source.iterator(this.length(), 2);
 
         while (iterator.hasNext()) {
             String value = iterator.next();
@@ -57,7 +57,7 @@ public class CenturyStrategy extends Strategy {
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
         Objects.requireNonNull(objective.getYear());
         int century = Math.abs(objective.getYear()) / 100;
-        target.append(CommonUtil.leftPad(String.valueOf(century), this.pattern.length(), '0'));
+        target.append(CommonUtil.leftPad(String.valueOf(century), this.length(), '0'));
         chain.next();
     }
 }

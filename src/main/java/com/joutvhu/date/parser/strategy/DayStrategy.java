@@ -44,7 +44,7 @@ public class DayStrategy extends Strategy {
     @SuppressWarnings("java:S3776")
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         AtomicBoolean first = new AtomicBoolean(true);
-        int len = this.ordinal ? this.pattern.length() + 1 : this.pattern.length();
+        int len = this.ordinal ? this.length() + 1 : this.length();
         ParseBackup backup = ParseBackup.backup(objective, source);
         Iterator<String> iterator = source.iterator(len, (this.dayInYear ? 3 : 2) + (this.ordinal ? 2 : 0));
 

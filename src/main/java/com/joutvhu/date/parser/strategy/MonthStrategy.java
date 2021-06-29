@@ -35,7 +35,7 @@ public class MonthStrategy extends Strategy {
     @Override
     public void afterPatternSet() {
         this.ordinal = this.pattern.endsWith("o");
-        this.number = this.ordinal || this.pattern.length() <= 2;
+        this.number = this.ordinal || this.length() <= 2;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class MonthStrategy extends Strategy {
     @SuppressWarnings({"java:S3776", "java:S135"})
     private void parseNumber(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         AtomicBoolean first = new AtomicBoolean(true);
-        int len = this.ordinal ? this.pattern.length() + 1 : this.pattern.length();
+        int len = this.ordinal ? this.length() + 1 : this.length();
         ParseBackup backup = ParseBackup.backup(objective, source);
         Iterator<String> iterator = source.iterator(len, this.ordinal ? 4 : 2);
 
@@ -105,7 +105,7 @@ public class MonthStrategy extends Strategy {
         ParseBackup backup = ParseBackup.backup(objective, source);
         String value = source.get(3);
 
-        if (this.pattern.length() == 3) {
+        if (this.length() == 3) {
             int index = CommonUtil.indexIgnoreCaseOf(value, SHORT_MONTHS);
             this.tryParse(objective, chain, backup, index + 1, true);
         } else {

@@ -16,6 +16,10 @@ public abstract class Strategy {
         // Do nothing
     }
 
+    public int length() {
+        return this.length();
+    }
+
     public abstract boolean add(char c);
 
     protected boolean add(boolean condition, char c) {

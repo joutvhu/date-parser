@@ -23,7 +23,7 @@ public class ZoneStrategy extends Strategy {
     @Override
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
-        Iterator<String> iterator = source.iterator(this.pattern.length());
+        Iterator<String> iterator = source.iterator(this.length());
 
         while (iterator.hasNext()) {
             String value = iterator.next();

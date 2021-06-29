@@ -32,7 +32,7 @@ public class HourStrategy extends Strategy {
     @SuppressWarnings("java:S3776")
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
-        Iterator<String> iterator = source.iterator(this.pattern.length(), 2);
+        Iterator<String> iterator = source.iterator(this.length(), 2);
 
         while (iterator.hasNext()) {
             String value = iterator.next();

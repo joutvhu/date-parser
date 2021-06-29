@@ -40,8 +40,8 @@ public class WeekStrategy extends Strategy {
                 objective,
                 chain,
                 backup,
-                source.get(this.ordinal ? this.pattern.length() + 1 : this.pattern.length()),
-                this.pattern.length() > (this.ordinal ? 2 : 1)))
+                source.get(this.ordinal ? this.length() + 1 : this.length()),
+                this.length() > (this.ordinal ? 2 : 1)))
             this.tryParse(objective, chain, backup, source.get(this.ordinal ? 3 : 1), true);
     }
 
