@@ -6,7 +6,13 @@ import java.time.Month;
 import java.util.Objects;
 
 public class MonthConvertor implements Convertor<Month> {
-    public static final MonthConvertor INSTANCE = new MonthConvertor();
+    private static MonthConvertor instance;
+
+    public static synchronized MonthConvertor getInstance() {
+        if (instance == null)
+            instance = new MonthConvertor();
+        return instance;
+    }
 
     @Override
     public Month convert(ObjectiveDate objective) {

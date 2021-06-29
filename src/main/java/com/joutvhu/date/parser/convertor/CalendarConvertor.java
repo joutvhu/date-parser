@@ -6,7 +6,13 @@ import java.util.Calendar;
 import java.util.Objects;
 
 public class CalendarConvertor implements Convertor<Calendar> {
-    public static final CalendarConvertor INSTANCE = new CalendarConvertor();
+    private static CalendarConvertor instance;
+
+    public static synchronized CalendarConvertor getInstance() {
+        if (instance == null)
+            instance = new CalendarConvertor();
+        return instance;
+    }
 
     @Override
     public Calendar convert(ObjectiveDate objective) {

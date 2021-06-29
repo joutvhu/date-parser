@@ -6,7 +6,13 @@ import java.time.YearMonth;
 import java.util.Objects;
 
 public class YearMonthConvertor implements Convertor<YearMonth> {
-    public static final YearMonthConvertor INSTANCE = new YearMonthConvertor();
+    private static YearMonthConvertor instance;
+
+    public static synchronized YearMonthConvertor getInstance() {
+        if (instance == null)
+            instance = new YearMonthConvertor();
+        return instance;
+    }
 
     @Override
     public YearMonth convert(ObjectiveDate objective) {

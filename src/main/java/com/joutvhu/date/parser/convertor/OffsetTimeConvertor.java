@@ -5,13 +5,19 @@ import com.joutvhu.date.parser.domain.ObjectiveDate;
 import java.time.OffsetTime;
 
 public class OffsetTimeConvertor implements Convertor<OffsetTime> {
-    public static final OffsetTimeConvertor INSTANCE = new OffsetTimeConvertor();
+    private static OffsetTimeConvertor instance;
+
+    public static synchronized OffsetTimeConvertor getInstance() {
+        if (instance == null)
+            instance = new OffsetTimeConvertor();
+        return instance;
+    }
 
     @Override
     public OffsetTime convert(ObjectiveDate objective) {
         return OffsetTime.of(
-                LocalTimeConvertor.INSTANCE.convert(objective),
-                ZoneOffsetConvertor.INSTANCE.convert(objective)
+                LocalTimeConvertor.getInstance().convert(objective),
+                ZoneOffsetConvertor.getInstance().convert(objective)
         );
     }
 }

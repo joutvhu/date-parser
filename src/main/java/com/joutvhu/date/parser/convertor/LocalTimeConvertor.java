@@ -6,7 +6,13 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 public class LocalTimeConvertor implements Convertor<LocalTime> {
-    public static final LocalTimeConvertor INSTANCE = new LocalTimeConvertor();
+    private static LocalTimeConvertor instance;
+
+    public static synchronized LocalTimeConvertor getInstance() {
+        if (instance == null)
+            instance = new LocalTimeConvertor();
+        return instance;
+    }
 
     @Override
     public LocalTime convert(ObjectiveDate objective) {

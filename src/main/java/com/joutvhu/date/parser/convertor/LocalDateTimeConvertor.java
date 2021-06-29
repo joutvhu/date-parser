@@ -5,13 +5,19 @@ import com.joutvhu.date.parser.domain.ObjectiveDate;
 import java.time.LocalDateTime;
 
 public class LocalDateTimeConvertor implements Convertor<LocalDateTime> {
-    public static final LocalDateTimeConvertor INSTANCE = new LocalDateTimeConvertor();
+    private static LocalDateTimeConvertor instance;
+
+    public static synchronized LocalDateTimeConvertor getInstance() {
+        if (instance == null)
+            instance = new LocalDateTimeConvertor();
+        return instance;
+    }
 
     @Override
     public LocalDateTime convert(ObjectiveDate objective) {
         return LocalDateTime.of(
-                LocalDateConvertor.INSTANCE.convert(objective),
-                LocalTimeConvertor.INSTANCE.convert(objective)
+                LocalDateConvertor.getInstance().convert(objective),
+                LocalTimeConvertor.getInstance().convert(objective)
         );
     }
 }
