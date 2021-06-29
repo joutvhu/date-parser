@@ -7,14 +7,17 @@ import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.subscription.HourSubscription;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 public class AmPmStrategy extends Strategy {
     public static final String AM_PM = "am/pm";
 
+    private boolean upperCase;
+
     @SuppressWarnings("java:S125")
     public AmPmStrategy(char c) {
         super(c);
-        // Upper Case when c == 'A';
+        this.upperCase = c == 'A';
     }
 
     @Override
@@ -52,6 +55,9 @@ public class AmPmStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-
+        Objects.requireNonNull(objective.getHour());
+        String value = objective.getHour() < 12 ? "am" : "pm";
+        target.append(this.upperCase ? value.toUpperCase() : value);
+        chain.next();
     }
 }
