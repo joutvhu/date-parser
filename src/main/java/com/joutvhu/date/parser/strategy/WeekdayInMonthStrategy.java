@@ -45,6 +45,6 @@ public class WeekdayInMonthStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-
+        chain.next();
     }
 }

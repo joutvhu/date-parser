@@ -162,5 +162,6 @@ public class MonthStrategy extends Strategy {
         } else {
             target.append(this.length() == 3 ? SHORT_MONTHS.get(month - 1) : LONG_MONTHS.get(month - 1));
         }
+        chain.next();
     }
 }

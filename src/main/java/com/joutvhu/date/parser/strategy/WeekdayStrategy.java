@@ -138,6 +138,6 @@ public class WeekdayStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-
+        chain.next();
     }
 }

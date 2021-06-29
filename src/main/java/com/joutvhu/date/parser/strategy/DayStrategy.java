@@ -172,5 +172,6 @@ public class DayStrategy extends Strategy {
         target.append(CommonUtil.leftPad(String.valueOf(day), this.length(), '0'));
         if (this.ordinal)
             target.append(CommonUtil.getOrdinal(day));
+        chain.next();
     }
 }

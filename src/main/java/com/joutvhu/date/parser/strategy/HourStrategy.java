@@ -8,6 +8,7 @@ import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.text.MessageFormat;
 import java.util.Iterator;
+import java.util.Objects;
 
 public class HourStrategy extends Strategy {
     public static final String HOUR12 = "hour12";
@@ -84,6 +85,15 @@ public class HourStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        Integer hour = objective.getHour();
+        Objects.requireNonNull(hour);
 
+        if (!this.hour24 && hour > 11)
+            hour -= 12;
+        if (!this.startFrom0 && hour == 0)
+            hour = this.hour24 ? 24 : 12;
+
+        target.append(CommonUtil.leftPad(String.valueOf(hour), this.length(), '0'));
+        chain.next();
     }
 }

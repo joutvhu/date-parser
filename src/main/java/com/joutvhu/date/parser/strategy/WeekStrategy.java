@@ -111,6 +111,6 @@ public class WeekStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-
+        chain.next();
     }
 }

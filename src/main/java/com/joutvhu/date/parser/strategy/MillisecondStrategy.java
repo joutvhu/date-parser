@@ -7,6 +7,7 @@ import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MillisecondStrategy extends Strategy {
@@ -55,6 +56,11 @@ public class MillisecondStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-
+        Objects.requireNonNull(objective.getNano());
+        String value = CommonUtil.rightPad(String.valueOf(objective.getNano()), this.length(), '0');
+        if (value.length() > this.length())
+            value = value.substring(0, this.length());
+        target.append(value);
+        chain.next();
     }
 }
