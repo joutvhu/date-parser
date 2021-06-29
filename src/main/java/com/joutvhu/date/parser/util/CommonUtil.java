@@ -33,6 +33,19 @@ public class CommonUtil {
         return value.matches(".*(st|nd|rd|th)");
     }
 
+    public String getOrdinal(int value) {
+        switch (value) {
+            case 1:
+                return "st";
+            case 2:
+                return "nd";
+            case 3:
+                return "rd";
+            default:
+                return "th";
+        }
+    }
+
     public int indexIgnoreCaseOf(String value, List<String> in) {
         for (int i = 0, len = in.size(); i < len; i++) {
             if (value != null && value.equalsIgnoreCase(in.get(i)))
