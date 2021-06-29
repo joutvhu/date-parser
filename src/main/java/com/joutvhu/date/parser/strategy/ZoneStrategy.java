@@ -7,6 +7,7 @@ import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.ZoneUtil;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.TimeZone;
 
 public class ZoneStrategy extends Strategy {
@@ -51,6 +52,8 @@ public class ZoneStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-
+        Objects.requireNonNull(objective.getZone());
+        target.append(objective.getZone().getID());
+        chain.next();
     }
 }
