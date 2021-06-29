@@ -7,6 +7,7 @@ import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class YearStrategy extends Strategy {
@@ -61,6 +62,11 @@ public class YearStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-
+        Objects.requireNonNull(objective.getYear());
+        int year = Math.abs(objective.getYear());
+        if (this.pattern.length() == 2)
+            year %= 100;
+        target.append(CommonUtil.leftPad(String.valueOf(year), this.pattern.length(), '0'));
+        chain.next();
     }
 }
