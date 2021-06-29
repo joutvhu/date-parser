@@ -80,4 +80,38 @@ public class DateFormat {
         this.strategies.forEach(strategy -> strategy.afterCompletion(objective));
         return objective;
     }
+
+    private void format(ObjectiveDate objective, StringBuilder target, int index) {
+        if (index < this.endIndex) {
+            this.strategies.get(index).format(objective, target, new NextStrategy() {
+                @Override
+                public Strategy get() {
+                    return DateFormat.this.strategies.get(index + 1);
+                }
+
+                @Override
+                public void next() {
+                    DateFormat.this.format(objective, target, index + 1);
+                }
+            });
+        } else if (index == this.endIndex) {
+            this.strategies.get(index).format(objective, target, new NextStrategy() {
+                @Override
+                public Strategy get() {
+                    return null;
+                }
+
+                @Override
+                public void next() {
+                    // Do nothing
+                }
+            });
+        }
+    }
+
+    public String format(ObjectiveDate objective) {
+        StringBuilder target = new StringBuilder();
+        this.format(objective, target, 0);
+        return target.toString();
+    }
 }
