@@ -7,9 +7,11 @@ import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.text.MessageFormat;
+import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MonthStrategy extends Strategy {
@@ -149,6 +151,16 @@ public class MonthStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        Integer month = objective.getMonth();
+        Objects.requireNonNull(month);
+        ChronoField.MONTH_OF_YEAR.checkValidIntValue(month);
 
+        if (this.number) {
+            target.append(CommonUtil.leftPad(String.valueOf(month), this.length(), '0'));
+            if (this.ordinal)
+                target.append(CommonUtil.getOrdinal(month));
+        } else {
+            target.append(this.length() == 3 ? SHORT_MONTHS.get(month - 1) : LONG_MONTHS.get(month - 1));
+        }
     }
 }

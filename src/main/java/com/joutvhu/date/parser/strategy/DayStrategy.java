@@ -7,6 +7,7 @@ import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.subscription.DaySubscription;
 import com.joutvhu.date.parser.util.CommonUtil;
 
+import java.time.LocalDate;
 import java.time.MonthDay;
 import java.util.Arrays;
 import java.util.Collections;
@@ -153,6 +154,23 @@ public class DayStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        Objects.requireNonNull(objective.getDay());
+        Objects.requireNonNull(objective.getMonth());
+        Objects.requireNonNull(objective.getYear());
 
+        Integer day = null;
+
+        if (this.dayInYear) {
+            day = LocalDate
+                    .of(objective.getYear(), objective.getMonth(), objective.getDay())
+                    .getDayOfYear();
+        } else {
+            CommonUtil.checkValidDate(objective.getYear(), objective.getMonth(), objective.getDay());
+            day = objective.getDay();
+        }
+
+        target.append(CommonUtil.leftPad(String.valueOf(day), this.length(), '0'));
+        if (this.ordinal)
+            target.append(CommonUtil.getOrdinal(day));
     }
 }
