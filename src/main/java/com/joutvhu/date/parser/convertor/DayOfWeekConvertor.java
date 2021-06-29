@@ -7,7 +7,13 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 public class DayOfWeekConvertor implements Convertor<DayOfWeek> {
-    public static final DayOfWeekConvertor INSTANCE = new DayOfWeekConvertor();
+    private static DayOfWeekConvertor instance;
+
+    public static synchronized DayOfWeekConvertor getInstance() {
+        if (instance == null)
+            instance = new DayOfWeekConvertor();
+        return instance;
+    }
 
     @Override
     public DayOfWeek convert(ObjectiveDate objective) {

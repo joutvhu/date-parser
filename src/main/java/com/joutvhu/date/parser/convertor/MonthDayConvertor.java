@@ -6,7 +6,13 @@ import java.time.MonthDay;
 import java.util.Objects;
 
 public class MonthDayConvertor implements Convertor<MonthDay> {
-    public static final MonthDayConvertor INSTANCE = new MonthDayConvertor();
+    private static MonthDayConvertor instance;
+
+    public static synchronized MonthDayConvertor getInstance() {
+        if (instance == null)
+            instance = new MonthDayConvertor();
+        return instance;
+    }
 
     @Override
     public MonthDay convert(ObjectiveDate objective) {

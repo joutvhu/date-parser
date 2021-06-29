@@ -20,7 +20,7 @@ import java.util.TimeZone;
  * @since 1.0.0
  */
 public class DateParser {
-    private static DateParser parser;
+    private static DateParser instance;
 
     private Locale defaultLocale;
     private TimeZone defaultZone;
@@ -37,31 +37,10 @@ public class DateParser {
      *
      * @return The date parser.
      */
-    public static DateParser instance() {
-        if (parser == null) {
-            parser = new DateParser()
-                    .with(CalendarConvertor.INSTANCE)
-                    .with(DateConvertor.INSTANCE)
-                    .with(LocalDateConvertor.INSTANCE)
-                    .with(LocalDateTimeConvertor.INSTANCE)
-                    .with(LocalTimeConvertor.INSTANCE)
-                    .with(InstantConvertor.INSTANCE)
-                    .with(SqlDateConvertor.INSTANCE)
-                    .with(SqlTimeConvertor.INSTANCE)
-                    .with(SqlTimestampConvertor.INSTANCE)
-                    .with(DayOfWeekConvertor.INSTANCE)
-                    .with(LongConvertor.INSTANCE)
-                    .with(MonthConvertor.INSTANCE)
-                    .with(MonthDayConvertor.INSTANCE)
-                    .with(OffsetDateTimeConvertor.INSTANCE)
-                    .with(OffsetTimeConvertor.INSTANCE)
-                    .with(TimeZoneConvertor.INSTANCE)
-                    .with(YearConvertor.INSTANCE)
-                    .with(YearMonthConvertor.INSTANCE)
-                    .with(ZonedDateTimeConvertor.INSTANCE)
-                    .with(ZoneOffsetConvertor.INSTANCE);
-        }
-        return parser;
+    public static DateParser getInstance() {
+        if (instance == null)
+            instance = new DateParser();
+        return instance;
     }
 
     /**
@@ -141,6 +120,10 @@ public class DateParser {
                 return convertor.convert(objective);
         }
 
+        Convertor<T> convertor = ConvertorService.getInstance().getConvertor(type);
+        if (convertor != null)
+            return convertor.convert(objective);
+
         throw new ClassCastException("Unsupported " + type.getName() + " class.");
     }
 
@@ -179,7 +162,7 @@ public class DateParser {
     }
 
     /**
-     * Quick parse with default {@link DateParser#instance()}
+     * Quick parse with default {@link DateParser#getInstance()}
      *
      * @param type     is the target type class
      * @param value    is string of date need to parse
@@ -188,6 +171,6 @@ public class DateParser {
      * @return target object
      */
     public static <T> T quickParse(Class<T> type, String value, String... patterns) {
-        return DateParser.instance().parse(type, value, patterns);
+        return DateParser.getInstance().parse(type, value, patterns);
     }
 }

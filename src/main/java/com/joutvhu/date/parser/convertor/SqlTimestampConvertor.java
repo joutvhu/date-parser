@@ -5,10 +5,16 @@ import com.joutvhu.date.parser.domain.ObjectiveDate;
 import java.sql.Timestamp;
 
 public class SqlTimestampConvertor implements Convertor<Timestamp> {
-    public static final SqlTimestampConvertor INSTANCE = new SqlTimestampConvertor();
+    private static SqlTimestampConvertor instance;
+
+    public static synchronized SqlTimestampConvertor getInstance() {
+        if (instance == null)
+            instance = new SqlTimestampConvertor();
+        return instance;
+    }
 
     @Override
     public Timestamp convert(ObjectiveDate objective) {
-        return Timestamp.valueOf(LocalDateTimeConvertor.INSTANCE.convert(objective));
+        return Timestamp.valueOf(LocalDateTimeConvertor.getInstance().convert(objective));
     }
 }

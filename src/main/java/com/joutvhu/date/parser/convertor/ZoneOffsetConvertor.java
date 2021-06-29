@@ -7,7 +7,13 @@ import java.time.ZoneOffset;
 import java.util.Objects;
 
 public class ZoneOffsetConvertor implements Convertor<ZoneOffset> {
-    public static final ZoneOffsetConvertor INSTANCE = new ZoneOffsetConvertor();
+    private static ZoneOffsetConvertor instance;
+
+    public static synchronized ZoneOffsetConvertor getInstance() {
+        if (instance == null)
+            instance = new ZoneOffsetConvertor();
+        return instance;
+    }
 
     @Override
     public ZoneOffset convert(ObjectiveDate objective) {

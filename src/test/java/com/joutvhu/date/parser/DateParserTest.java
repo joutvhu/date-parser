@@ -16,7 +16,7 @@ import java.util.TimeZone;
 class DateParserTest {
     @Test
     void parse_utilDate0() {
-        Date result = DateParser.instance()
+        Date result = DateParser.getInstance()
                 .parse(Date.class, "2021/6/7", "yyyy/M/d");
         Assertions.assertNotNull(result);
         Assertions.assertEquals("2021-06-07 00:00:00.000", format(result, "yyyy-MM-dd HH:mm:ss.SSS"));
@@ -24,7 +24,7 @@ class DateParserTest {
 
     @Test
     void parse_utilDate1() {
-        Date result = DateParser.instance()
+        Date result = DateParser.getInstance()
                 .parse(Date.class, "2021/06/27", "yyyy/MM/dd");
         Assertions.assertNotNull(result);
         Assertions.assertEquals("2021-06-27 00:00:00.000", format(result, "yyyy-MM-dd HH:mm:ss.SSS"));
@@ -32,7 +32,7 @@ class DateParserTest {
 
     @Test
     void parse_utilDate2() {
-        Date result = DateParser.instance()
+        Date result = DateParser.getInstance()
                 .parse(Date.class, "2021/06/27 21", "yyyy/MM/dd HH");
         Assertions.assertNotNull(result);
         Assertions.assertEquals("2021-06-27 21:00:00.000", format(result, "yyyy-MM-dd HH:mm:ss.SSS"));
@@ -40,7 +40,7 @@ class DateParserTest {
 
     @Test
     void parse_utilDate3() {
-        Date result = DateParser.instance()
+        Date result = DateParser.getInstance()
                 .parse(Date.class, "2021/06/27 21:52", "yyyy/MM/dd HH:mm");
         Assertions.assertNotNull(result);
         Assertions.assertEquals("2021-06-27 21:52:00.000", format(result, "yyyy-MM-dd HH:mm:ss.SSS"));
@@ -48,7 +48,7 @@ class DateParserTest {
 
     @Test
     void parse_utilDate4() {
-        Date result = DateParser.instance()
+        Date result = DateParser.getInstance()
                 .parse(Date.class, "2021/06/27 21:52:25", "yyyy/MM/dd HH:mm:ss");
         Assertions.assertNotNull(result);
         Assertions.assertEquals("2021-06-27 21:52:25.000", format(result, "yyyy-MM-dd HH:mm:ss.SSS"));
@@ -56,7 +56,7 @@ class DateParserTest {
 
     @Test
     void parse_utilDate5() {
-        Date result = DateParser.instance()
+        Date result = DateParser.getInstance()
                 .parse(Date.class, "2021/06/27 21:52:25.408", "yyyy/MM/dd HH:mm:ss.SSS");
         Assertions.assertNotNull(result);
         Assertions.assertEquals("2021-06-27 21:52:25.408", format(result, "yyyy-MM-dd HH:mm:ss.SSS"));
@@ -64,14 +64,14 @@ class DateParserTest {
 
     @Test
     void parse_Calendar0() {
-        Calendar result = DateParser.instance()
+        Calendar result = DateParser.getInstance()
                 .parse(Calendar.class, "2021/06/27 21:52:25.408", "yyyy/MM/dd HH:mm:ss.SSS");
         Assertions.assertNotNull(result);
     }
 
     @Test
     void parse_LocalDateTime0() {
-        LocalDateTime result = DateParser.instance()
+        LocalDateTime result = DateParser.getInstance()
                 .parse(LocalDateTime.class, "2021/06/27 21:52:25.408", "yyyy/MM/dd HH:mm:ss.SSS");
         Assertions.assertNotNull(result);
         Assertions.assertEquals("2021-06-27T21:52:25.408", result.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));

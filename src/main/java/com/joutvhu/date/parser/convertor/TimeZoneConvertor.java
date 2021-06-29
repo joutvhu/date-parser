@@ -5,7 +5,13 @@ import com.joutvhu.date.parser.domain.ObjectiveDate;
 import java.util.TimeZone;
 
 public class TimeZoneConvertor implements Convertor<TimeZone> {
-    public static final TimeZoneConvertor INSTANCE = new TimeZoneConvertor();
+    private static TimeZoneConvertor instance;
+
+    public static synchronized TimeZoneConvertor getInstance() {
+        if (instance == null)
+            instance = new TimeZoneConvertor();
+        return instance;
+    }
 
     @Override
     public TimeZone convert(ObjectiveDate objective) {

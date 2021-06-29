@@ -6,14 +6,20 @@ import java.time.ZonedDateTime;
 import java.util.Objects;
 
 public class ZonedDateTimeConvertor implements Convertor<ZonedDateTime> {
-    public static final ZonedDateTimeConvertor INSTANCE = new ZonedDateTimeConvertor();
+    private static ZonedDateTimeConvertor instance;
+
+    public static synchronized ZonedDateTimeConvertor getInstance() {
+        if (instance == null)
+            instance = new ZonedDateTimeConvertor();
+        return instance;
+    }
 
     @Override
     public ZonedDateTime convert(ObjectiveDate objective) {
         Objects.requireNonNull(objective.getZone());
 
         return ZonedDateTime.of(
-                LocalDateTimeConvertor.INSTANCE.convert(objective),
+                LocalDateTimeConvertor.getInstance().convert(objective),
                 objective.getZone().toZoneId()
         );
     }
