@@ -81,4 +81,9 @@ public class HourStrategy extends Strategy {
             }
         }
     }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+
+    }
 }

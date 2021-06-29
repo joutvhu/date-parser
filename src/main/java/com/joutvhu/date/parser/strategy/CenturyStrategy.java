@@ -51,4 +51,9 @@ public class CenturyStrategy extends Strategy {
             }
         }
     }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+
+    }
 }

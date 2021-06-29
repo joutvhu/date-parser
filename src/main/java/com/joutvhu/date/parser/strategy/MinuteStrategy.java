@@ -7,6 +7,7 @@ import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 public class MinuteStrategy extends Strategy {
     public MinuteStrategy(char c) {
@@ -53,5 +54,16 @@ public class MinuteStrategy extends Strategy {
                         this.pattern);
             }
         }
+    }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        Objects.requireNonNull(objective.getMinute());
+        target.append(CommonUtil.leftPad(
+                String.valueOf(objective.getMinute()),
+                this.pattern.length(),
+                '0'
+        ));
+        chain.next();
     }
 }

@@ -7,6 +7,7 @@ import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 public class SecondStrategy extends Strategy {
     public SecondStrategy(char c) {
@@ -53,5 +54,16 @@ public class SecondStrategy extends Strategy {
                         this.pattern);
             }
         }
+    }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        Objects.requireNonNull(objective.getSecond());
+        target.append(CommonUtil.leftPad(
+                String.valueOf(objective.getSecond()),
+                this.pattern.length(),
+                '0'
+        ));
+        chain.next();
     }
 }

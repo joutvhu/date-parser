@@ -62,4 +62,9 @@ public class QuarterStrategy extends Strategy {
             }
         }
     }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+
+    }
 }

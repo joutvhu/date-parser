@@ -42,4 +42,9 @@ public class WeekdayInMonthStrategy extends Strategy {
                     this.pattern);
         }
     }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+
+    }
 }

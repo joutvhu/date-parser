@@ -48,4 +48,9 @@ public class ZoneStrategy extends Strategy {
                 backup.getBackupPosition(),
                 this.pattern);
     }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+
+    }
 }

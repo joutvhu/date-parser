@@ -49,4 +49,9 @@ public class AmPmStrategy extends Strategy {
             throw e;
         }
     }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+
+    }
 }

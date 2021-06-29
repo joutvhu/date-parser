@@ -74,4 +74,10 @@ public class QuoteStrategy extends Strategy {
                     this.pattern);
         }
     }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        target.append(this.pattern);
+        chain.next();
+    }
 }

@@ -56,4 +56,9 @@ public class EraStrategy extends Strategy {
             objective.setYear(year);
         }
     }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+
+    }
 }

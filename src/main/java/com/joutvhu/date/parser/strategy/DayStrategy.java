@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DayStrategy extends Strategy {
@@ -148,5 +149,10 @@ public class DayStrategy extends Strategy {
             }
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+
     }
 }

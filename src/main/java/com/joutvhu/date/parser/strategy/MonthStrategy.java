@@ -146,4 +146,9 @@ public class MonthStrategy extends Strategy {
         }
         return false;
     }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+
+    }
 }
