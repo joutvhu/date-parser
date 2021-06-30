@@ -34,7 +34,9 @@ public class CommonUtil {
     }
 
     public String getOrdinal(int value) {
-        switch (value) {
+        if (value == 11 || value == 12 || value == 13)
+            return "th";
+        switch (value % 10) {
             case 1:
                 return "st";
             case 2:
