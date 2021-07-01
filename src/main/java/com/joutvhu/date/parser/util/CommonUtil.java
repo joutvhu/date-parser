@@ -3,14 +3,11 @@ package com.joutvhu.date.parser.util;
 import lombok.experimental.UtilityClass;
 
 import java.time.DateTimeException;
-import java.time.DayOfWeek;
 import java.time.Month;
 import java.time.chrono.IsoChronology;
-import java.time.format.TextStyle;
 import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
@@ -179,31 +176,24 @@ public class CommonUtil {
         }
     }
 
-    public <T> T defaultIfNull(T value, T defaultValue) {
-        return value == null ? defaultValue : value;
-    }
-
-    public <T> T defaultIfNull(Supplier<T> value, Supplier<T> defaultValue) {
-        T result = value.get();
-        return result == null ? defaultValue.get() : result;
-    }
-
-    public Integer parseDayOfWeek(TextStyle style, Locale locale, String value) {
-        for (int i = 1; i < 8; i++) {
-            if (DayOfWeek.of(i)
-                    .getDisplayName(style, locale)
-                    .equalsIgnoreCase(value))
-                return i;
+    public <T> T defaultIfNull(T value, T... defaultValues) {
+        if (value != null)
+            return value;
+        for (T v : defaultValues) {
+            if (v != null)
+                return v;
         }
         return null;
     }
 
-    public Integer parseMonth(TextStyle style, Locale locale, String value) {
-        for (int i = 1; i < 13; i++) {
-            if (Month.of(i)
-                    .getDisplayName(style, locale)
-                    .equalsIgnoreCase(value))
-                return i;
+    public <T> T defaultIfNull(Supplier<T> value, Supplier<T>... defaultValues) {
+        T result = value.get();
+        if (result != null)
+            return result;
+        for (Supplier<T> v : defaultValues) {
+            result = v.get();
+            if (result != null)
+                return result;
         }
         return null;
     }

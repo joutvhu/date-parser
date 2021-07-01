@@ -5,6 +5,7 @@ import com.joutvhu.date.parser.convertor.Convertor;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
+@SuppressWarnings("java:S3740")
 public class ConvertorService {
     private static ConvertorService instance;
     private final ServiceLoader<Convertor> loader;

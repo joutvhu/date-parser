@@ -5,25 +5,20 @@ import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
+import com.joutvhu.date.parser.util.NameUtil;
 
 import java.text.MessageFormat;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoField;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MonthStrategy extends Strategy {
     private static final String NOT_MONTH_MESSAGE = "The '{0}' is not a month.";
-
-    private static final List<String> SHORT_MONTHS = Arrays
-            .asList("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
-    private static final List<String> LONG_MONTHS = Arrays
-            .asList("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
 
     private boolean number;
     private boolean ordinal;
@@ -108,56 +103,37 @@ public class MonthStrategy extends Strategy {
     @SuppressWarnings("java:S1643")
     private void parseString(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
-        StringBuilder value = new StringBuilder(source.get(3));
 
-        if (this.length() == 3) {
-            final String finalValue = value.toString();
-            Integer month = CommonUtil.defaultIfNull(
-                    () -> CommonUtil.parseMonth(TextStyle.SHORT, objective.getLocale(), finalValue),
-                    () -> CommonUtil.parseMonth(TextStyle.SHORT, Locale.ROOT, finalValue)
-            );
-            this.tryParse(objective, chain, backup, month, true);
-        } else {
-            for (int i = 0; i < 6; i++) {
-                value.append(source.get(1));
-                final String finalValue = value.toString();
-                Integer month = CommonUtil.defaultIfNull(
-                        () -> CommonUtil.parseMonth(TextStyle.FULL, objective.getLocale(), finalValue),
-                        () -> CommonUtil.parseMonth(TextStyle.FULL, Locale.ROOT, finalValue)
-                );
-                if (this.tryParse(objective, chain, backup, month, i == 5))
-                    return;
-            }
-        }
-
-        backup.restore();
-        throw new MismatchPatternException(
-                MessageFormat.format(NOT_MONTH_MESSAGE, value.toString()),
-                backup.getBackupPosition(),
-                this.pattern);
-    }
-
-    private boolean tryParse(
-            ObjectiveDate objective,
-            NextStrategy chain,
-            ParseBackup backup,
-            Integer value,
-            boolean throwable
-    ) {
-        if (value != null && value > 0 && value < 13) {
-            try {
-                chain.next();
-                objective.set(ObjectiveDate.MONTH, value);
-                backup.commit();
-                return true;
-            } catch (Exception e) {
-                if (throwable) {
-                    backup.restore();
-                    throw e;
+        Iterator<String> iterator = source.iterator(1);
+        Map.Entry<String, Month> entry = NameUtil.findName(
+                iterator,
+                Month.values(),
+                new Locale[]{objective.getLocale(), Locale.ROOT},
+                new TextStyle[]{TextStyle.SHORT, TextStyle.FULL},
+                (value, style, locale) -> value.getDisplayName(style, locale),
+                value -> {
+                    try {
+                        chain.next();
+                        objective.set(ObjectiveDate.MONTH, value.getValue());
+                        backup.commit();
+                        return true;
+                    } catch (Exception e) {
+                        if (!iterator.hasNext()) {
+                            backup.restore();
+                            throw e;
+                        }
+                    }
+                    return false;
                 }
-            }
+        );
+
+        if (entry.getValue() == null) {
+            backup.restore();
+            throw new MismatchPatternException(
+                    MessageFormat.format(NOT_MONTH_MESSAGE, entry.getKey()),
+                    backup.getBackupPosition(),
+                    this.pattern);
         }
-        return false;
     }
 
     @Override

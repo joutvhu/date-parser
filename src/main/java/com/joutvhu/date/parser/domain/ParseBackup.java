@@ -3,7 +3,7 @@ package com.joutvhu.date.parser.domain;
 import lombok.Getter;
 
 @Getter
-public class ParseBackup implements Backup<Object> {
+public class ParseBackup implements Backup<Void> {
     private final ObjectiveDate.DateBackup dateBackup;
     private final StringSource.PositionBackup positionBackup;
 
@@ -21,7 +21,7 @@ public class ParseBackup implements Backup<Object> {
     }
 
     @Override
-    public Object restore() {
+    public Void restore() {
         this.dateBackup.restore();
         this.positionBackup.restore();
         return null;
