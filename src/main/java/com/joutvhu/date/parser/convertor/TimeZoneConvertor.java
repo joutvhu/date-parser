@@ -20,6 +20,8 @@ public class TimeZoneConvertor implements Convertor<TimeZone> {
 
     @Override
     public ObjectiveDate convert(ObjectiveDate objective, TimeZone object) {
+        if (object != null)
+            objective.setZone(object);
         return objective;
     }
 }

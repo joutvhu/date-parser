@@ -3,6 +3,7 @@ package com.joutvhu.date.parser.convertor;
 import com.joutvhu.date.parser.domain.ObjectiveDate;
 
 import java.time.OffsetTime;
+import java.util.TimeZone;
 
 public class OffsetTimeConvertor implements Convertor<OffsetTime> {
     private static OffsetTimeConvertor instance;
@@ -23,6 +24,13 @@ public class OffsetTimeConvertor implements Convertor<OffsetTime> {
 
     @Override
     public ObjectiveDate convert(ObjectiveDate objective, OffsetTime object) {
+        if (object != null) {
+            objective.setZone(TimeZone.getTimeZone(object.getOffset()));
+            objective.setHour(object.getHour());
+            objective.setMinute(object.getMinute());
+            objective.setSecond(object.getSecond());
+            objective.setNano(object.getNano());
+        }
         return objective;
     }
 }

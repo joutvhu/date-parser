@@ -3,6 +3,7 @@ package com.joutvhu.date.parser.convertor;
 import com.joutvhu.date.parser.domain.ObjectiveDate;
 
 import java.time.Instant;
+import java.time.temporal.ChronoField;
 
 public class InstantConvertor implements Convertor<Instant> {
     private static InstantConvertor instance;
@@ -24,6 +25,15 @@ public class InstantConvertor implements Convertor<Instant> {
 
     @Override
     public ObjectiveDate convert(ObjectiveDate objective, Instant object) {
+        if (object != null) {
+            objective.setYear(object.get(ChronoField.YEAR));
+            objective.setMonth(object.get(ChronoField.MONTH_OF_YEAR));
+            objective.setDay(object.get(ChronoField.DAY_OF_MONTH));
+            objective.setHour(object.get(ChronoField.HOUR_OF_DAY));
+            objective.setMinute(object.get(ChronoField.MINUTE_OF_HOUR));
+            objective.setSecond(object.get(ChronoField.SECOND_OF_MINUTE));
+            objective.setNano(object.get(ChronoField.NANO_OF_SECOND));
+        }
         return objective;
     }
 }

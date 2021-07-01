@@ -30,6 +30,12 @@ public class LocalTimeConvertor implements Convertor<LocalTime> {
 
     @Override
     public ObjectiveDate convert(ObjectiveDate objective, LocalTime object) {
+        if (object != null) {
+            objective.setHour(object.getHour());
+            objective.setMinute(object.getMinute());
+            objective.setSecond(object.getSecond());
+            objective.setNano(object.getNano());
+        }
         return objective;
     }
 }

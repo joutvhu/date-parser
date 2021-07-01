@@ -20,6 +20,12 @@ public class SqlTimeConvertor implements Convertor<Time> {
 
     @Override
     public ObjectiveDate convert(ObjectiveDate objective, Time object) {
+        if (object != null) {
+            objective.setHour(object.getHours());
+            objective.setMinute(object.getMinutes());
+            objective.setSecond(object.getSeconds());
+            objective.setNano((int) ((object.getTime() % 1000) * 1000000));
+        }
         return objective;
     }
 }

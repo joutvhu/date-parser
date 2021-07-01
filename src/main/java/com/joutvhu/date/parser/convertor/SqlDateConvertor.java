@@ -20,6 +20,11 @@ public class SqlDateConvertor implements Convertor<Date> {
 
     @Override
     public ObjectiveDate convert(ObjectiveDate objective, Date object) {
+        if (object != null) {
+            objective.setYear(object.getYear() + 1900);
+            objective.setMonth(object.getMonth() + 1);
+            objective.setDay(object.getDate());
+        }
         return objective;
     }
 }

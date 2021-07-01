@@ -40,7 +40,7 @@ public class CalendarConvertor implements Convertor<Calendar> {
     public ObjectiveDate convert(ObjectiveDate objective, Calendar object) {
         if (object != null) {
             objective.setYear(object.get(Calendar.YEAR));
-            objective.setMonth(object.get(Calendar.MONTH));
+            objective.setMonth(object.get(Calendar.MONTH) + 1);
             objective.setDay(object.get(Calendar.DAY_OF_MONTH));
             objective.setHour(object.get(Calendar.HOUR_OF_DAY));
             objective.setMinute(object.get(Calendar.MINUTE));

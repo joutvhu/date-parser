@@ -25,6 +25,11 @@ public class LocalDateConvertor implements Convertor<LocalDate> {
 
     @Override
     public ObjectiveDate convert(ObjectiveDate objective, LocalDate object) {
+        if (object != null) {
+            objective.setYear(object.getYear());
+            objective.setMonth(object.getMonthValue());
+            objective.setDay(object.getDayOfMonth());
+        }
         return objective;
     }
 }

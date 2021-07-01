@@ -23,6 +23,8 @@ public class MonthConvertor implements Convertor<Month> {
 
     @Override
     public ObjectiveDate convert(ObjectiveDate objective, Month object) {
+        if (object != null)
+            objective.setMonth(object.getValue());
         return objective;
     }
 }

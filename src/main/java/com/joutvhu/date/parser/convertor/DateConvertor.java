@@ -23,9 +23,9 @@ public class DateConvertor implements Convertor<Date> {
     @Override
     public ObjectiveDate convert(ObjectiveDate objective, Date object) {
         if (object != null) {
-            objective.setYear(object.getYear());
-            objective.setMonth(object.getMonth());
-            objective.setDay(object.getDay());
+            objective.setYear(object.getYear() + 1900);
+            objective.setMonth(object.getMonth() + 1);
+            objective.setDay(object.getDate());
             objective.setHour(object.getHours());
             objective.setMinute(object.getMinutes());
             objective.setSecond(object.getSeconds());

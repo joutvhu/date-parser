@@ -24,6 +24,10 @@ public class MonthDayConvertor implements Convertor<MonthDay> {
 
     @Override
     public ObjectiveDate convert(ObjectiveDate objective, MonthDay object) {
+        if (object != null) {
+            objective.setMonth(object.getMonthValue());
+            objective.setDay(object.getDayOfMonth());
+        }
         return objective;
     }
 }
