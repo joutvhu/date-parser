@@ -139,7 +139,7 @@ public class MonthStrategy extends Strategy {
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
         Integer month = objective.getMonth();
-        Objects.requireNonNull(month);
+        Objects.requireNonNull(month, "Month is null.");
         ChronoField.MONTH_OF_YEAR.checkValidIntValue(month);
 
         if (this.number) {

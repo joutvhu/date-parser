@@ -60,8 +60,19 @@ public class EraStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-        Objects.requireNonNull(objective.getYear());
-        target.append(objective.getYear() < 0 ? "BC" : "AD");
+        String value = null;
+        if (objective.getYear() != null) {
+            value = objective.getYear() < 0 ? "BC" : "AD";
+        } else {
+            Integer era = objective.get(ERA);
+            if (era == GregorianCalendar.AD)
+                value = "AD";
+            else if (era == GregorianCalendar.BC)
+                value = "BC";
+        }
+
+        Objects.requireNonNull(value, "Year is null.");
+        target.append(value);
         chain.next();
     }
 }

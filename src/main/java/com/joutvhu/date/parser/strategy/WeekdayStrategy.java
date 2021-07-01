@@ -137,7 +137,7 @@ public class WeekdayStrategy extends Strategy {
             dayOfWeek = DayOfWeek.of(w);
         }
 
-        Objects.requireNonNull(dayOfWeek);
+        Objects.requireNonNull(dayOfWeek, "Day of week is undefined.");
 
         if (this.text) {
             Objects.requireNonNull(objective.getLocale());

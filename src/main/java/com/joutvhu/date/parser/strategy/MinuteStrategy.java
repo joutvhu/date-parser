@@ -58,7 +58,7 @@ public class MinuteStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-        Objects.requireNonNull(objective.getMinute());
+        Objects.requireNonNull(objective.getMinute(), "Minute is null.");
         target.append(CommonUtil.leftPad(
                 String.valueOf(objective.getMinute()),
                 this.length(),

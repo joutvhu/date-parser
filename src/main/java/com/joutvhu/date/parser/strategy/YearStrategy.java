@@ -55,7 +55,7 @@ public class YearStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-        Objects.requireNonNull(objective.getYear());
+        Objects.requireNonNull(objective.getYear(), "Year is null.");
         int year = Math.abs(objective.getYear());
         if (this.length() == 2)
             year %= 100;

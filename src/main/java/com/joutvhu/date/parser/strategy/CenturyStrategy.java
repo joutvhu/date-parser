@@ -55,7 +55,7 @@ public class CenturyStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-        Objects.requireNonNull(objective.getYear());
+        Objects.requireNonNull(objective.getYear(), "Year is null.");
         int century = Math.abs(objective.getYear()) / 100;
         target.append(CommonUtil.leftPad(String.valueOf(century), this.length(), '0'));
         chain.next();

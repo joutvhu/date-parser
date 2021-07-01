@@ -67,8 +67,14 @@ public class QuarterStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-        Objects.requireNonNull(objective.getMonth());
-        int quarter = (objective.getMonth() - 1) / 3 + 1;
+        Integer quarter;
+        if (objective.getMonth() != null) {
+            quarter = (objective.getMonth() - 1) / 3 + 1;
+        } else {
+            quarter = objective.get(QUARTER);
+        }
+
+        Objects.requireNonNull(quarter, "Month is null.");
         target.append(quarter);
         if (this.ordinal)
             target.append(CommonUtil.getOrdinal(quarter));

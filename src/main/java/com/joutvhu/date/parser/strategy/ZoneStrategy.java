@@ -52,7 +52,7 @@ public class ZoneStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-        Objects.requireNonNull(objective.getZone());
+        Objects.requireNonNull(objective.getZone(), "Zone is null.");
         target.append(objective.getZone().getID());
         chain.next();
     }

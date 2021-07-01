@@ -154,18 +154,23 @@ public class DayStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-        Objects.requireNonNull(objective.getDay());
-        Objects.requireNonNull(objective.getMonth());
-        Objects.requireNonNull(objective.getYear());
-
-        Integer day = null;
-
+        Integer day;
         if (this.dayInYear) {
-            day = LocalDate
-                    .of(objective.getYear(), objective.getMonth(), objective.getDay())
-                    .getDayOfYear();
+            if (objective.getDay() != null && objective.getMonth() != null && objective.getYear() != null) {
+                day = LocalDate
+                        .of(objective.getYear(), objective.getMonth(), objective.getDay())
+                        .getDayOfYear();
+            } else {
+                day = objective.get(DAY_OF_YEAR);
+            }
+
+            if (day == null) {
+                Objects.requireNonNull(objective.getDay(), "Day is null.");
+                Objects.requireNonNull(objective.getMonth(), "Month is null.");
+                Objects.requireNonNull(objective.getYear(), "Year is null.");
+            }
         } else {
-            CommonUtil.checkValidDate(objective.getYear(), objective.getMonth(), objective.getDay());
+            Objects.requireNonNull(objective.getDay(), "Day is null.");
             day = objective.getDay();
         }
 

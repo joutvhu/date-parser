@@ -86,7 +86,7 @@ public class HourStrategy extends Strategy {
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
         Integer hour = objective.getHour();
-        Objects.requireNonNull(hour);
+        Objects.requireNonNull(hour, "Hour is null.");
 
         if (!this.hour24 && hour > 11)
             hour -= 12;

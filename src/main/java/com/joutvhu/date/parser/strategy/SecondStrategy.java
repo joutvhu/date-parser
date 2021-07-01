@@ -58,7 +58,7 @@ public class SecondStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-        Objects.requireNonNull(objective.getSecond());
+        Objects.requireNonNull(objective.getSecond(), "Second is null.");
         target.append(CommonUtil.leftPad(
                 String.valueOf(objective.getSecond()),
                 this.length(),

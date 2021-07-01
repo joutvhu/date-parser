@@ -55,8 +55,14 @@ public class AmPmStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-        Objects.requireNonNull(objective.getHour());
-        String value = objective.getHour() < 12 ? "am" : "pm";
+        String value;
+        if (objective.getHour() != null) {
+            value = objective.getHour() < 12 ? "am" : "pm";
+        } else {
+            value = objective.get(AM_PM);
+        }
+        Objects.requireNonNull(value, "AM or PM undefined.");
+
         target.append(this.upperCase ? value.toUpperCase() : value);
         chain.next();
     }
