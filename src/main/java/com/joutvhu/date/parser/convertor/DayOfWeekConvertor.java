@@ -32,6 +32,8 @@ public class DayOfWeekConvertor implements Convertor<DayOfWeek> {
 
     @Override
     public ObjectiveDate convert(ObjectiveDate objective, DayOfWeek object) {
+        if (object != null)
+            objective.set(WeekdayStrategy.WEEKDAY, object.getValue());
         return objective;
     }
 }
