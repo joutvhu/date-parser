@@ -24,6 +24,9 @@ import java.util.Objects;
  *   e       day-number-of-week          number            1; 7
  *   E       day-name-in-week            text              Tuesday; Tue
  * </pre>
+ *
+ * @since 1.0.0
+ * @author Giao Ho
  */
 public class WeekdayStrategy extends Strategy {
     public static final String WEEKDAY = "weekday";
