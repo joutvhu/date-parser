@@ -17,7 +17,7 @@ public abstract class Strategy {
     }
 
     public int length() {
-        return this.length();
+        return this.pattern.length();
     }
 
     public abstract boolean add(char c);

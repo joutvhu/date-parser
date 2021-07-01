@@ -7,17 +7,16 @@ import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.List;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.Locale;
+import java.util.Objects;
 
 public class WeekdayStrategy extends Strategy {
     public static final String WEEKDAY = "weekday";
 
     private static final String NOT_DAY_OF_WEEK_MESSAGE = "The '{0}' is not a day of week.";
-
-    private static final List<String> SHORT_WEEKDAYS = Arrays.asList("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun");
-    private static final List<String> LONG_WEEKDAYS = Arrays
-            .asList("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
 
     private final boolean text;
 
@@ -93,14 +92,22 @@ public class WeekdayStrategy extends Strategy {
         String value = source.get(3);
 
         if (this.length() < 4) {
-            int index = CommonUtil.indexIgnoreCaseOf(value, SHORT_WEEKDAYS);
-            if (this.tryParse(objective, chain, backup, index + 1, true))
+            final String finalValue = value;
+            Integer dayOfWeek = CommonUtil.defaultIfNull(
+                    () -> CommonUtil.parseDayOfWeek(TextStyle.SHORT, objective.getLocale(), finalValue),
+                    () -> CommonUtil.parseDayOfWeek(TextStyle.SHORT, Locale.ROOT, finalValue)
+            );
+            if (this.tryParse(objective, chain, backup, dayOfWeek, true))
                 return;
         } else {
             for (int i = 0; i < 6; i++) {
                 value += source.get(1);
-                int index = CommonUtil.indexIgnoreCaseOf(value, LONG_WEEKDAYS);
-                if (this.tryParse(objective, chain, backup, index + 1, i == 5))
+                final String finalValue = value;
+                Integer dayOfWeek = CommonUtil.defaultIfNull(
+                        () -> CommonUtil.parseDayOfWeek(TextStyle.FULL, objective.getLocale(), finalValue),
+                        () -> CommonUtil.parseDayOfWeek(TextStyle.FULL, Locale.ROOT, finalValue)
+                );
+                if (this.tryParse(objective, chain, backup, dayOfWeek, i == 5))
                     return;
             }
         }
@@ -116,11 +123,11 @@ public class WeekdayStrategy extends Strategy {
             ObjectiveDate objective,
             NextStrategy chain,
             ParseBackup backup,
-            int value,
+            Integer value,
             boolean throwable
     ) {
         // 1 (Monday) to 7 (Sunday)
-        if (value > 0 && value < 8) {
+        if (value != null && value > 0 && value < 8) {
             try {
                 chain.next();
                 objective.set(WEEKDAY, value);
@@ -138,6 +145,34 @@ public class WeekdayStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        DayOfWeek dayOfWeek;
+        if (objective.getDay() != null && objective.getDay() != null && objective.getDay() != null) {
+            dayOfWeek = LocalDate
+                    .of(objective.getYear(), objective.getMonth(), objective.getDay())
+                    .getDayOfWeek();
+        } else {
+            Integer w = objective.get(WEEKDAY);
+            Objects.requireNonNull(w);
+            dayOfWeek = DayOfWeek.of(w);
+        }
+
+        Objects.requireNonNull(dayOfWeek);
+
+        if (this.text) {
+            Objects.requireNonNull(objective.getLocale());
+
+            target.append(this.length() < 4 ?
+                    dayOfWeek.getDisplayName(TextStyle.SHORT, objective.getLocale()) :
+                    dayOfWeek.getDisplayName(TextStyle.FULL, objective.getLocale())
+            );
+        } else {
+            target.append(CommonUtil.leftPad(
+                    String.valueOf(dayOfWeek.getValue()),
+                    this.length(),
+                    '0'
+            ));
+        }
+
         chain.next();
     }
 }

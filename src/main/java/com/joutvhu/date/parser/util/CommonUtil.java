@@ -3,12 +3,16 @@ package com.joutvhu.date.parser.util;
 import lombok.experimental.UtilityClass;
 
 import java.time.DateTimeException;
+import java.time.DayOfWeek;
 import java.time.Month;
 import java.time.chrono.IsoChronology;
+import java.time.format.TextStyle;
 import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 @UtilityClass
 public class CommonUtil {
@@ -173,5 +177,24 @@ public class CommonUtil {
                     throw new DateTimeException("Invalid date '" + Month.of(month).name() + " " + dayOfMonth + "'");
             }
         }
+    }
+
+    public <T> T defaultIfNull(T value, T defaultValue) {
+        return value == null ? defaultValue : value;
+    }
+
+    public <T> T defaultIfNull(Supplier<T> value, Supplier<T> defaultValue) {
+        T result = value.get();
+        return result == null ? defaultValue.get() : result;
+    }
+
+    public Integer parseDayOfWeek(TextStyle style, Locale locale, String value) {
+        for (int i = 1; i < 8; i++) {
+            if (DayOfWeek.of(i)
+                    .getDisplayName(style, locale)
+                    .equalsIgnoreCase(value))
+                return i;
+        }
+        return null;
     }
 }
