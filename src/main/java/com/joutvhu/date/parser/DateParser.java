@@ -114,17 +114,32 @@ public class DateParser {
         return this;
     }
 
-    public <T> T convert(Class<T> type, ObjectiveDate objective) {
+    public <T> Convertor<T> getConvertor(Class<T> type, boolean forParse) {
         if (this.convertors.containsKey(type)) {
             Convertor<T> convertor = (Convertor<T>) this.convertors.get(type);
             if (convertor != null)
-                return convertor.convert(objective);
+                return convertor;
         }
 
-        Convertor<T> convertor = ConvertorService.getInstance().getConvertor(type);
+        Convertor<T> convertor = ConvertorService.getInstance().getConvertor(type, forParse);
+        if (convertor != null)
+            return convertor;
+
+        return null;
+    }
+
+    public <T> T convert(Class<T> type, ObjectiveDate objective) {
+        Convertor<T> convertor = this.getConvertor(type, true);
         if (convertor != null)
             return convertor.convert(objective);
+        throw new ClassCastException("Unsupported " + type.getName() + " class.");
+    }
 
+    public <T> ObjectiveDate convert(ObjectiveDate objective, T object) {
+        Class<T> type = (Class<T>) object.getClass();
+        Convertor<T> convertor = this.getConvertor(type, false);
+        if (convertor != null)
+            return convertor.convert(objective, object);
         throw new ClassCastException("Unsupported " + type.getName() + " class.");
     }
 
@@ -173,5 +188,24 @@ public class DateParser {
      */
     public static <T> T quickParse(Class<T> type, String value, String... patterns) {
         return DateParser.getInstance().parse(type, value, patterns);
+    }
+
+    public <T> String format(T object, String pattern) {
+        if (object == null)
+            throw new IllegalArgumentException("Object Date must not be null");
+        if (pattern == null)
+            throw new IllegalArgumentException("Pattern must not be null");
+
+        ObjectiveDate objective = new ObjectiveDate(this.defaultLocale, this.defaultZone, this.defaultWeekFields);
+        objective = this.convert(objective, object);
+
+        return new DateFormat(pattern, strategyFactory)
+                .with(defaultLocale)
+                .with(defaultZone)
+                .with(defaultWeekFields).format(objective);
+    }
+
+    public static <T> String quickFormat(T object, String pattern) {
+        return DateParser.getInstance().format(object, pattern);
     }
 }
