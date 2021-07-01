@@ -17,4 +17,11 @@ public class SqlDateConvertor implements Convertor<Date> {
     public Date convert(ObjectiveDate objective) {
         return Date.valueOf(LocalDateConvertor.getInstance().convert(objective));
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, Date object) {
+        if (object != null)
+            LocalDateConvertor.getInstance().convert(objective, object.toLocalDate());
+        return objective;
+    }
 }

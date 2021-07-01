@@ -5,6 +5,7 @@ import com.joutvhu.date.parser.domain.ObjectiveDate;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Objects;
+import java.util.TimeZone;
 
 public class ZoneOffsetConvertor implements Convertor<ZoneOffset> {
     private static ZoneOffsetConvertor instance;
@@ -23,5 +24,12 @@ public class ZoneOffsetConvertor implements Convertor<ZoneOffset> {
             return (ZoneOffset) objective.getZone().toZoneId();
         else
             return objective.getZone().toZoneId().getRules().getOffset(Instant.now());
+    }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, ZoneOffset object) {
+        if (object != null)
+            objective.setZone(TimeZone.getTimeZone(object));
+        return objective;
     }
 }

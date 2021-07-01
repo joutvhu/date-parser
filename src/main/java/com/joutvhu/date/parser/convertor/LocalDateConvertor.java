@@ -22,4 +22,14 @@ public class LocalDateConvertor implements Convertor<LocalDate> {
 
         return LocalDate.of(objective.getYear(), objective.getMonth(), objective.getDay());
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, LocalDate object) {
+        if (object != null) {
+            objective.setYear(object.getYear());
+            objective.setMonth(object.getMonthValue());
+            objective.setDay(object.getDayOfMonth());
+        }
+        return objective;
+    }
 }

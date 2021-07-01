@@ -17,4 +17,11 @@ public class SqlTimestampConvertor implements Convertor<Timestamp> {
     public Timestamp convert(ObjectiveDate objective) {
         return Timestamp.valueOf(LocalDateTimeConvertor.getInstance().convert(objective));
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, Timestamp object) {
+        if (object != null)
+            LocalDateTimeConvertor.getInstance().convert(objective, object.toLocalDateTime());
+        return objective;
+    }
 }

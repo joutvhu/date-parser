@@ -3,6 +3,9 @@ package com.joutvhu.date.parser.convertor;
 import com.joutvhu.date.parser.domain.ObjectiveDate;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.TimeZone;
 
 public class InstantConvertor implements Convertor<Instant> {
     private static InstantConvertor instance;
@@ -20,5 +23,22 @@ public class InstantConvertor implements Convertor<Instant> {
         if (objective.getNano() != null && oldNano != objective.getNano())
             instant = instant.minusNanos(oldNano).plusNanos(objective.getNano());
         return instant;
+    }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, Instant object) {
+        if (object != null) {
+            LocalDateTime localDateTime;
+            if (objective.getZone() != null) {
+                localDateTime = LocalDateTime
+                        .ofInstant(object, objective.getZone().toZoneId());
+            } else {
+                localDateTime = LocalDateTime
+                        .ofInstant(object, ZoneId.systemDefault());
+                objective.setZone(TimeZone.getDefault());
+            }
+            LocalDateTimeConvertor.getInstance().convert(objective, localDateTime);
+        }
+        return objective;
     }
 }

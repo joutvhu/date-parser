@@ -20,4 +20,18 @@ public class LocalDateTimeConvertor implements Convertor<LocalDateTime> {
                 LocalTimeConvertor.getInstance().convert(objective)
         );
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, LocalDateTime object) {
+        if (object != null) {
+            objective.setYear(object.getYear());
+            objective.setMonth(object.getMonthValue());
+            objective.setDay(object.getDayOfMonth());
+            objective.setHour(object.getHour());
+            objective.setMinute(object.getMinute());
+            objective.setSecond(object.getSecond());
+            objective.setNano(object.getNano());
+        }
+        return objective;
+    }
 }

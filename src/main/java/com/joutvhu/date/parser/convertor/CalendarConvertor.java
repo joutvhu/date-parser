@@ -35,4 +35,20 @@ public class CalendarConvertor implements Convertor<Calendar> {
 
         return calendar;
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, Calendar object) {
+        if (object != null) {
+            objective.setYear(object.get(Calendar.YEAR));
+            objective.setMonth(object.get(Calendar.MONTH) + 1);
+            objective.setDay(object.get(Calendar.DAY_OF_MONTH));
+            objective.setHour(object.get(Calendar.HOUR_OF_DAY));
+            objective.setMinute(object.get(Calendar.MINUTE));
+            objective.setSecond(object.get(Calendar.SECOND));
+            objective.setNano(object.get(Calendar.MILLISECOND) * 1000000);
+            if (object.getTimeZone() != null)
+                objective.setZone(object.getTimeZone());
+        }
+        return objective;
+    }
 }

@@ -20,4 +20,11 @@ public class MonthConvertor implements Convertor<Month> {
 
         return Month.of(objective.getMonth());
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, Month object) {
+        if (object != null)
+            objective.setMonth(object.getValue());
+        return objective;
+    }
 }

@@ -29,4 +29,11 @@ public class DayOfWeekConvertor implements Convertor<DayOfWeek> {
 
         throw new NullPointerException("Day of week is null");
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, DayOfWeek object) {
+        if (object != null)
+            objective.set(WeekdayStrategy.WEEKDAY, object.getValue());
+        return objective;
+    }
 }

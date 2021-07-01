@@ -17,4 +17,11 @@ public class SqlTimeConvertor implements Convertor<Time> {
     public Time convert(ObjectiveDate objective) {
         return Time.valueOf(LocalTimeConvertor.getInstance().convert(objective));
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, Time object) {
+        if (object != null)
+            LocalTimeConvertor.getInstance().convert(objective, object.toLocalTime());
+        return objective;
+    }
 }
