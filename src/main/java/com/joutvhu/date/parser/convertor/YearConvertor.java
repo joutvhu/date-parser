@@ -20,4 +20,9 @@ public class YearConvertor implements Convertor<Year> {
 
         return Year.of(objective.getYear());
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, Year object) {
+        return objective;
+    }
 }

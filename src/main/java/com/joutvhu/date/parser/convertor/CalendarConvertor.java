@@ -35,4 +35,9 @@ public class CalendarConvertor implements Convertor<Calendar> {
 
         return calendar;
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, Calendar object) {
+        return objective;
+    }
 }

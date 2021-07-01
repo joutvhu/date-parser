@@ -23,4 +23,9 @@ public class ZonedDateTimeConvertor implements Convertor<ZonedDateTime> {
                 objective.getZone().toZoneId()
         );
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, ZonedDateTime object) {
+        return objective;
+    }
 }

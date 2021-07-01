@@ -17,4 +17,9 @@ public class TimeZoneConvertor implements Convertor<TimeZone> {
     public TimeZone convert(ObjectiveDate objective) {
         return objective.getZone();
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, TimeZone object) {
+        return objective;
+    }
 }

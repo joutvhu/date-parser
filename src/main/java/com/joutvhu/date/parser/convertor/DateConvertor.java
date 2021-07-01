@@ -17,4 +17,9 @@ public class DateConvertor implements Convertor<Date> {
     public Date convert(ObjectiveDate objective) {
         return CalendarConvertor.getInstance().convert(objective).getTime();
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, Date object) {
+        return objective;
+    }
 }

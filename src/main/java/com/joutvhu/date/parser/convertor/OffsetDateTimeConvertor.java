@@ -20,4 +20,9 @@ public class OffsetDateTimeConvertor implements Convertor<OffsetDateTime> {
                 ZoneOffsetConvertor.getInstance().convert(objective)
         );
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, OffsetDateTime object) {
+        return objective;
+    }
 }

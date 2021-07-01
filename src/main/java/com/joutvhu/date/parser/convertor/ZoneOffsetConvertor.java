@@ -24,4 +24,9 @@ public class ZoneOffsetConvertor implements Convertor<ZoneOffset> {
         else
             return objective.getZone().toZoneId().getRules().getOffset(Instant.now());
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, ZoneOffset object) {
+        return objective;
+    }
 }

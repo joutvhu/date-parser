@@ -20,4 +20,9 @@ public class LocalDateTimeConvertor implements Convertor<LocalDateTime> {
                 LocalTimeConvertor.getInstance().convert(objective)
         );
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, LocalDateTime object) {
+        return objective;
+    }
 }

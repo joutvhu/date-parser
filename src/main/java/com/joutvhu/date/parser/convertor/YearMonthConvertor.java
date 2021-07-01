@@ -21,4 +21,9 @@ public class YearMonthConvertor implements Convertor<YearMonth> {
 
         return YearMonth.of(objective.getYear(), objective.getMonth());
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, YearMonth object) {
+        return objective;
+    }
 }

@@ -21,4 +21,9 @@ public class InstantConvertor implements Convertor<Instant> {
             instant = instant.minusNanos(oldNano).plusNanos(objective.getNano());
         return instant;
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, Instant object) {
+        return objective;
+    }
 }

@@ -27,4 +27,9 @@ public class LocalTimeConvertor implements Convertor<LocalTime> {
 
         return localTime;
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, LocalTime object) {
+        return objective;
+    }
 }

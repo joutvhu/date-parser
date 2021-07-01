@@ -15,4 +15,9 @@ public class LongConvertor implements Convertor<Long> {
     public Long convert(ObjectiveDate objective) {
         return CalendarConvertor.getInstance().convert(objective).getTimeInMillis();
     }
+
+    @Override
+    public ObjectiveDate convert(ObjectiveDate objective, Long object) {
+        return objective;
+    }
 }

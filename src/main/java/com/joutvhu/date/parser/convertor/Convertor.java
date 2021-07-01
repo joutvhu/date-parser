@@ -8,6 +8,8 @@ import java.lang.reflect.Type;
 public interface Convertor<T> {
     T convert(ObjectiveDate objective);
 
+    ObjectiveDate convert(ObjectiveDate objective, T object);
+
     static <T> Class<T> typeOfConvertor(Convertor<T> convertor) {
         Class<? extends Convertor> convertorClass = convertor.getClass();
         for (Type type : convertorClass.getGenericInterfaces()) {
