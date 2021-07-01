@@ -151,4 +151,8 @@ public class WeekUtil {
         }
         return (weekdayInMonth * 7) - firstDayOfMonth + dayOfWeek + 1 - (dayOfWeek < firstDayOfMonth ? 0 : 7);
     }
+
+    public int getWeekdayInMonthByDayOfMonth(int dayOfMonth) {
+        return (dayOfMonth / 7) + (dayOfMonth % 7 > 0 ? 1 : 0);
+    }
 }
