@@ -8,6 +8,7 @@ import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.text.MessageFormat;
 import java.util.Iterator;
+import java.util.Objects;
 
 public class HourStrategy extends Strategy {
     public static final String HOUR12 = "hour12";
@@ -32,7 +33,7 @@ public class HourStrategy extends Strategy {
     @SuppressWarnings("java:S3776")
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
-        Iterator<String> iterator = source.iterator(this.pattern.length(), 2);
+        Iterator<String> iterator = source.iterator(this.length(), 2);
 
         while (iterator.hasNext()) {
             String value = iterator.next();
@@ -80,5 +81,19 @@ public class HourStrategy extends Strategy {
                         this.pattern);
             }
         }
+    }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        Integer hour = objective.getHour();
+        Objects.requireNonNull(hour, "Hour is null.");
+
+        if (!this.hour24 && hour > 11)
+            hour -= 12;
+        if (!this.startFrom0 && hour == 0)
+            hour = this.hour24 ? 24 : 12;
+
+        target.append(CommonUtil.leftPad(String.valueOf(hour), this.length(), '0'));
+        chain.next();
     }
 }

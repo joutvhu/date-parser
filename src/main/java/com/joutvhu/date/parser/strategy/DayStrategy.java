@@ -7,11 +7,13 @@ import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.subscription.DaySubscription;
 import com.joutvhu.date.parser.util.CommonUtil;
 
+import java.time.LocalDate;
 import java.time.MonthDay;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DayStrategy extends Strategy {
@@ -43,7 +45,7 @@ public class DayStrategy extends Strategy {
     @SuppressWarnings("java:S3776")
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         AtomicBoolean first = new AtomicBoolean(true);
-        int len = this.ordinal ? this.pattern.length() + 1 : this.pattern.length();
+        int len = this.ordinal ? this.length() + 1 : this.length();
         ParseBackup backup = ParseBackup.backup(objective, source);
         Iterator<String> iterator = source.iterator(len, (this.dayInYear ? 3 : 2) + (this.ordinal ? 2 : 0));
 
@@ -148,5 +150,37 @@ public class DayStrategy extends Strategy {
             }
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        Integer day;
+        if (this.dayInYear) {
+            if (objective.getDay() != null && objective.getMonth() != null && objective.getYear() != null) {
+                day = LocalDate
+                        .of(objective.getYear(), objective.getMonth(), objective.getDay())
+                        .getDayOfYear();
+            } else {
+                day = objective.get(DAY_OF_YEAR);
+            }
+
+            if (day == null) {
+                Objects.requireNonNull(objective.getDay(), "Day is null.");
+                Objects.requireNonNull(objective.getMonth(), "Month is null.");
+                Objects.requireNonNull(objective.getYear(), "Year is null.");
+            }
+        } else {
+            Objects.requireNonNull(objective.getDay(), "Day is null.");
+            day = objective.getDay();
+        }
+
+        target.append(CommonUtil.leftPad(
+                String.valueOf(day),
+                this.ordinal ? this.length() - 1 : this.length(),
+                '0'
+        ));
+        if (this.ordinal)
+            target.append(CommonUtil.getOrdinal(day));
+        chain.next();
     }
 }

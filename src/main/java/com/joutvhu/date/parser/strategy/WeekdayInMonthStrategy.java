@@ -5,6 +5,10 @@ import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.subscription.WeekdayInMonthSubscription;
+import com.joutvhu.date.parser.util.WeekUtil;
+
+import java.time.LocalDate;
+import java.util.Objects;
 
 public class WeekdayInMonthStrategy extends Strategy {
     public static final String WEEKDAY_IN_MONTH = "weekday_in_month";
@@ -41,5 +45,21 @@ public class WeekdayInMonthStrategy extends Strategy {
                     backup.getBackupPosition(),
                     this.pattern);
         }
+    }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        Integer week;
+        if (objective.getDay() != null && objective.getMonth() != null && objective.getYear() != null) {
+            week = WeekUtil.getWeekdayInMonthByDayOfMonth(
+                    LocalDate.of(objective.getYear(), objective.getMonth(), objective.getDay())
+                            .getDayOfMonth());
+        } else {
+            week = objective.get(WEEKDAY_IN_MONTH);
+        }
+
+        Objects.requireNonNull(week, "Week in month is undefined.");
+        target.append(week);
+        chain.next();
     }
 }

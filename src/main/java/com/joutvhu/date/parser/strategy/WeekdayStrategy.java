@@ -5,19 +5,21 @@ import com.joutvhu.date.parser.domain.ParseBackup;
 import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
+import com.joutvhu.date.parser.util.NameUtil;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.List;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 
 public class WeekdayStrategy extends Strategy {
     public static final String WEEKDAY = "weekday";
 
     private static final String NOT_DAY_OF_WEEK_MESSAGE = "The '{0}' is not a day of week.";
-
-    private static final List<String> SHORT_WEEKDAYS = Arrays.asList("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun");
-    private static final List<String> LONG_WEEKDAYS = Arrays
-            .asList("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
 
     private final boolean text;
 
@@ -46,8 +48,8 @@ public class WeekdayStrategy extends Strategy {
                 objective,
                 chain,
                 backup,
-                source.get(this.pattern.length()),
-                this.pattern.length() > 1))
+                source.get(this.length()),
+                this.length() > 1))
             this.tryParse(objective, chain, backup, source.get(1), true);
     }
 
@@ -90,49 +92,68 @@ public class WeekdayStrategy extends Strategy {
     @SuppressWarnings("java:S1643")
     private void parseString(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
-        String value = source.get(3);
+        Iterator<String> iterator = source.iterator(1);
+        Map.Entry<String, DayOfWeek> entry = NameUtil.findName(
+                iterator,
+                DayOfWeek.values(),
+                new Locale[]{objective.getLocale(), Locale.ROOT},
+                new TextStyle[]{TextStyle.SHORT, TextStyle.FULL},
+                (value, style, locale) -> value.getDisplayName(style, locale),
+                value -> {
+                    try {
+                        chain.next();
+                        objective.set(WEEKDAY, value.getValue());
+                        backup.commit();
+                        return true;
+                    } catch (Exception e) {
+                        if (!iterator.hasNext()) {
+                            backup.restore();
+                            throw e;
+                        }
+                    }
+                    return false;
+                }
+        );
 
-        if (this.pattern.length() < 4) {
-            int index = CommonUtil.indexIgnoreCaseOf(value, SHORT_WEEKDAYS);
-            if (this.tryParse(objective, chain, backup, index + 1, true))
-                return;
-        } else {
-            for (int i = 0; i < 6; i++) {
-                value += source.get(1);
-                int index = CommonUtil.indexIgnoreCaseOf(value, LONG_WEEKDAYS);
-                if (this.tryParse(objective, chain, backup, index + 1, i == 5))
-                    return;
-            }
+        if (entry.getValue() == null) {
+            backup.restore();
+            throw new MismatchPatternException(
+                    MessageFormat.format(NOT_DAY_OF_WEEK_MESSAGE, entry.getKey()),
+                    backup.getBackupPosition(),
+                    this.pattern);
         }
-
-        backup.restore();
-        throw new MismatchPatternException(
-                MessageFormat.format(NOT_DAY_OF_WEEK_MESSAGE, value),
-                backup.getBackupPosition(),
-                this.pattern);
     }
 
-    private boolean tryParse(
-            ObjectiveDate objective,
-            NextStrategy chain,
-            ParseBackup backup,
-            int value,
-            boolean throwable
-    ) {
-        // 1 (Monday) to 7 (Sunday)
-        if (value > 0 && value < 8) {
-            try {
-                chain.next();
-                objective.set(WEEKDAY, value);
-                backup.commit();
-                return true;
-            } catch (Exception e) {
-                if (throwable) {
-                    backup.restore();
-                    throw e;
-                }
-            }
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        DayOfWeek dayOfWeek;
+        if (objective.getYear() != null && objective.getMonth() != null && objective.getDay() != null) {
+            dayOfWeek = LocalDate
+                    .of(objective.getYear(), objective.getMonth(), objective.getDay())
+                    .getDayOfWeek();
+        } else {
+            Integer w = objective.get(WEEKDAY);
+            Objects.requireNonNull(w);
+            dayOfWeek = DayOfWeek.of(w);
         }
-        return false;
+
+        Objects.requireNonNull(dayOfWeek, "Day of week is undefined.");
+
+        if (this.text) {
+            Objects.requireNonNull(objective.getLocale());
+
+            target.append(this.length() < 4 ?
+                    dayOfWeek.getDisplayName(TextStyle.SHORT, objective.getLocale()) :
+                    dayOfWeek.getDisplayName(TextStyle.FULL, objective.getLocale())
+            );
+        } else {
+            target.append(CommonUtil.leftPad(
+                    String.valueOf(dayOfWeek.getValue()),
+                    this.length(),
+                    '0'
+            ));
+        }
+
+        chain.next();
     }
 }

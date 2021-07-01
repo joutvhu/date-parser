@@ -16,6 +16,10 @@ public abstract class Strategy {
         // Do nothing
     }
 
+    public int length() {
+        return this.pattern.length();
+    }
+
     public abstract boolean add(char c);
 
     protected boolean add(boolean condition, char c) {
@@ -38,6 +42,8 @@ public abstract class Strategy {
     }
 
     public abstract void parse(ObjectiveDate objective, StringSource source, NextStrategy chain);
+
+    public abstract void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain);
 
     public void afterCompletion(ObjectiveDate objective) {
         // Do nothing

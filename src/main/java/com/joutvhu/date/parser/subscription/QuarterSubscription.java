@@ -12,7 +12,7 @@ public class QuarterSubscription implements Subscription {
             Integer quarter = objective.get(QuarterStrategy.QUARTER);
 
             if (month != null && quarter != null) {
-                int q = month / 3 + 1;
+                int q = (month - 1) / 3 + 1;
                 if (quarter != q) {
                     throw new ConflictDateException(
                             "The month of " + month + " is not in quarter " + quarter + ".",

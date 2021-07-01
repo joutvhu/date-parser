@@ -8,6 +8,7 @@ import com.joutvhu.date.parser.subscription.CenturySubscription;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 public class CenturyStrategy extends Strategy {
     public static final String CENTURY = "century";
@@ -24,7 +25,7 @@ public class CenturyStrategy extends Strategy {
     @Override
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
-        Iterator<String> iterator = source.iterator(this.pattern.length(), 2);
+        Iterator<String> iterator = source.iterator(this.length(), 2);
 
         while (iterator.hasNext()) {
             String value = iterator.next();
@@ -50,5 +51,13 @@ public class CenturyStrategy extends Strategy {
                         this.pattern);
             }
         }
+    }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        Objects.requireNonNull(objective.getYear(), "Year is null.");
+        int century = Math.abs(objective.getYear()) / 100;
+        target.append(CommonUtil.leftPad(String.valueOf(century), this.length(), '0'));
+        chain.next();
     }
 }

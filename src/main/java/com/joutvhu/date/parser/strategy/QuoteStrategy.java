@@ -57,7 +57,7 @@ public class QuoteStrategy extends Strategy {
     @Override
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         StringSource.PositionBackup backup = source.backup();
-        String value = source.get(this.pattern.length());
+        String value = source.get(this.length());
         if (pattern.equals(value)) {
             try {
                 chain.next();
@@ -73,5 +73,11 @@ public class QuoteStrategy extends Strategy {
                     source.getIndex(),
                     this.pattern);
         }
+    }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        target.append(this.pattern);
+        chain.next();
     }
 }

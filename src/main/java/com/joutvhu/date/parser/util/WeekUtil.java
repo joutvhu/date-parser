@@ -37,7 +37,34 @@ public class WeekUtil {
         if (firstDayOfWeek != 1)
             dayOfWeek = convertWeekDay(dayOfWeek, firstDayOfWeek);
         dayOfYear = dayOfYear - dayOfWeek;
+        if (dayOfYear <= 0)
+            return 7 + dayOfYear >= minimalDaysInFirstWeek ? 1 : 0;
         return dayOfYear / 7 + (dayOfYear % 7 >= minimalDaysInFirstWeek ? 2 : 1);
+    }
+
+    public int getWeekOfMonthByDayOfMonth(WeekFields weekFields, int dayOfMonth, int dayOfWeek) {
+        return getWeekOfMonthByDayOfMonth(
+                weekFields.getFirstDayOfWeek().getValue(),
+                dayOfMonth,
+                dayOfWeek
+        );
+    }
+
+    /**
+     * Get week of month by day of month and day of week.
+     *
+     * @param firstDayOfWeek The first day-of-week varies by culture.
+     * @param dayOfMonth     The day of month
+     * @param dayOfWeek      The weekday of current day (1 is Monday, 7 is Sunday).
+     * @return The week of month.
+     */
+    public int getWeekOfMonthByDayOfMonth(int firstDayOfWeek, int dayOfMonth, int dayOfWeek) {
+        if (firstDayOfWeek != 1)
+            dayOfWeek = convertWeekDay(dayOfWeek, firstDayOfWeek);
+        dayOfMonth = dayOfMonth - dayOfWeek;
+        if (dayOfMonth <= 0)
+            return 1;
+        return dayOfMonth / 7 + (dayOfMonth % 7 > 0 ? 2 : 1);
     }
 
     public int getDayOfYearByWeekOfYear(WeekFields weekFields, int weekOfYear, int dayOfWeek, int firstDayOfYear) {
@@ -123,5 +150,9 @@ public class WeekUtil {
             firstDayOfMonth = convertWeekDay(firstDayOfMonth, firstDayOfWeek);
         }
         return (weekdayInMonth * 7) - firstDayOfMonth + dayOfWeek + 1 - (dayOfWeek < firstDayOfMonth ? 0 : 7);
+    }
+
+    public int getWeekdayInMonthByDayOfMonth(int dayOfMonth) {
+        return (dayOfMonth / 7) + (dayOfMonth % 7 > 0 ? 1 : 0);
     }
 }

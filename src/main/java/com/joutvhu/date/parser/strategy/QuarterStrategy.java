@@ -7,6 +7,8 @@ import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.subscription.QuarterSubscription;
 import com.joutvhu.date.parser.util.CommonUtil;
 
+import java.util.Objects;
+
 public class QuarterStrategy extends Strategy {
     public static final String QUARTER = "quarter";
 
@@ -61,5 +63,21 @@ public class QuarterStrategy extends Strategy {
                 throw e;
             }
         }
+    }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        Integer quarter;
+        if (objective.getMonth() != null) {
+            quarter = (objective.getMonth() - 1) / 3 + 1;
+        } else {
+            quarter = objective.get(QUARTER);
+        }
+
+        Objects.requireNonNull(quarter, "Month is null.");
+        target.append(quarter);
+        if (this.ordinal)
+            target.append(CommonUtil.getOrdinal(quarter));
+        chain.next();
     }
 }

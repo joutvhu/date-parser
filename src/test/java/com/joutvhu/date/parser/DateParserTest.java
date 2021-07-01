@@ -173,6 +173,18 @@ class DateParserTest {
     }
 
     @Test
+    void parse_DayOfWeek7() {
+        DayOfWeek result = DateParser.quickParse(DayOfWeek.class, "tue", "EEE");
+        Assertions.assertEquals(2, result.getValue());
+    }
+
+    @Test
+    void parse_DayOfWeek8() {
+        DayOfWeek result = DateParser.quickParse(DayOfWeek.class, "SAT", "EEE");
+        Assertions.assertEquals(6, result.getValue());
+    }
+
+    @Test
     void parse_ZoneOffset0() {
         ZoneOffset result = DateParser.quickParse(ZoneOffset.class, "SE Asia Standard Time", "Z");
         Assertions.assertEquals("+07:00", result.toString());

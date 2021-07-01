@@ -6,6 +6,7 @@ import com.joutvhu.date.parser.domain.StringSource;
 import com.joutvhu.date.parser.exception.MismatchPatternException;
 
 import java.util.GregorianCalendar;
+import java.util.Objects;
 
 public class EraStrategy extends Strategy {
     public static final String ERA = "era";
@@ -55,5 +56,23 @@ public class EraStrategy extends Strategy {
                 year = -year;
             objective.setYear(year);
         }
+    }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        String value = null;
+        if (objective.getYear() != null) {
+            value = objective.getYear() < 0 ? "BC" : "AD";
+        } else {
+            Integer era = objective.get(ERA);
+            if (era == GregorianCalendar.AD)
+                value = "AD";
+            else if (era == GregorianCalendar.BC)
+                value = "BC";
+        }
+
+        Objects.requireNonNull(value, "Year is null.");
+        target.append(value);
+        chain.next();
     }
 }

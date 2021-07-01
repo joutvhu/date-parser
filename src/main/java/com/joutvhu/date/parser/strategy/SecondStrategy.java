@@ -7,6 +7,7 @@ import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 public class SecondStrategy extends Strategy {
     public SecondStrategy(char c) {
@@ -21,7 +22,7 @@ public class SecondStrategy extends Strategy {
     @Override
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
-        Iterator<String> iterator = source.iterator(this.pattern.length(), 2);
+        Iterator<String> iterator = source.iterator(this.length(), 2);
 
         while (iterator.hasNext()) {
             String value = iterator.next();
@@ -53,5 +54,16 @@ public class SecondStrategy extends Strategy {
                         this.pattern);
             }
         }
+    }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        Objects.requireNonNull(objective.getSecond(), "Second is null.");
+        target.append(CommonUtil.leftPad(
+                String.valueOf(objective.getSecond()),
+                this.length(),
+                '0'
+        ));
+        chain.next();
     }
 }

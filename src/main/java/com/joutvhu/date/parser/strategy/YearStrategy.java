@@ -7,12 +7,11 @@ import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.CommonUtil;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class YearStrategy extends Strategy {
     public static final String YEAR2 = "year2";
-
-    private int length;
 
     public YearStrategy(char c) {
         super(c);
@@ -24,22 +23,17 @@ public class YearStrategy extends Strategy {
     }
 
     @Override
-    public void afterPatternSet() {
-        this.length = this.pattern.length();
-    }
-
-    @Override
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         AtomicBoolean first = new AtomicBoolean(true);
         ParseBackup backup = ParseBackup.backup(objective, source);
-        Iterator<String> iterator = source.iterator(this.length, 4);
+        Iterator<String> iterator = source.iterator(this.length(), 4);
 
         while (iterator.hasNext()) {
             String value = iterator.next();
             if (CommonUtil.isNumber(first, value)) {
                 try {
                     chain.next();
-                    objective.set(YEAR2, this.length < 3 && value.length() < 3);
+                    objective.set(YEAR2, this.length() < 3 && value.length() < 3);
                     objective.set(ObjectiveDate.YEAR, Integer.parseInt(value));
                     backup.commit();
                     return;
@@ -57,5 +51,15 @@ public class YearStrategy extends Strategy {
                         this.pattern);
             }
         }
+    }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        Objects.requireNonNull(objective.getYear(), "Year is null.");
+        int year = Math.abs(objective.getYear());
+        if (this.length() == 2)
+            year %= 100;
+        target.append(CommonUtil.leftPad(String.valueOf(year), this.length(), '0'));
+        chain.next();
     }
 }

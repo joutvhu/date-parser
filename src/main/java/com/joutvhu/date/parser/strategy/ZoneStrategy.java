@@ -7,6 +7,7 @@ import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.util.ZoneUtil;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.TimeZone;
 
 public class ZoneStrategy extends Strategy {
@@ -22,7 +23,7 @@ public class ZoneStrategy extends Strategy {
     @Override
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
-        Iterator<String> iterator = source.iterator(this.pattern.length());
+        Iterator<String> iterator = source.iterator(this.length());
 
         while (iterator.hasNext()) {
             String value = iterator.next();
@@ -47,5 +48,12 @@ public class ZoneStrategy extends Strategy {
                 "The time zone is invalid.",
                 backup.getBackupPosition(),
                 this.pattern);
+    }
+
+    @Override
+    public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        Objects.requireNonNull(objective.getZone(), "Zone is null.");
+        target.append(objective.getZone().getID());
+        chain.next();
     }
 }

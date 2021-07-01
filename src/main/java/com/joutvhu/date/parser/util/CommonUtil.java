@@ -9,6 +9,7 @@ import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 @UtilityClass
 public class CommonUtil {
@@ -33,6 +34,21 @@ public class CommonUtil {
         return value.matches(".*(st|nd|rd|th)");
     }
 
+    public String getOrdinal(int value) {
+        if (value == 11 || value == 12 || value == 13)
+            return "th";
+        switch (value % 10) {
+            case 1:
+                return "st";
+            case 2:
+                return "nd";
+            case 3:
+                return "rd";
+            default:
+                return "th";
+        }
+    }
+
     public int indexIgnoreCaseOf(String value, List<String> in) {
         for (int i = 0, len = in.size(); i < len; i++) {
             if (value != null && value.equalsIgnoreCase(in.get(i)))
@@ -41,7 +57,51 @@ public class CommonUtil {
         return -1;
     }
 
-    public String rightPad(final String str, final int size, final char padChar) {
+    public static String leftPad(String str, int size, char padChar) {
+        if (str == null) {
+            return null;
+        } else {
+            int pads = size - str.length();
+            if (pads <= 0)
+                return str;
+            else if (pads > 8192)
+                return leftPad(str, size, String.valueOf(padChar));
+            return repeat(padChar, pads).concat(str);
+        }
+    }
+
+    public static String leftPad(String str, int size, String padStr) {
+        if (str == null)
+            return null;
+        else {
+            if (padStr == null || padStr.length() == 0)
+                padStr = " ";
+
+            int padLen = padStr.length();
+            int strLen = str.length();
+            int pads = size - strLen;
+            if (pads <= 0)
+                return str;
+            else if (padLen == 1 && pads <= 8192)
+                return leftPad(str, size, padStr.charAt(0));
+            else if (pads == padLen)
+                return padStr.concat(str);
+            else if (pads < padLen)
+                return padStr.substring(0, pads).concat(str);
+            else {
+                char[] padding = new char[pads];
+                char[] padChars = padStr.toCharArray();
+
+                for (int i = 0; i < pads; ++i) {
+                    padding[i] = padChars[i % padLen];
+                }
+
+                return (new String(padding)).concat(str);
+            }
+        }
+    }
+
+    public String rightPad(String str, int size, char padChar) {
         if (str == null)
             return null;
         final int pads = size - str.length();
@@ -52,7 +112,7 @@ public class CommonUtil {
         return str.concat(repeat(padChar, pads));
     }
 
-    public String rightPad(final String str, final int size, String padStr) {
+    public String rightPad(String str, int size, String padStr) {
         if (str == null)
             return null;
         if (padStr == null || padStr.length() == 0)
@@ -79,7 +139,7 @@ public class CommonUtil {
         }
     }
 
-    public String repeat(final char ch, final int repeat) {
+    public String repeat(char ch, int repeat) {
         if (repeat <= 0)
             return "";
         final char[] buf = new char[repeat];
@@ -114,5 +174,27 @@ public class CommonUtil {
                     throw new DateTimeException("Invalid date '" + Month.of(month).name() + " " + dayOfMonth + "'");
             }
         }
+    }
+
+    public <T> T defaultIfNull(T value, T... defaultValues) {
+        if (value != null)
+            return value;
+        for (T v : defaultValues) {
+            if (v != null)
+                return v;
+        }
+        return null;
+    }
+
+    public <T> T defaultIfNull(Supplier<T> value, Supplier<T>... defaultValues) {
+        T result = value.get();
+        if (result != null)
+            return result;
+        for (Supplier<T> v : defaultValues) {
+            result = v.get();
+            if (result != null)
+                return result;
+        }
+        return null;
     }
 }

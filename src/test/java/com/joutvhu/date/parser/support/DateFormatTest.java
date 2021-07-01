@@ -51,6 +51,36 @@ class DateFormatTest {
     }
 
     @Test
+    void parse_Quarter2() {
+        ObjectiveDate objective = new DateFormat("M Q").parse("03 1");
+        Assertions.assertNotNull(objective);
+    }
+
+    @Test
+    void parse_Quarter4() {
+        ObjectiveDate objective = new DateFormat("M Q").parse("09 3");
+        Assertions.assertNotNull(objective);
+    }
+
+    @Test
+    void parse_Quarter5() {
+        ObjectiveDate objective = new DateFormat("M Q").parse("08 3");
+        Assertions.assertNotNull(objective);
+    }
+
+    @Test
+    void parse_Quarter6() {
+        ObjectiveDate objective = new DateFormat("M Q").parse("10 4");
+        Assertions.assertNotNull(objective);
+    }
+
+    @Test
+    void parse_Quarter7() {
+        ObjectiveDate objective = new DateFormat("M Q").parse("12 4");
+        Assertions.assertNotNull(objective);
+    }
+
+    @Test
     void parse_WeekOfYear0() {
         ObjectiveDate objective = new DateFormat("yyyy ww E").parse("2021 26 Tue");
         Assertions.assertEquals(29, objective.getDay());
