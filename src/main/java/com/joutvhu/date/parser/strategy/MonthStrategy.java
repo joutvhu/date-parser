@@ -20,11 +20,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class MonthStrategy extends Strategy {
     private static final String NOT_MONTH_MESSAGE = "The '{0}' is not a month.";
 
-    private boolean number;
+    private boolean numeric;
     private boolean ordinal;
+    private final boolean standAlone;
 
     public MonthStrategy(char c) {
         super(c);
+        this.standAlone = c == 'L';
     }
 
     @Override
@@ -35,12 +37,12 @@ public class MonthStrategy extends Strategy {
     @Override
     public void afterPatternSet() {
         this.ordinal = this.pattern.endsWith("o");
-        this.number = this.ordinal || this.length() <= 2;
+        this.numeric = this.ordinal || this.length() <= 2;
     }
 
     @Override
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
-        if (number)
+        if (numeric)
             this.parseNumber(objective, source, chain);
         else
             this.parseString(objective, source, chain);
@@ -104,12 +106,16 @@ public class MonthStrategy extends Strategy {
     private void parseString(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
 
+        TextStyle[] styles = this.standAlone ?
+                new TextStyle[]{TextStyle.SHORT_STANDALONE, TextStyle.FULL_STANDALONE} :
+                new TextStyle[]{TextStyle.SHORT, TextStyle.FULL};
+
         Iterator<String> iterator = source.iterator(1);
         Map.Entry<String, Month> entry = NameUtil.findName(
                 iterator,
                 Month.values(),
                 new Locale[]{objective.getLocale(), Locale.ROOT},
-                new TextStyle[]{TextStyle.SHORT, TextStyle.FULL},
+                styles,
                 (value, style, locale) -> value.getDisplayName(style, locale),
                 value -> {
                     try {
@@ -142,7 +148,7 @@ public class MonthStrategy extends Strategy {
         Objects.requireNonNull(month, "Month is null.");
         ChronoField.MONTH_OF_YEAR.checkValidIntValue(month);
 
-        if (this.number) {
+        if (this.numeric) {
             target.append(CommonUtil.leftPad(
                     String.valueOf(month),
                     this.ordinal ? this.length() - 1 : this.length(),
@@ -152,8 +158,12 @@ public class MonthStrategy extends Strategy {
                 target.append(CommonUtil.getOrdinal(month));
         } else {
             target.append(this.length() == 3 ?
-                    Month.of(month).getDisplayName(TextStyle.SHORT, objective.getLocale()) :
-                    Month.of(month).getDisplayName(TextStyle.FULL, objective.getLocale())
+                    Month.of(month).getDisplayName(
+                            this.standAlone ? TextStyle.SHORT_STANDALONE : TextStyle.SHORT,
+                            objective.getLocale()) :
+                    Month.of(month).getDisplayName(
+                            this.standAlone ? TextStyle.FULL_STANDALONE : TextStyle.FULL,
+                            objective.getLocale())
             );
         }
         chain.next();
