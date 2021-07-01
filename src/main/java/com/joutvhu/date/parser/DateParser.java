@@ -20,7 +20,7 @@ import java.util.TimeZone;
  * @author Giao Ho
  * @since 1.0.0
  */
-public class DateParser {
+public class DateParser implements DateParseAndFormat {
     private static DateParser instance;
 
     private Locale defaultLocale;
@@ -114,7 +114,7 @@ public class DateParser {
         return this;
     }
 
-    public <T> Convertor<T> getConvertor(Class<T> type, boolean forParse) {
+    private <T> Convertor<T> getConvertor(Class<T> type, boolean forParse) {
         if (this.convertors.containsKey(type)) {
             Convertor<T> convertor = (Convertor<T>) this.convertors.get(type);
             if (convertor != null)
@@ -128,14 +128,14 @@ public class DateParser {
         return null;
     }
 
-    public <T> T convert(Class<T> type, ObjectiveDate objective) {
+    private <T> T convert(Class<T> type, ObjectiveDate objective) {
         Convertor<T> convertor = this.getConvertor(type, true);
         if (convertor != null)
             return convertor.convert(objective);
         throw new ClassCastException("Unsupported " + type.getName() + " class.");
     }
 
-    public <T> ObjectiveDate convert(ObjectiveDate objective, T object) {
+    private <T> ObjectiveDate convert(ObjectiveDate objective, T object) {
         Class<T> type = (Class<T>) object.getClass();
         Convertor<T> convertor = this.getConvertor(type, false);
         if (convertor != null)
@@ -152,6 +152,7 @@ public class DateParser {
      * @param <T>      is the target type
      * @return target object
      */
+    @Override
     public <T> T parse(Class<T> type, String value, String... patterns) {
         if (type == null)
             throw new IllegalArgumentException("Date Type must not be null");
@@ -190,6 +191,7 @@ public class DateParser {
         return DateParser.getInstance().parse(type, value, patterns);
     }
 
+    @Override
     public <T> String format(T object, String pattern) {
         if (object == null)
             throw new IllegalArgumentException("Object Date must not be null");
