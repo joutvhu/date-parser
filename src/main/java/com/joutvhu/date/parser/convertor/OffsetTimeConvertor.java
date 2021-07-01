@@ -25,11 +25,8 @@ public class OffsetTimeConvertor implements Convertor<OffsetTime> {
     @Override
     public ObjectiveDate convert(ObjectiveDate objective, OffsetTime object) {
         if (object != null) {
-            objective.setZone(TimeZone.getTimeZone(object.getOffset()));
-            objective.setHour(object.getHour());
-            objective.setMinute(object.getMinute());
-            objective.setSecond(object.getSecond());
-            objective.setNano(object.getNano());
+            ZoneOffsetConvertor.getInstance().convert(objective, object.getOffset());
+            LocalTimeConvertor.getInstance().convert(objective, object.toLocalTime());
         }
         return objective;
     }

@@ -20,15 +20,8 @@ public class SqlTimestampConvertor implements Convertor<Timestamp> {
 
     @Override
     public ObjectiveDate convert(ObjectiveDate objective, Timestamp object) {
-        if (object != null) {
-            objective.setYear(object.getYear() + 1900);
-            objective.setMonth(object.getMonth() + 1);
-            objective.setDay(object.getDate());
-            objective.setHour(object.getHours());
-            objective.setMinute(object.getMinutes());
-            objective.setSecond(object.getSeconds());
-            objective.setNano((int) ((object.getTime() % 1000) * 1000000));
-        }
+        if (object != null)
+            LocalDateTimeConvertor.getInstance().convert(objective, object.toLocalDateTime());
         return objective;
     }
 }
