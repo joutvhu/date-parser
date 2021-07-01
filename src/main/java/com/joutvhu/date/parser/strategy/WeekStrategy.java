@@ -7,8 +7,11 @@ import com.joutvhu.date.parser.exception.MismatchPatternException;
 import com.joutvhu.date.parser.subscription.WeekOfMonthSubscription;
 import com.joutvhu.date.parser.subscription.WeekOfYearSubscription;
 import com.joutvhu.date.parser.util.CommonUtil;
+import com.joutvhu.date.parser.util.WeekUtil;
 
 import java.text.MessageFormat;
+import java.time.LocalDate;
+import java.util.Objects;
 
 public class WeekStrategy extends Strategy {
     public static final String WEEK_OF_YEAR = "week_of_year";
@@ -111,6 +114,38 @@ public class WeekStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
+        Integer week;
+        if (objective.getDay() != null && objective.getMonth() != null && objective.getYear() != null) {
+            LocalDate localDate = LocalDate
+                    .of(objective.getYear(), objective.getMonth(), objective.getDay());
+
+            if (this.weekInYear) {
+                week = WeekUtil.getWeekOfYearByDayOfYear(
+                        objective.getWeekFields(),
+                        localDate.getDayOfYear(),
+                        localDate.getDayOfWeek().getValue());
+            } else {
+                week = WeekUtil.getWeekOfMonthByDayOfMonth(
+                        objective.getWeekFields(),
+                        localDate.getDayOfMonth(),
+                        localDate.getDayOfWeek().getValue());
+            }
+        } else {
+            if (this.weekInYear) {
+                week = objective.get(WEEK_OF_YEAR);
+            } else {
+                week = objective.get(WEEK_OF_MONTH);
+            }
+        }
+
+        Objects.requireNonNull(week, "Week of " + (this.weekInYear ? "year" : "month") + " is undefined.");
+        target.append(CommonUtil.leftPad(
+                String.valueOf(week),
+                this.ordinal ? this.length() - 1 : this.length(),
+                '0'
+        ));
+        if (this.ordinal)
+            target.append(CommonUtil.getOrdinal(week));
         chain.next();
     }
 }

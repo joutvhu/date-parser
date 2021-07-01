@@ -143,7 +143,11 @@ public class MonthStrategy extends Strategy {
         ChronoField.MONTH_OF_YEAR.checkValidIntValue(month);
 
         if (this.number) {
-            target.append(CommonUtil.leftPad(String.valueOf(month), this.length(), '0'));
+            target.append(CommonUtil.leftPad(
+                    String.valueOf(month),
+                    this.ordinal ? this.length() - 1 : this.length(),
+                    '0'
+            ));
             if (this.ordinal)
                 target.append(CommonUtil.getOrdinal(month));
         } else {
