@@ -20,7 +20,7 @@ public class ConvertorService {
         return instance;
     }
 
-    public <T> Convertor<T> getConvertor(Class<T> type) {
+    public <T> Convertor<T> getConvertor(Class<T> type, boolean forParse) {
         if (type == null)
             return null;
         Iterator<Convertor> convertorIterator = this.loader.iterator();
@@ -32,8 +32,11 @@ public class ConvertorService {
 
             if (type.equals(targetType))
                 return convertor;
-            if (subtypeConvertor == null && type.isAssignableFrom(targetType))
-                subtypeConvertor = convertor;
+            if (subtypeConvertor == null) {
+                if ((forParse && type.isAssignableFrom(targetType)) ||
+                        (!forParse && targetType.isAssignableFrom(type)))
+                    subtypeConvertor = convertor;
+            }
         }
         return subtypeConvertor;
     }
