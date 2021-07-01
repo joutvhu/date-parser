@@ -31,10 +31,14 @@ public class StrategyFactory {
             case 'M':
             case 'L':
                 return new MonthStrategy(c);
+            case 'n':
+            case 'N':
+                return new NanoStrategy(c);
             case 's':
                 return new SecondStrategy(c);
             case 'S':
                 return new MillisecondStrategy(c);
+            case 'q':
             case 'Q':
                 return new QuarterStrategy(c);
             case 'w':
