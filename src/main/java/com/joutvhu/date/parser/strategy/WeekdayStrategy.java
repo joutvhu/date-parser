@@ -89,10 +89,10 @@ public class WeekdayStrategy extends Strategy {
     @SuppressWarnings("java:S1643")
     private void parseString(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
-        String value = source.get(3);
+        StringBuilder value = new StringBuilder(source.get(3));
 
         if (this.length() < 4) {
-            final String finalValue = value;
+            final String finalValue = value.toString();
             Integer dayOfWeek = CommonUtil.defaultIfNull(
                     () -> CommonUtil.parseDayOfWeek(TextStyle.SHORT, objective.getLocale(), finalValue),
                     () -> CommonUtil.parseDayOfWeek(TextStyle.SHORT, Locale.ROOT, finalValue)
@@ -101,8 +101,8 @@ public class WeekdayStrategy extends Strategy {
                 return;
         } else {
             for (int i = 0; i < 6; i++) {
-                value += source.get(1);
-                final String finalValue = value;
+                value.append(source.get(1));
+                final String finalValue = value.toString();
                 Integer dayOfWeek = CommonUtil.defaultIfNull(
                         () -> CommonUtil.parseDayOfWeek(TextStyle.FULL, objective.getLocale(), finalValue),
                         () -> CommonUtil.parseDayOfWeek(TextStyle.FULL, Locale.ROOT, finalValue)
@@ -114,7 +114,7 @@ public class WeekdayStrategy extends Strategy {
 
         backup.restore();
         throw new MismatchPatternException(
-                MessageFormat.format(NOT_DAY_OF_WEEK_MESSAGE, value),
+                MessageFormat.format(NOT_DAY_OF_WEEK_MESSAGE, value.toString()),
                 backup.getBackupPosition(),
                 this.pattern);
     }

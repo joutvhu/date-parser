@@ -197,4 +197,14 @@ public class CommonUtil {
         }
         return null;
     }
+
+    public Integer parseMonth(TextStyle style, Locale locale, String value) {
+        for (int i = 1; i < 13; i++) {
+            if (Month.of(i)
+                    .getDisplayName(style, locale)
+                    .equalsIgnoreCase(value))
+                return i;
+        }
+        return null;
+    }
 }
