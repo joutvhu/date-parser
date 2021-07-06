@@ -89,21 +89,21 @@ class DateFormatTest {
 
     @Test
     void parse_WeekOfMonth0() {
-        ObjectiveDate objective = new DateFormat("yyyy MM W u").parse("2021 06 3 2");
+        ObjectiveDate objective = new DateFormat("yyyy MM W e").parse("2021 06 3 2");
         Assertions.assertEquals(15, objective.getDay());
         Assertions.assertEquals(6, objective.getMonth());
     }
 
     @Test
     void parse_WeekdayInMonth0() {
-        ObjectiveDate objective = new DateFormat("yyyy MM F u").parse("2021 06 4 3");
+        ObjectiveDate objective = new DateFormat("yyyy MM F e").parse("2021 06 4 3");
         Assertions.assertEquals(23, objective.getDay());
         Assertions.assertEquals(6, objective.getMonth());
     }
 
     @Test
     void parse_WeekdayInMonth1() {
-        ObjectiveDate objective = new DateFormat("yyyy MM F u").parse("2021 06 3 7");
+        ObjectiveDate objective = new DateFormat("yyyy MM F e").parse("2021 06 3 7");
         Assertions.assertEquals(20, objective.getDay());
         Assertions.assertEquals(6, objective.getMonth());
     }
