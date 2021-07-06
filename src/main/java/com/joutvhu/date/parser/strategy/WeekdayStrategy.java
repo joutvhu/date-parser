@@ -16,29 +16,45 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * <pre>
+ *  Symbol  Meaning                     Presentation      Examples
+ *  ------  -------                     ------------      -------
+ *   c       stand-alone-day-of-week     text              Sunday; Sun
+ *   e       day-number-of-week          number            1; 7
+ *   E       day-name-in-week            text              Tuesday; Tue
+ * </pre>
+ *
+ * @since 1.0.0
+ * @author Giao Ho
+ */
 public class WeekdayStrategy extends Strategy {
     public static final String WEEKDAY = "weekday";
 
     private static final String NOT_DAY_OF_WEEK_MESSAGE = "The '{0}' is not a day of week.";
 
-    private final boolean text;
+    private final boolean numeric;
+    private final boolean standAlone;
 
     public WeekdayStrategy(char c) {
         super(c);
-        this.text = c == 'E';
+        this.numeric = c == 'e';
+        this.standAlone = c == 'c';
     }
 
     @Override
     public boolean add(char c) {
+        if (this.standAlone)
+            return false;
         return add(c == this.pattern.charAt(0), c);
     }
 
     @Override
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
-        if (text)
-            this.parseString(objective, source, chain);
-        else
+        if (numeric)
             this.parseNumber(objective, source, chain);
+        else
+            this.parseString(objective, source, chain);
     }
 
     private void parseNumber(ObjectiveDate objective, StringSource source, NextStrategy chain) {
@@ -93,11 +109,16 @@ public class WeekdayStrategy extends Strategy {
     private void parseString(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
         Iterator<String> iterator = source.iterator(1);
+
+        TextStyle[] styles = this.standAlone ?
+                new TextStyle[]{TextStyle.SHORT_STANDALONE, TextStyle.FULL_STANDALONE} :
+                new TextStyle[]{TextStyle.SHORT, TextStyle.FULL};
+
         Map.Entry<String, DayOfWeek> entry = NameUtil.findName(
                 iterator,
                 DayOfWeek.values(),
                 new Locale[]{objective.getLocale(), Locale.ROOT},
-                new TextStyle[]{TextStyle.SHORT, TextStyle.FULL},
+                styles,
                 (value, style, locale) -> value.getDisplayName(style, locale),
                 value -> {
                     try {
@@ -139,19 +160,23 @@ public class WeekdayStrategy extends Strategy {
 
         Objects.requireNonNull(dayOfWeek, "Day of week is undefined.");
 
-        if (this.text) {
-            Objects.requireNonNull(objective.getLocale());
-
-            target.append(this.length() < 4 ?
-                    dayOfWeek.getDisplayName(TextStyle.SHORT, objective.getLocale()) :
-                    dayOfWeek.getDisplayName(TextStyle.FULL, objective.getLocale())
-            );
-        } else {
+        if (this.numeric) {
             target.append(CommonUtil.leftPad(
                     String.valueOf(dayOfWeek.getValue()),
                     this.length(),
                     '0'
             ));
+        } else {
+            Objects.requireNonNull(objective.getLocale());
+
+            target.append(this.length() < 4 ?
+                    dayOfWeek.getDisplayName(
+                            this.standAlone ? TextStyle.SHORT_STANDALONE : TextStyle.SHORT,
+                            objective.getLocale()) :
+                    dayOfWeek.getDisplayName(
+                            this.standAlone ? TextStyle.FULL_STANDALONE : TextStyle.FULL,
+                            objective.getLocale())
+            );
         }
 
         chain.next();

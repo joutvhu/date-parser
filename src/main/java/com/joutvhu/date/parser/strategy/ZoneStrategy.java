@@ -27,7 +27,16 @@ public class ZoneStrategy extends Strategy {
 
         while (iterator.hasNext()) {
             String value = iterator.next();
-            TimeZone timeZone = ZoneUtil.getTimeZone(value);
+
+            if (value.startsWith(" ")) {
+                backup.restore();
+                throw new MismatchPatternException(
+                        "The time zone can't start with a space.",
+                        backup.getBackupPosition(),
+                        this.pattern);
+            }
+
+            TimeZone timeZone = ZoneUtil.getTimeZone(value, objective.getLocale());
             if (timeZone != null) {
                 try {
                     chain.next();

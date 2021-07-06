@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class DateParserTest {
+class DateParseTest {
     @Test
     void parse_utilDate0() {
         Date result = DateParser.getInstance()

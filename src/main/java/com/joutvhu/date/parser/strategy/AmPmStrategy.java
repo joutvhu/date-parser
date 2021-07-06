@@ -12,12 +12,9 @@ import java.util.Objects;
 public class AmPmStrategy extends Strategy {
     public static final String AM_PM = "am/pm";
 
-    private boolean upperCase;
-
     @SuppressWarnings("java:S125")
     public AmPmStrategy(char c) {
         super(c);
-        this.upperCase = c == 'A';
     }
 
     @Override
@@ -55,15 +52,19 @@ public class AmPmStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-        String value;
+        String value = null;
         if (objective.getHour() != null) {
-            value = objective.getHour() < 12 ? "am" : "pm";
+            value = objective.getHour() < 12 ? "AM" : "PM";
         } else {
-            value = objective.get(AM_PM);
+            Integer pm = objective.get(AM_PM);
+            if (pm == Calendar.AM)
+                value = "AM";
+            else if (pm == Calendar.PM)
+                value = "PM";
         }
         Objects.requireNonNull(value, "AM or PM undefined.");
 
-        target.append(this.upperCase ? value.toUpperCase() : value);
+        target.append(value);
         chain.next();
     }
 }

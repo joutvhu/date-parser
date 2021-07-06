@@ -13,9 +13,9 @@ public class StrategyFactory {
             case 'd':
             case 'D':
                 return new DayStrategy(c);
+            case 'c':
             case 'e':
             case 'E':
-            case 'u':
                 return new WeekdayStrategy(c);
             case 'F':
                 return new WeekdayInMonthStrategy(c);
@@ -31,18 +31,26 @@ public class StrategyFactory {
             case 'M':
             case 'L':
                 return new MonthStrategy(c);
+            case 'n':
+            case 'N':
+                return new NanoStrategy(c);
             case 's':
                 return new SecondStrategy(c);
             case 'S':
                 return new MillisecondStrategy(c);
+            case 'q':
             case 'Q':
                 return new QuarterStrategy(c);
             case 'w':
             case 'W':
                 return new WeekStrategy(c);
+            case 'u':
             case 'y':
             case 'Y':
                 return new YearStrategy(c);
+            case 'O':
+            case 'V':
+            case 'x':
             case 'X':
             case 'z':
             case 'Z':
