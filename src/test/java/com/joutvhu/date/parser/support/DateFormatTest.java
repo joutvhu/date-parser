@@ -1,6 +1,7 @@
 package com.joutvhu.date.parser.support;
 
 import com.joutvhu.date.parser.domain.ObjectiveDate;
+import com.joutvhu.date.parser.strategy.QuarterStrategy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -48,36 +49,70 @@ class DateFormatTest {
     void parse_Quarter1() {
         ObjectiveDate objective = new DateFormat("yyyyMd Q").parse("20210523 2");
         Assertions.assertNotNull(objective);
+        Assertions.assertEquals(2, (Integer) objective.get(QuarterStrategy.QUARTER));
     }
 
     @Test
     void parse_Quarter2() {
         ObjectiveDate objective = new DateFormat("M Q").parse("03 1");
         Assertions.assertNotNull(objective);
+        Assertions.assertEquals(1, (Integer) objective.get(QuarterStrategy.QUARTER));
     }
 
     @Test
     void parse_Quarter4() {
         ObjectiveDate objective = new DateFormat("M Q").parse("09 3");
         Assertions.assertNotNull(objective);
+        Assertions.assertEquals(3, (Integer) objective.get(QuarterStrategy.QUARTER));
     }
 
     @Test
     void parse_Quarter5() {
         ObjectiveDate objective = new DateFormat("M Q").parse("08 3");
         Assertions.assertNotNull(objective);
+        Assertions.assertEquals(3, (Integer) objective.get(QuarterStrategy.QUARTER));
     }
 
     @Test
     void parse_Quarter6() {
         ObjectiveDate objective = new DateFormat("M Q").parse("10 4");
         Assertions.assertNotNull(objective);
+        Assertions.assertEquals(4, (Integer) objective.get(QuarterStrategy.QUARTER));
     }
 
     @Test
     void parse_Quarter7() {
         ObjectiveDate objective = new DateFormat("M Q").parse("12 4");
         Assertions.assertNotNull(objective);
+        Assertions.assertEquals(4, (Integer) objective.get(QuarterStrategy.QUARTER));
+    }
+
+    @Test
+    void parse_Quarter8() {
+        ObjectiveDate objective = new DateFormat("QQQ").parse("Q3");
+        Assertions.assertNotNull(objective);
+        Assertions.assertEquals(3, (Integer) objective.get(QuarterStrategy.QUARTER));
+    }
+
+    @Test
+    void parse_Quarter9() {
+        ObjectiveDate objective = new DateFormat("qqq").parse("003");
+        Assertions.assertNotNull(objective);
+        Assertions.assertEquals(3, (Integer) objective.get(QuarterStrategy.QUARTER));
+    }
+
+    @Test
+    void parse_Quarter10() {
+        ObjectiveDate objective = new DateFormat("qo").parse("1st");
+        Assertions.assertNotNull(objective);
+        Assertions.assertEquals(1, (Integer) objective.get(QuarterStrategy.QUARTER));
+    }
+
+    @Test
+    void parse_Quarter11() {
+        ObjectiveDate objective = new DateFormat("QQQQ").parse("1st quarter");
+        Assertions.assertNotNull(objective);
+        Assertions.assertEquals(1, (Integer) objective.get(QuarterStrategy.QUARTER));
     }
 
     @Test
