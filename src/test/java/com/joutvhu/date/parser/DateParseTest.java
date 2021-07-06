@@ -155,7 +155,7 @@ class DateParseTest {
 
     @Test
     void parse_DayOfWeek4() {
-        DayOfWeek result = DateParser.quickParse(DayOfWeek.class, "2", "u");
+        DayOfWeek result = DateParser.quickParse(DayOfWeek.class, "2", "e");
         Assertions.assertEquals(2, result.getValue());
     }
 
