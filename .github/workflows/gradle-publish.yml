@@ -42,6 +42,14 @@ jobs:
       - name: Build with Gradle
         run: gradle clean build
 
+      - name: Generate report
+        run: gradle codeCoverageReport
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v1
+        with:
+          files: ./build/reports/jacoco/report.xml
+
       - name: Get Current Release
         id: get_current_release
         uses: joutvhu/get-release@v1
