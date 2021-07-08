@@ -1,5 +1,7 @@
 # Date Parser
 
+[![codecov](https://codecov.io/gh/joutvhu/date-parser/branch/main/graph/badge.svg?token=2OJDWTPPGW)](https://codecov.io/gh/joutvhu/date-parser)
+
 Utility to parse String to Date by target type and string format
 
 ## Using
