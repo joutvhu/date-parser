@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Upload reports to Codecov
+name: Report Codecov
 
 # Controls when the action will run.
 on:
