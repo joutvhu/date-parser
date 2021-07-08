@@ -9,8 +9,8 @@ plugins {
 
 group 'com.github.joutvhu'
 version '1.0.0.2-SNAPSHOT'
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 def snapshotVersion = version.endsWith('-SNAPSHOT') || version.endsWith('.SNAPSHOT')
 
@@ -34,18 +34,6 @@ dependencies {
 
     testCompileOnly 'org.projectlombok:lombok:1.18.20'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
-}
-
-task codeCoverageReport(type: JacocoReport, dependsOn: ['test']) {
-    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-    sourceSets sourceSets.main
-
-    reports {
-        xml.enabled true
-        xml.destination file("${buildDir}/reports/jacoco/report.xml")
-        html.enabled false
-        csv.enabled false
-    }
 }
 
 jar {
@@ -87,6 +75,18 @@ tasks.withType(Test) {
     }
     filter {
         includeTestsMatching 'com.joutvhu.date.parser.*'
+    }
+}
+
+task codeCoverageReport(type: JacocoReport, dependsOn: ['test']) {
+    executionData test
+    sourceSets sourceSets.main
+
+    reports {
+        xml.enabled true
+        xml.destination file("${buildDir}/reports/jacoco/report.xml")
+        html.enabled false
+        csv.enabled false
     }
 }
 
