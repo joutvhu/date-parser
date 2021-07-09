@@ -214,9 +214,7 @@ class DateFormatTest {
 
     @Test
     void format_Long0() {
-        String result = DateParser.formatter()
-                .withZone(TimeZone.getDefault())
-                .format(1624846968780L, "yyyy-MM-dd HH:mm:ss.SSS");
+        String result = DateParser.format(1624846968780L, "yyyy-MM-dd HH:mm:ss.SSS");
         Assertions.assertEquals("2021-06-28 09:22:48.780", result);
     }
 
@@ -251,6 +249,21 @@ class DateFormatTest {
     @Test
     void format_ZonedDateTime0() {
         ZonedDateTime date = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
+        String result = DateParser.format(date, "MMM dd yyyy HH:mm:ss.SSS");
+
+        String expected = DateTimeFormatter
+                .ofPattern("MMM dd yyyy HH:mm:ss.SSS")
+                .withLocale(Locale.getDefault())
+                .withZone(ZoneOffset.UTC)
+                .format(date);
+
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    void format_ZonedDateTime1() {
+        LocalDateTime localDateTime = LocalDateTime.of(2021, 7, 9, 14, 1, 3, 4100000);
+        ZonedDateTime date = ZonedDateTime.of(localDateTime, ZoneOffset.UTC);
         String result = DateParser.format(date, "MMM dd yyyy HH:mm:ss.SSS");
 
         String expected = DateTimeFormatter
