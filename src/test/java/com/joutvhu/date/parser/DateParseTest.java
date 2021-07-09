@@ -78,6 +78,14 @@ class DateParseTest {
     }
 
     @Test
+    void parse_LocalDateTime1() {
+        LocalDateTime result = DateParser.formatter()
+                .parse(LocalDateTime.class, "2021/06/27 41045272000000", "yyyy/MM/dd N");
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals("2021-06-27T11:24:05.272", result.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+    }
+
+    @Test
     void parse_Instant0() {
         Instant result = DateParser.parse(Instant.class, "2021/06/27 21:52:25.403841585", "yyyy/MM/dd HH:mm:ss.SSSSSSSSS");
         Assertions.assertNotNull(result);
