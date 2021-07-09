@@ -13,22 +13,46 @@ import java.util.Objects;
 public class CenturyStrategy extends Strategy {
     public static final String CENTURY = "century";
 
+    private boolean ordinal;
+
     public CenturyStrategy(char c) {
         super(c);
     }
 
     @Override
     public boolean add(char c) {
-        return add(c == 'C', c);
+        return add(c == 'C', c, c == 'o');
+    }
+
+    @Override
+    public void afterPatternSet() {
+        this.ordinal = this.pattern.endsWith("o");
     }
 
     @Override
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
-        Iterator<String> iterator = source.iterator(this.length(), 2);
+        Iterator<String> iterator = this.ordinal ?
+                source.iterator(this.length() + 1, 4) :
+                source.iterator(this.length(), 2);
 
         while (iterator.hasNext()) {
             String value = iterator.next();
+
+            if (this.ordinal) {
+                if (CommonUtil.hasOrdinal(value))
+                    value = value.substring(0, value.length() - 2);
+                else {
+                    if (iterator.hasNext())
+                        continue;
+                    backup.restore();
+                    throw new MismatchPatternException(
+                            "The century '" + value + "' must be end with an ordinal indicator.",
+                            backup.getBackupPosition(),
+                            this.pattern);
+                }
+            }
+
             if (CommonUtil.isNumber(value)) {
                 try {
                     int century = Integer.parseInt(value);
@@ -55,9 +79,21 @@ public class CenturyStrategy extends Strategy {
 
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
-        Objects.requireNonNull(objective.getYear(), "Year is null.");
-        int century = Math.abs(objective.getYear()) / 100;
-        target.append(CommonUtil.leftPad(String.valueOf(century), this.length(), '0'));
+        Integer century;
+        if (objective.getYear() != null) {
+            century = Math.abs(objective.getYear()) / 100 + 1;
+        } else {
+            century = objective.get(CENTURY);
+        }
+
+        Objects.requireNonNull(century, "Year is null.");
+        target.append(CommonUtil.leftPad(
+                String.valueOf(century),
+                this.ordinal ? this.length() - 1 : this.length(),
+                '0'
+        ));
+        if (this.ordinal)
+            target.append(CommonUtil.getOrdinal(century));
         chain.next();
     }
 }
