@@ -4,7 +4,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class DateParser {
-    private DateFormatter formatter;
+    private DateFormatter formatter = new DateFormatter();
 
     /**
      * Get default instance of {@link DateFormatter}.
@@ -12,13 +12,11 @@ public class DateParser {
      * @return The date parser.
      */
     public DateFormatter formatter() {
-        if (formatter == null)
-            formatter = new DateFormatter();
-        return formatter;
+        return new DateFormatter();
     }
 
     public <T> String format(T object, String pattern) {
-        return formatter().format(object, pattern);
+        return formatter.format(object, pattern);
     }
 
     /**
@@ -31,6 +29,6 @@ public class DateParser {
      * @return target object
      */
     public static <T> T parse(Class<T> type, String value, String... patterns) {
-        return formatter().parse(type, value, patterns);
+        return formatter.parse(type, value, patterns);
     }
 }

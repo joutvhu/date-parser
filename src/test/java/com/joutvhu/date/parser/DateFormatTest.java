@@ -5,13 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.Instant;
-import java.time.Month;
-import java.time.MonthDay;
-import java.time.Year;
-import java.time.YearMonth;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
@@ -74,7 +68,7 @@ public class DateFormatTest {
         MonthDay monthDay = MonthDay.of(Month.MARCH, 18);
         String result = DateParser.format(monthDay, "MMo, ddo");
 
-        Assertions.assertEquals("02rd, 18th", result);
+        Assertions.assertEquals("03rd, 18th", result);
     }
 
     @Test
@@ -99,5 +93,47 @@ public class DateFormatTest {
         String result = DateParser.format(year, "CCo yy");
 
         Assertions.assertEquals("21st 20", result);
+    }
+
+    @Test
+    void format_LocalDate0() {
+        LocalDate date = LocalDate.now();
+        String result = DateParser.format(date, "MMM dd yyyy");
+
+        String expected = DateTimeFormatter
+                .ofPattern("MMM dd yyyy")
+                .withLocale(Locale.getDefault())
+                .withZone(ZoneId.systemDefault())
+                .format(date);
+
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    void format_LocalTime0() {
+        LocalTime date = LocalTime.now();
+        String result = DateParser.format(date, "hh:mm:ss.SSS a");
+
+        String expected = DateTimeFormatter
+                .ofPattern("hh:mm:ss.SSS a")
+                .withLocale(Locale.getDefault())
+                .withZone(ZoneId.systemDefault())
+                .format(date);
+
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    void format_LocalDateTime0() {
+        LocalDateTime date = LocalDateTime.now();
+        String result = DateParser.format(date, "MMM dd yyyy HH:mm:ss.SSS");
+
+        String expected = DateTimeFormatter
+                .ofPattern("MMM dd yyyy HH:mm:ss.SSS")
+                .withLocale(Locale.getDefault())
+                .withZone(ZoneId.systemDefault())
+                .format(date);
+
+        Assertions.assertEquals(expected, result);
     }
 }
