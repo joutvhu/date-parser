@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.WeekFields;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -82,6 +83,14 @@ class DateFormatTest {
     }
 
     @Test
+    void format_YearMonth1() {
+        YearMonth yearMonth = YearMonth.of(2021, Month.DECEMBER);
+        String result = DateParser.format(yearMonth, "QQQ");
+
+        Assertions.assertEquals("Q4", result);
+    }
+
+    @Test
     void format_Year0() {
         Year year = Year.of(2021);
         String result = DateParser.format(year, "G CC yy");
@@ -109,6 +118,24 @@ class DateFormatTest {
                 .format(date);
 
         Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    void format_LocalDate1() {
+        LocalDate date = LocalDate.of(2021, 7, 14);
+        String result = DateParser.format(date, "F");
+
+        Assertions.assertEquals("2", result);
+    }
+
+    @Test
+    void format_LocalDate2() {
+        LocalDate date = LocalDate.of(2021, 7, 14);
+        String result = DateParser.formatter()
+                .withWeekFields(WeekFields.ISO)
+                .format(date, "w W");
+
+        Assertions.assertEquals("28 3", result);
     }
 
     @Test
@@ -281,6 +308,12 @@ class DateFormatTest {
     void format_ZonedOffset0() {
         String result = DateParser.format(ZoneOffset.UTC, "X");
         Assertions.assertEquals("Z", result);
+    }
+
+    @Test
+    void format_ZonedOffset1() {
+        String result = DateParser.format(ZoneOffset.of("+07:00"), "X");
+        Assertions.assertEquals("+0700", result);
     }
 
     @Test
