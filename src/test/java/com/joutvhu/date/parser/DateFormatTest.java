@@ -88,8 +88,16 @@ public class DateFormatTest {
     @Test
     void format_Year0() {
         Year year = Year.of(2021);
-        String result = DateParser.format(year, "CC yy");
+        String result = DateParser.format(year, "G CC yy");
 
-        Assertions.assertEquals("21 21", result);
+        Assertions.assertEquals("AD 21 21", result);
+    }
+
+    @Test
+    void format_Year1() {
+        Year year = Year.of(2020);
+        String result = DateParser.format(year, "CCo yy");
+
+        Assertions.assertEquals("21st 20", result);
     }
 }
