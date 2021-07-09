@@ -78,4 +78,36 @@ class StrategyTest {
             dateFormat.parse("1x");
         });
     }
+
+    @Test
+    void parse_Weekday0() {
+        Assertions.assertThrows(Exception.class, () -> {
+            DateFormat dateFormat = new DateFormat("e");
+            dateFormat.parse("8");
+        });
+    }
+
+    @Test
+    void parse_Weekday1() {
+        Assertions.assertThrows(Exception.class, () -> {
+            DateFormat dateFormat = new DateFormat("e");
+            dateFormat.parse("M");
+        });
+    }
+
+    @Test
+    void parse_Weekday2() {
+        Assertions.assertThrows(Exception.class, () -> {
+            DateFormat dateFormat = new DateFormat("E");
+            dateFormat.parse("Mom");
+        });
+    }
+
+    @Test
+    void parse_Zone0() {
+        Assertions.assertThrows(Exception.class, () -> {
+            DateFormat dateFormat = new DateFormat("Z");
+            dateFormat.parse(" UTC");
+        });
+    }
 }
