@@ -1,9 +1,11 @@
 package com.joutvhu.date.parser.convertor;
 
 import com.joutvhu.date.parser.domain.ObjectiveDate;
+import com.joutvhu.date.parser.util.CommonUtil;
 
-import java.util.Date;
-import java.util.Objects;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class LongConvertor implements Convertor<Long> {
     private static LongConvertor instance;
@@ -21,9 +23,14 @@ public class LongConvertor implements Convertor<Long> {
 
     @Override
     public ObjectiveDate convert(ObjectiveDate objective, Long object) {
-        if (object != null)
-            return DateConvertor.getInstance().convert(objective, new Date(object));
-        else
-            return objective;
+        if (object != null) {
+            Calendar calendar = Calendar.getInstance(
+                    CommonUtil.defaultIfNull(objective.getZone(), TimeZone.getDefault()),
+                    CommonUtil.defaultIfNull(objective.getLocale(), Locale.getDefault())
+            );
+            calendar.setTimeInMillis(object);
+            return CalendarConvertor.getInstance().convert(objective, calendar);
+        }
+        return objective;
     }
 }

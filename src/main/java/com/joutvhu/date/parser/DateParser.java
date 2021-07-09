@@ -28,7 +28,7 @@ public class DateParser {
      * @param <T>      is the target type
      * @return target object
      */
-    public static <T> T parse(Class<T> type, String value, String... patterns) {
+    public <T> T parse(Class<T> type, String value, String... patterns) {
         return formatter.parse(type, value, patterns);
     }
 }

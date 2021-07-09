@@ -214,9 +214,7 @@ class DateFormatTest {
 
     @Test
     void format_Long0() {
-        String result = DateParser.formatter()
-                .withZone(TimeZone.getDefault())
-                .format(1624846968780L, "yyyy-MM-dd HH:mm:ss.SSS");
+        String result = DateParser.format(1624846968780L, "yyyy-MM-dd HH:mm:ss.SSS");
         Assertions.assertEquals("2021-06-28 09:22:48.780", result);
     }
 
