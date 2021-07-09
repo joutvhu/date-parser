@@ -261,6 +261,21 @@ class DateFormatTest {
     }
 
     @Test
+    void format_ZonedDateTime1() {
+        LocalDateTime localDateTime = LocalDateTime.of(2021, 7, 9, 14, 1, 3, 4100000);
+        ZonedDateTime date = ZonedDateTime.of(localDateTime, ZoneOffset.UTC);
+        String result = DateParser.format(date, "MMM dd yyyy HH:mm:ss.SSS");
+
+        String expected = DateTimeFormatter
+                .ofPattern("MMM dd yyyy HH:mm:ss.SSS")
+                .withLocale(Locale.getDefault())
+                .withZone(ZoneOffset.UTC)
+                .format(date);
+
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
     void format_ZonedOffset0() {
         String result = DateParser.format(ZoneOffset.UTC, "X");
         Assertions.assertEquals("Z", result);

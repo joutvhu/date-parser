@@ -57,7 +57,7 @@ public class MillisecondStrategy extends Strategy {
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
         Objects.requireNonNull(objective.getNano(), "Nanosecond is null.");
-        String value = CommonUtil.rightPad(String.valueOf(objective.getNano()), this.length(), '0');
+        String value = CommonUtil.leftPad(String.valueOf(objective.getNano()), 9, '0');
         if (value.length() > this.length())
             value = value.substring(0, this.length());
         target.append(value);
