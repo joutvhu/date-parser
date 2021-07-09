@@ -46,7 +46,7 @@ public class NanoStrategy extends Strategy {
                         objective.set(ObjectiveDate.SECOND, second);
                         nano = nano % 1000000000L;
                     }
-                    objective.set(ObjectiveDate.NANO, nano);
+                    objective.set(ObjectiveDate.NANO, (int) nano);
                     backup.commit();
                     return;
                 } catch (Exception e) {
@@ -68,7 +68,17 @@ public class NanoStrategy extends Strategy {
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
         Objects.requireNonNull(objective.getNano(), "Nanosecond is null.");
-        target.append(CommonUtil.leftPad(String.valueOf(objective.getNano()), this.length(), '0'));
+        long nano = objective.getNano();
+        if (this.nanoOfDay) {
+            Objects.requireNonNull(objective.getHour(), "Hour is null.");
+            Objects.requireNonNull(objective.getMinute(), "Minute is null.");
+            Objects.requireNonNull(objective.getSecond(), "Second is null.");
+
+            nano += objective.getHour() * 3600000000000L;
+            nano += objective.getMinute() * 60000000000L;
+            nano += objective.getSecond() * 1000000000L;
+        }
+        target.append(CommonUtil.leftPad(String.valueOf(nano), this.length(), '0'));
         chain.next();
     }
 }

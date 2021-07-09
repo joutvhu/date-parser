@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -13,7 +15,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DateFormatTest {
+class DateFormatTest {
     @Test
     void format_utilDate0() {
         Date date = new Date();
@@ -135,5 +137,140 @@ public class DateFormatTest {
                 .format(date);
 
         Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    void format_LocalDateTime1() {
+        LocalDateTime date = LocalDateTime.now();
+        String result = DateParser.format(date, "MM dd yyyy N");
+
+        String expected = DateTimeFormatter
+                .ofPattern("MM dd yyyy N")
+                .withLocale(Locale.getDefault())
+                .withZone(ZoneId.systemDefault())
+                .format(date);
+
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    void format_LocalDateTime2() {
+        LocalDateTime date = LocalDateTime.now();
+        String result = DateParser.format(date, "dd n");
+
+        String expected = DateTimeFormatter
+                .ofPattern("dd n")
+                .withLocale(Locale.getDefault())
+                .withZone(ZoneId.systemDefault())
+                .format(date);
+
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    void format_SqlDate0() {
+        LocalDate localDate = LocalDate.now();
+        java.sql.Date date = java.sql.Date.valueOf(localDate);
+        String result = DateParser.format(date, "MMM dd yyyy");
+
+        String expected = DateTimeFormatter
+                .ofPattern("MMM dd yyyy")
+                .withLocale(Locale.getDefault())
+                .withZone(ZoneId.systemDefault())
+                .format(localDate);
+
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    void format_SqlTime0() {
+        LocalTime localTime = LocalTime.now();
+        Time time = Time.valueOf(localTime);
+        String result = DateParser.format(time, "hh:mm:ss a");
+
+        String expected = DateTimeFormatter
+                .ofPattern("hh:mm:ss a")
+                .withLocale(Locale.getDefault())
+                .withZone(ZoneId.systemDefault())
+                .format(localTime);
+
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    void format_SqlTimestamp0() {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        Timestamp date = Timestamp.valueOf(localDateTime);
+        String result = DateParser.format(date, "MMM dd yyyy HH:mm:ss.SSS");
+
+        String expected = DateTimeFormatter
+                .ofPattern("MMM dd yyyy HH:mm:ss.SSS")
+                .withLocale(Locale.getDefault())
+                .withZone(ZoneId.systemDefault())
+                .format(localDateTime);
+
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    void format_Long0() {
+        String result = DateParser.formatter()
+                .withZone(TimeZone.getTimeZone("UTC"))
+                .format(1624846968780L, "yyyy-MM-dd HH:mm:ss.SSS");
+        Assertions.assertEquals("2021-06-28 09:22:48.780", result);
+    }
+
+    @Test
+    void format_OffsetDateTime0() {
+        OffsetDateTime date = OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
+        String result = DateParser.format(date, "MMM dd yyyy HH:mm:ss.SSS");
+
+        String expected = DateTimeFormatter
+                .ofPattern("MMM dd yyyy HH:mm:ss.SSS")
+                .withLocale(Locale.getDefault())
+                .withZone(ZoneOffset.UTC)
+                .format(date);
+
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    void format_OffsetTime0() {
+        OffsetTime time = OffsetTime.of(LocalTime.now(), ZoneOffset.UTC);
+        String result = DateParser.format(time, "HH:mm:ss.SSS");
+
+        String expected = DateTimeFormatter
+                .ofPattern("HH:mm:ss.SSS")
+                .withLocale(Locale.getDefault())
+                .withZone(ZoneOffset.UTC)
+                .format(time);
+
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    void format_ZonedDateTime0() {
+        ZonedDateTime date = ZonedDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
+        String result = DateParser.format(date, "MMM dd yyyy HH:mm:ss.SSS");
+
+        String expected = DateTimeFormatter
+                .ofPattern("MMM dd yyyy HH:mm:ss.SSS")
+                .withLocale(Locale.getDefault())
+                .withZone(ZoneOffset.UTC)
+                .format(date);
+
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    void format_ZonedOffset0() {
+        String result = DateParser.format(ZoneOffset.UTC, "X");
+        Assertions.assertEquals("Z", result);
+    }
+
+    @Test
+    void format_TimeZone0() {
+        String result = DateParser.format(TimeZone.getTimeZone("GMT"), "x");
+        Assertions.assertEquals("+00", result);
     }
 }
