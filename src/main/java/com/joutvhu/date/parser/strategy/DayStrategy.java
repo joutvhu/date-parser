@@ -41,8 +41,8 @@ public class DayStrategy extends Strategy {
         this.ordinal = this.pattern.endsWith("o");
     }
 
-    @Override
     @SuppressWarnings("java:S3776")
+    @Override
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         AtomicBoolean first = new AtomicBoolean(true);
         int len = this.ordinal ? this.length() + 1 : this.length();

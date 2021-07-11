@@ -29,8 +29,8 @@ public class HourStrategy extends Strategy {
         return add(c == this.pattern.charAt(0), c);
     }
 
-    @Override
     @SuppressWarnings("java:S3776")
+    @Override
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
         Iterator<String> iterator = source.iterator(this.length(), 2);

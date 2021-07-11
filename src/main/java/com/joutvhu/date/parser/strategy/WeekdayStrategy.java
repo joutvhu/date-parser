@@ -25,8 +25,8 @@ import java.util.Objects;
  *   E       day-name-in-week            text              Tuesday; Tue
  * </pre>
  *
- * @since 1.0.0
  * @author Giao Ho
+ * @since 1.0.0
  */
 public class WeekdayStrategy extends Strategy {
     public static final String WEEKDAY = "weekday";
@@ -168,15 +168,17 @@ public class WeekdayStrategy extends Strategy {
             ));
         } else {
             Objects.requireNonNull(objective.getLocale());
-
-            target.append(this.length() < 4 ?
-                    dayOfWeek.getDisplayName(
-                            this.standAlone ? TextStyle.SHORT_STANDALONE : TextStyle.SHORT,
-                            objective.getLocale()) :
-                    dayOfWeek.getDisplayName(
-                            this.standAlone ? TextStyle.FULL_STANDALONE : TextStyle.FULL,
-                            objective.getLocale())
-            );
+            if (this.length() < 4) {
+                target.append(dayOfWeek.getDisplayName(
+                        this.standAlone ? TextStyle.SHORT_STANDALONE : TextStyle.SHORT,
+                        objective.getLocale()
+                ));
+            } else {
+                target.append(dayOfWeek.getDisplayName(
+                        this.standAlone ? TextStyle.FULL_STANDALONE : TextStyle.FULL,
+                        objective.getLocale()
+                ));
+            }
         }
 
         chain.next();

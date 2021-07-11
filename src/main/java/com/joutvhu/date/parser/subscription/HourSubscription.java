@@ -8,8 +8,8 @@ import com.joutvhu.date.parser.strategy.HourStrategy;
 import java.util.Calendar;
 
 public class HourSubscription implements Subscription {
-    @Override
     @SuppressWarnings("java:S3776")
+    @Override
     public void changed(ObjectiveDate objective, String event, Object value) {
         if (ObjectiveDate.HOUR.equals(event) || AmPmStrategy.AM_PM.equals(event)) {
             Integer hour = objective.getHour();

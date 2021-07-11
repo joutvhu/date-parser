@@ -13,6 +13,7 @@ import java.util.TimeZone;
 public class ZoneUtil {
     private String[][] zoneMappings = null;
 
+    @SuppressWarnings("java:S1192")
     private String[][] getZoneMappings() {
         if (zoneMappings == null) {
             zoneMappings = new String[][]{
@@ -173,6 +174,7 @@ public class ZoneUtil {
             return zoneIdOfName(name, rootSymbols);
     }
 
+    @SuppressWarnings("java:S3776")
     public ZoneId getZoneId(String zoneId, Locale locale) {
         Objects.requireNonNull(zoneId, "Zone ID must be not null.");
 

@@ -29,6 +29,7 @@ public class CenturyStrategy extends Strategy {
         this.ordinal = this.pattern.endsWith("o");
     }
 
+    @SuppressWarnings("java:S3776")
     @Override
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);

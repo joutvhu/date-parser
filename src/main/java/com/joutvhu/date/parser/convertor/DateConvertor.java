@@ -2,9 +2,7 @@ package com.joutvhu.date.parser.convertor;
 
 import com.joutvhu.date.parser.domain.ObjectiveDate;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 
 public class DateConvertor implements Convertor<Date> {
     private static DateConvertor instance;
@@ -20,6 +18,7 @@ public class DateConvertor implements Convertor<Date> {
         return CalendarConvertor.getInstance().convert(objective).getTime();
     }
 
+    @SuppressWarnings("java:S1874")
     @Override
     public ObjectiveDate convert(ObjectiveDate objective, Date object) {
         if (object != null) {

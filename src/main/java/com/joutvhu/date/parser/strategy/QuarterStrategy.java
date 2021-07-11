@@ -39,6 +39,7 @@ public class QuarterStrategy extends Strategy {
         return this.ordinal ? super.length() - 1 : super.length();
     }
 
+    @SuppressWarnings("java:S3776")
     @Override
     public void parse(ObjectiveDate objective, StringSource source, NextStrategy chain) {
         ParseBackup backup = ParseBackup.backup(objective, source);
@@ -82,9 +83,9 @@ public class QuarterStrategy extends Strategy {
 
                 if (this.ordinal || this.longText) {
                     ParseBackup ordinalBackup = ParseBackup.backup(objective, source);
-                    String ordinal = source.get(2);
-                    fullValue.append(ordinal);
-                    if (!CommonUtil.hasOrdinal(ordinal)) {
+                    String o = source.get(2);
+                    fullValue.append(o);
+                    if (!CommonUtil.hasOrdinal(o)) {
                         if (this.longText)
                             ordinalBackup.restore();
                         else {

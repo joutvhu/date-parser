@@ -157,14 +157,17 @@ public class MonthStrategy extends Strategy {
             if (this.ordinal)
                 target.append(CommonUtil.getOrdinal(month));
         } else {
-            target.append(this.length() == 3 ?
-                    Month.of(month).getDisplayName(
-                            this.standAlone ? TextStyle.SHORT_STANDALONE : TextStyle.SHORT,
-                            objective.getLocale()) :
-                    Month.of(month).getDisplayName(
-                            this.standAlone ? TextStyle.FULL_STANDALONE : TextStyle.FULL,
-                            objective.getLocale())
-            );
+            if (this.length() == 3) {
+                target.append(Month.of(month).getDisplayName(
+                        this.standAlone ? TextStyle.SHORT_STANDALONE : TextStyle.SHORT,
+                        objective.getLocale()
+                ));
+            } else {
+                target.append(Month.of(month).getDisplayName(
+                        this.standAlone ? TextStyle.FULL_STANDALONE : TextStyle.FULL,
+                        objective.getLocale()
+                ));
+            }
         }
         chain.next();
     }
