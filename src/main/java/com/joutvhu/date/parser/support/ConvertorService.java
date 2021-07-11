@@ -20,6 +20,7 @@ public class ConvertorService {
         return instance;
     }
 
+    @SuppressWarnings("java:S1066")
     public <T> Convertor<T> getConvertor(Class<T> type, boolean forParse) {
         if (type == null)
             return null;

@@ -3,7 +3,6 @@ package com.joutvhu.date.parser.convertor;
 import com.joutvhu.date.parser.domain.ObjectiveDate;
 
 import java.time.OffsetTime;
-import java.util.TimeZone;
 
 public class OffsetTimeConvertor implements Convertor<OffsetTime> {
     private static OffsetTimeConvertor instance;

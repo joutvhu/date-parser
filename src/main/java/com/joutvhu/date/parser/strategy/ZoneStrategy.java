@@ -63,6 +63,7 @@ public class ZoneStrategy extends Strategy {
                 this.pattern);
     }
 
+    @SuppressWarnings({"java:S3776", "java:S3358"})
     @Override
     public void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain) {
         Objects.requireNonNull(objective.getZone(), "Zone is null.");

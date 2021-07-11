@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 
 @UtilityClass
 public class NameUtil {
-    @SuppressWarnings("java:S3776")
+    @SuppressWarnings({"java:S135", "java:S1197", "java:S3776"})
     public <T> Map.Entry<String, T> findName(
             Iterator<String> iterator,
             T[] values,
