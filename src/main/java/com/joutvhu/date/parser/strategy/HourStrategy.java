@@ -10,10 +10,24 @@ import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.Objects;
 
+/**
+ * <pre>
+ *  Symbol  Meaning                     Presentation      Examples
+ *  ------  -------                     ------------      -------
+ *   h       clock-hour-of-am-pm (1-12)  number            1; 12
+ *   H       hour-of-day (0-23)          number            0; 23
+ *   k       clock-hour-of-am-pm (1-24)  number            1; 24
+ *   K       hour-of-am-pm (0-11)        number            0; 11
+ * </pre>
+ *
+ * @author Giao Ho
+ * @version 1.0.0
+ * @since 2021-07-01
+ */
 public class HourStrategy extends Strategy {
     public static final String HOUR12 = "hour12";
 
-    private static final String NOT_HOUR_MESSAGE = "The value '{0}' is not a hour.";
+    private static final String NOT_HOUR_MESSAGE = "The value ''{0}'' is not a hour.";
 
     private final boolean hour24;
     private final boolean startFrom0;

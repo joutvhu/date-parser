@@ -45,7 +45,7 @@ public abstract class Strategy {
 
     public abstract void format(ObjectiveDate objective, StringBuilder target, NextStrategy chain);
 
-    public void afterCompletion(ObjectiveDate objective) {
+    public void afterParsing(ObjectiveDate objective) {
         // Do nothing
     }
 }

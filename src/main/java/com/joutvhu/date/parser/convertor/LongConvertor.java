@@ -29,7 +29,7 @@ public class LongConvertor implements Convertor<Long> {
                     CommonUtil.defaultIfNull(objective.getLocale(), Locale.getDefault())
             );
             calendar.setTimeInMillis(object);
-            return CalendarConvertor.getInstance().convert(objective, calendar);
+            CalendarConvertor.getInstance().convert(objective, calendar);
         }
         return objective;
     }

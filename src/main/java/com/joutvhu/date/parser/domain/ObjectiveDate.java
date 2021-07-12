@@ -20,7 +20,8 @@ import java.util.TimeZone;
  * It is available to convert to other data types through a {@link com.joutvhu.date.parser.convertor.Convertor}.
  *
  * @author Giao Ho
- * @since 1.0.0
+ * @version 1.0.0
+ * @since 2021-07-12
  */
 @Getter
 @Setter
@@ -64,7 +65,7 @@ public class ObjectiveDate implements Serializable {
     private final Map<Class<? extends Subscription>, Subscription> listeners;
 
     public ObjectiveDate(Locale locale, TimeZone zone) {
-        this(locale, zone, WeekFields.of(locale));
+        this(locale, zone, WeekFields.of(locale != null ? locale : Locale.getDefault()));
     }
 
     public ObjectiveDate(Locale locale, TimeZone zone, WeekFields weekFields) {

@@ -53,9 +53,31 @@ class DateFormatTest {
     @Test
     void format_DayOfWeek0() {
         DayOfWeek dayOfWeek = DayOfWeek.WEDNESDAY;
-        String result = DateParser.format(dayOfWeek, "EEE");
+        String result = DateParser.formatter()
+                .withLocale(Locale.ROOT)
+                .format(dayOfWeek, "EEE");
 
         Assertions.assertEquals("Wed", result);
+    }
+
+    @Test
+    void format_DayOfWeek1() {
+        LocalDate localDate = LocalDate.of(2021, 8, 5);
+        String result = DateParser.formatter()
+                .withLocale(Locale.ROOT)
+                .format(localDate, "e");
+
+        Assertions.assertEquals("4", result);
+    }
+
+    @Test
+    void format_DayOfWeek2() {
+        DayOfWeek dayOfWeek = DayOfWeek.SUNDAY;
+        String result = DateParser.formatter()
+                .withLocale(Locale.ROOT)
+                .format(dayOfWeek, "c EEEE");
+
+        Assertions.assertEquals("Sun Sunday", result);
     }
 
     @Test
@@ -136,6 +158,16 @@ class DateFormatTest {
                 .format(date, "w W");
 
         Assertions.assertEquals("28 3", result);
+    }
+
+    @Test
+    void format_LocalDate3() {
+        LocalDate date = LocalDate.of(2021, 7, 14);
+        String result = DateParser.formatter()
+                .withWeekFields(WeekFields.ISO)
+                .format(date, "DDD");
+
+        Assertions.assertEquals("195", result);
     }
 
     @Test

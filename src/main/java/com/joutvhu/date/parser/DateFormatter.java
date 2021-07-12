@@ -18,7 +18,8 @@ import java.util.TimeZone;
  * The date parser
  *
  * @author Giao Ho
- * @since 1.0.0
+ * @version 1.0.0
+ * @since 2021-07-08
  */
 public class DateFormatter implements Formatter {
     private Locale defaultLocale;

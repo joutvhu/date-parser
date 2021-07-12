@@ -10,6 +10,18 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * <pre>
+ *  Symbol  Meaning                     Presentation      Examples
+ *  ------  -------                     ------------      -------
+ *   n       nano-of-second              number            987654321
+ *   N       nano-of-day                 number            1234000000
+ * </pre>
+ *
+ * @author Giao Ho
+ * @version 1.0.0
+ * @since 2021-07-09
+ */
 public class NanoStrategy extends Strategy {
     private boolean nanoOfDay;
 
