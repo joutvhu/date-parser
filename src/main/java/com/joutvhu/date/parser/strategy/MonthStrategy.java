@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MonthStrategy extends Strategy {
-    private static final String NOT_MONTH_MESSAGE = "The '{0}' is not a month.";
+    private static final String NOT_MONTH_MESSAGE = "The ''{0}'' is not a month.";
 
     private boolean numeric;
     private boolean ordinal;

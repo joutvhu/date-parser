@@ -87,7 +87,7 @@ public class WeekStrategy extends Strategy {
                 if (weekInYear) {
                     if (week < 0 || week > 54)
                         throw new MismatchPatternException(
-                                MessageFormat.format("The '{}' is not a week of year.", week),
+                                MessageFormat.format("The ''{0}'' is not a week of year.", week),
                                 backup.getBackupPosition(),
                                 this.pattern);
 
@@ -97,7 +97,7 @@ public class WeekStrategy extends Strategy {
                 } else {
                     if (week < 1 || week > 6)
                         throw new MismatchPatternException(
-                                MessageFormat.format("The '{}' is not a week of month.", week),
+                                MessageFormat.format("The ''{0}'' is not a week of month.", week),
                                 backup.getBackupPosition(),
                                 this.pattern);
 
@@ -117,7 +117,7 @@ public class WeekStrategy extends Strategy {
             backup.restore();
             if (throwable)
                 throw new MismatchPatternException(
-                        MessageFormat.format("The '{}' is not a week.", value),
+                        MessageFormat.format("The ''{0}'' is not a week.", value),
                         backup.getBackupPosition(),
                         this.pattern);
         }

@@ -67,6 +67,38 @@ class StrategyTest {
     }
 
     @Test
+    void parse_Hour0() {
+        ObjectiveDate objectiveDate = new DateFormat("hh a")
+                .parse("11 am");
+
+        Assertions.assertEquals(11, objectiveDate.getHour());
+    }
+
+    @Test
+    void parse_Hour1() {
+        ObjectiveDate objectiveDate = new DateFormat("HH")
+                .parse("23");
+
+        Assertions.assertEquals(23, objectiveDate.getHour());
+    }
+
+    @Test
+    void parse_Hour2() {
+        ObjectiveDate objectiveDate = new DateFormat("kk")
+                .parse("24");
+
+        Assertions.assertEquals(0, objectiveDate.getHour());
+    }
+
+    @Test
+    void parse_Hour3() {
+        ObjectiveDate objectiveDate = new DateFormat("K a")
+                .parse("0 pm");
+
+        Assertions.assertEquals(12, objectiveDate.getHour());
+    }
+
+    @Test
     void parse_Week0() {
         Assertions.assertThrows(Exception.class, () -> {
             DateFormat dateFormat = new DateFormat("wwo");

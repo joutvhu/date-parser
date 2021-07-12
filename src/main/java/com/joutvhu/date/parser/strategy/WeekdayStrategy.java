@@ -32,7 +32,7 @@ import java.util.Objects;
 public class WeekdayStrategy extends Strategy {
     public static final String WEEKDAY = "weekday";
 
-    private static final String NOT_DAY_OF_WEEK_MESSAGE = "The '{0}' is not a day of week.";
+    private static final String NOT_DAY_OF_WEEK_MESSAGE = "The ''{0}'' is not a day of week.";
 
     private final boolean numeric;
     private final boolean standAlone;

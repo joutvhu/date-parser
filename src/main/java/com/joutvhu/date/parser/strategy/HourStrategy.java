@@ -27,7 +27,7 @@ import java.util.Objects;
 public class HourStrategy extends Strategy {
     public static final String HOUR12 = "hour12";
 
-    private static final String NOT_HOUR_MESSAGE = "The value '{0}' is not a hour.";
+    private static final String NOT_HOUR_MESSAGE = "The value ''{0}'' is not a hour.";
 
     private final boolean hour24;
     private final boolean startFrom0;
