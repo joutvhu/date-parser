@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'com.github.joutvhu'
-version '1.0.0.3-SNAPSHOT'
+version '1.0.0'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
@@ -105,7 +105,7 @@ publishing {
 
             pom {
                 name = project.name
-                description = 'Utility to parse String to Date by target type and string format'
+                description = 'Utility to parse String to Date according to a target class, and the pattern strings. And format Date to String based on a pattern string.'
                 url = 'https://github.com/joutvhu/date-parser'
                 licenses {
                     license {
