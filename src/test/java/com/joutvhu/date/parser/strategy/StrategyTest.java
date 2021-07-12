@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -63,6 +64,30 @@ class StrategyTest {
         Assertions.assertThrows(Exception.class, () -> {
             DateFormat dateFormat = new DateFormat("ddo");
             dateFormat.parse("11");
+        });
+    }
+
+    @Test
+    void parse_Day1() {
+        DateFormat dateFormat = new DateFormat("DD yyyy");
+        ObjectiveDate objectiveDate = dateFormat.parse("150 2021");
+        Assertions.assertEquals(5, objectiveDate.getMonth());
+        Assertions.assertEquals(30, objectiveDate.getDay());
+    }
+
+    @Test
+    void parse_Day2() {
+        Assertions.assertThrows(Exception.class, () -> {
+            DateFormat dateFormat = new DateFormat("DD yyyy");
+            dateFormat.parse("367 2021");
+        });
+    }
+
+    @Test
+    void parse_Day3() {
+        Assertions.assertThrows(Exception.class, () -> {
+            DateFormat dateFormat = new DateFormat("DD yyyy");
+            dateFormat.parse("366 2021");
         });
     }
 
@@ -240,5 +265,13 @@ class StrategyTest {
         String result = dateFormat.format(objectiveDate);
 
         Assertions.assertEquals("3", result);
+    }
+
+    @Test
+    void format_Day0() {
+        Assertions.assertThrows(Exception.class, () -> {
+            ObjectiveDate objectiveDate = new ObjectiveDate(null, null);
+            new DateFormat("D").format(objectiveDate);
+        });
     }
 }

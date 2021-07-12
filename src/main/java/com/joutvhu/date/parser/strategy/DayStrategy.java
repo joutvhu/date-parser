@@ -16,6 +16,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * <pre>
+ *  Symbol  Meaning                     Presentation      Examples
+ *  ------  -------                     ------------      -------
+ *   d       day-of-month                number            10
+ *   D       day-of-year                 number            189
+ * </pre>
+ *
+ * @author Giao Ho
+ * @version 1.0.0
+ * @since 2021-07-01
+ */
 public class DayStrategy extends Strategy {
     public static final String DAYS = "days";
     public static final String DAY_OF_YEAR = "day_of_year";
@@ -79,19 +91,21 @@ public class DayStrategy extends Strategy {
                                     this.pattern);
                         }
                         List<MonthDay> monthDays = getMonthAndDay(day);
-                        objective.set(DAY_OF_YEAR, day);
                         if (monthDays.isEmpty()) {
                             throw new MismatchPatternException(
                                     "'" + day + "' is not a day of year.",
                                     backup.getBackupPosition(),
                                     this.pattern);
                         } else if (monthDays.size() == 1) {
+                            if (day == 366)
+                                objective.subscribe(new DaySubscription());
                             objective.set(ObjectiveDate.MONTH, monthDays.get(0).getMonthValue());
                             objective.set(ObjectiveDate.DAY, monthDays.get(0).getDayOfMonth());
                         } else {
                             objective.subscribe(new DaySubscription());
                             objective.set(DAYS, monthDays);
                         }
+                        objective.set(DAY_OF_YEAR, day);
                     } else {
                         if (day == 0 || day > 31) {
                             throw new MismatchPatternException(
