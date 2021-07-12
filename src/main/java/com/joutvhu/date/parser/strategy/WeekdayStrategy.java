@@ -26,7 +26,8 @@ import java.util.Objects;
  * </pre>
  *
  * @author Giao Ho
- * @since 1.0.0
+ * @version 1.0.0
+ * @since 2021-07-01
  */
 public class WeekdayStrategy extends Strategy {
     public static final String WEEKDAY = "weekday";

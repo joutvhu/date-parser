@@ -47,7 +47,7 @@ public class EraStrategy extends Strategy {
     }
 
     @Override
-    public void afterCompletion(ObjectiveDate objective) {
+    public void afterParsing(ObjectiveDate objective) {
         Integer era = objective.get(ERA);
         Integer year = objective.getYear();
         if (year != null && (era == GregorianCalendar.AD || era == GregorianCalendar.BC)) {

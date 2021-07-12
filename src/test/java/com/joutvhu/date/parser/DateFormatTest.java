@@ -161,6 +161,16 @@ class DateFormatTest {
     }
 
     @Test
+    void format_LocalDate3() {
+        LocalDate date = LocalDate.of(2021, 7, 14);
+        String result = DateParser.formatter()
+                .withWeekFields(WeekFields.ISO)
+                .format(date, "DDD");
+
+        Assertions.assertEquals("195", result);
+    }
+
+    @Test
     void format_LocalTime0() {
         LocalTime date = LocalTime.now();
         String result = DateParser.format(date, "hh:mm:ss.SSS a");

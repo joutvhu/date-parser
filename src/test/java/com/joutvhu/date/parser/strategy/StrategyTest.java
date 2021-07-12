@@ -1,12 +1,23 @@
 package com.joutvhu.date.parser.strategy;
 
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import com.joutvhu.date.parser.support.DateFormat;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class StrategyTest {
+    @Test
+    void parse_AmPm0() {
+        DateFormat dateFormat = new DateFormat("a");
+        ObjectiveDate objectiveDate = dateFormat.parse("am");
+        Assertions.assertEquals(Calendar.AM, objectiveDate.<Integer>get(AmPmStrategy.AM_PM));
+    }
+
     @Test
     void parse_Century0() {
         Assertions.assertThrows(Exception.class, () -> {
@@ -109,5 +120,93 @@ class StrategyTest {
             DateFormat dateFormat = new DateFormat("Z");
             dateFormat.parse(" UTC");
         });
+    }
+
+    @Test
+    void format_AmPm0() {
+        ObjectiveDate objectiveDate = new ObjectiveDate(null, null);
+        objectiveDate.set(AmPmStrategy.AM_PM, Calendar.AM);
+
+        DateFormat dateFormat = new DateFormat("a");
+        String result = dateFormat.format(objectiveDate);
+
+        Assertions.assertEquals("AM", result);
+    }
+
+    @Test
+    void format_AmPm1() {
+        ObjectiveDate objectiveDate = new ObjectiveDate(null, null);
+        objectiveDate.set(AmPmStrategy.AM_PM, Calendar.PM);
+
+        DateFormat dateFormat = new DateFormat("a");
+        String result = dateFormat.format(objectiveDate);
+
+        Assertions.assertEquals("PM", result);
+    }
+
+    @Test
+    void format_Era0() {
+        ObjectiveDate objectiveDate = new ObjectiveDate(null, null);
+        objectiveDate.set(EraStrategy.ERA, GregorianCalendar.AD);
+
+        DateFormat dateFormat = new DateFormat("G");
+        String result = dateFormat.format(objectiveDate);
+
+        Assertions.assertEquals("AD", result);
+    }
+
+    @Test
+    void format_Era1() {
+        ObjectiveDate objectiveDate = new ObjectiveDate(null, null);
+        objectiveDate.set(EraStrategy.ERA, GregorianCalendar.BC);
+
+        DateFormat dateFormat = new DateFormat("G");
+        String result = dateFormat.format(objectiveDate);
+
+        Assertions.assertEquals("BC", result);
+    }
+
+    @Test
+    void format_Hour0() {
+        ObjectiveDate objectiveDate = new ObjectiveDate(null, null);
+        objectiveDate.setHour(12);
+
+        DateFormat dateFormat = new DateFormat("h");
+        String result = dateFormat.format(objectiveDate);
+
+        Assertions.assertEquals("12", result);
+    }
+
+    @Test
+    void format_WeekdayInMonth0() {
+        ObjectiveDate objectiveDate = new ObjectiveDate(null, null);
+        objectiveDate.set(WeekdayInMonthStrategy.WEEKDAY_IN_MONTH, 2);
+
+        DateFormat dateFormat = new DateFormat("F");
+        String result = dateFormat.format(objectiveDate);
+
+        Assertions.assertEquals("2", result);
+    }
+
+    @Test
+    void format_Week0() {
+        ObjectiveDate objectiveDate = new ObjectiveDate(null, null);
+        objectiveDate.set(WeekStrategy.WEEK_OF_YEAR, 22);
+
+        DateFormat dateFormat = new DateFormat("w");
+        String result = dateFormat.format(objectiveDate);
+
+        Assertions.assertEquals("22", result);
+    }
+
+    @Test
+    void format_Week1() {
+        ObjectiveDate objectiveDate = new ObjectiveDate(null, null);
+        objectiveDate.set(WeekStrategy.WEEK_OF_MONTH, 3);
+
+        DateFormat dateFormat = new DateFormat("W");
+        String result = dateFormat.format(objectiveDate);
+
+        Assertions.assertEquals("3", result);
     }
 }

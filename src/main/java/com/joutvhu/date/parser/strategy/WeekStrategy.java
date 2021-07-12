@@ -13,6 +13,18 @@ import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * <pre>
+ *  Symbol  Meaning                     Presentation      Examples
+ *  ------  -------                     ------------      -------
+ *   w       week-of-year                number            27
+ *   W       week-of-month               number            4
+ * </pre>
+ *
+ * @author Giao Ho
+ * @version 1.0.0
+ * @since 2021-07-01
+ */
 public class WeekStrategy extends Strategy {
     public static final String WEEK_OF_YEAR = "week_of_year";
     public static final String WEEK_OF_MONTH = "week_of_month";
