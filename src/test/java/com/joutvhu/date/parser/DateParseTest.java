@@ -255,6 +255,21 @@ class DateParseTest {
         });
     }
 
+    @Test
+    void parse_Fail1() {
+        Assertions.assertThrows(Exception.class, () -> {
+            DateParser.formatter()
+                    .parse(Calendar.class, "2021/06/27 21:52:25.408x", "yyyy/MM/dd HH:mm:ss.SSS");
+        });
+    }
+
+    @Test
+    void parse_Fail2() {
+        Assertions.assertThrows(ParseException.class, () -> {
+            DateParser.parse(Instant.class, "Ad 21 3 2 1 2 11 AM 155010 UTC x", "G C q w e F hh a n V");
+        });
+    }
+
     private String format(Date date, String format) {
         SimpleDateFormat dt = new SimpleDateFormat(format);
         return dt.format(date);
