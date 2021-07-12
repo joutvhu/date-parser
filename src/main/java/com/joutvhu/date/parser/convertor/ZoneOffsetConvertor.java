@@ -3,6 +3,7 @@ package com.joutvhu.date.parser.convertor;
 import com.joutvhu.date.parser.domain.ObjectiveDate;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -19,11 +20,8 @@ public class ZoneOffsetConvertor implements Convertor<ZoneOffset> {
     @Override
     public ZoneOffset convert(ObjectiveDate objective) {
         Objects.requireNonNull(objective.getZone());
-
-        if (objective.getZone().toZoneId() instanceof ZoneOffset)
-            return (ZoneOffset) objective.getZone().toZoneId();
-        else
-            return objective.getZone().toZoneId().getRules().getOffset(Instant.now());
+        ZoneId zoneId = objective.getZone().toZoneId();
+        return zoneId instanceof ZoneOffset ? (ZoneOffset) zoneId : zoneId.getRules().getOffset(Instant.now());
     }
 
     @Override

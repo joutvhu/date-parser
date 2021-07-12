@@ -1,8 +1,13 @@
 package com.joutvhu.date.parser.convertor;
 
+import com.joutvhu.date.parser.domain.ObjectiveDate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.util.TimeZone;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ConvertorTest {
@@ -22,8 +27,18 @@ class ConvertorTest {
     }
 
     @Test
-    void instance_InstantConvertor() {
+    void instance_InstantConvertor0() {
         Assertions.assertEquals(InstantConvertor.getInstance(), InstantConvertor.getInstance());
+    }
+
+    @Test
+    void instance_InstantConvertor1() {
+        ObjectiveDate objectiveDate = new ObjectiveDate(null, null);
+        objectiveDate.setZone(null);
+        InstantConvertor.getInstance().convert(objectiveDate, Instant.now());
+
+        Assertions.assertNotNull(objectiveDate.getYear());
+        Assertions.assertNotNull(objectiveDate.getZone());
     }
 
     @Test
@@ -102,7 +117,14 @@ class ConvertorTest {
     }
 
     @Test
-    void instance_ZoneOffsetConvertor() {
+    void instance_ZoneOffsetConvertor0() {
         Assertions.assertEquals(ZoneOffsetConvertor.getInstance(), ZoneOffsetConvertor.getInstance());
+    }
+
+    @Test
+    void instance_ZoneOffsetConvertor1() {
+        ObjectiveDate objectiveDate = new ObjectiveDate(null, TimeZone.getTimeZone(ZoneOffset.of("+07:00")));
+        ZoneOffset zoneOffset = ZoneOffsetConvertor.getInstance().convert(objectiveDate);
+        Assertions.assertEquals(25200, zoneOffset.getTotalSeconds());
     }
 }
